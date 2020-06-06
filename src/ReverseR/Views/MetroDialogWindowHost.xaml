@@ -1,0 +1,26 @@
+﻿<Controls:MetroWindow x:Class="ReverseR.Views.MetroDialogWindowHost"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ReverseR.Views"
+        mc:Ignorable="d"
+        Title="{Binding Title}" Height="450" Width="800" WindowStartupLocation="CenterOwner" ShowMinButton="False" ShowMaxRestoreButton="False">
+    <Controls:MetroWindow.Style>
+        <Style TargetType="Controls:MetroWindow" BasedOn="{StaticResource MahApps.Styles.MetroWindow.VisualStudio}">
+            <Setter Property="SizeToContent" Value="WidthAndHeight" />
+        </Style>
+    </Controls:MetroWindow.Style>
+    <Controls:MetroWindow.WindowButtonCommands>
+        <Controls:WindowButtonCommands Style="{DynamicResource MahApps.Styles.WindowButtonCommands.Win10}" />
+    </Controls:MetroWindow.WindowButtonCommands>
+    <Controls:MetroWindow.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/VS/Colors.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/VS/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Controls:MetroWindow.Resources>
+</Controls:MetroWindow>

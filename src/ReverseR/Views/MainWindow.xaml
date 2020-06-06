@@ -1,0 +1,656 @@
+﻿<Controls:MetroWindow x:Class="ReverseR.Views.MainWindow"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+                      xmlns:ControlzEx="urn:controlzex"
+                      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                      xmlns:prism="http://prismlibrary.com/"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
+                      xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock"
+                      xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+                      xmlns:local="clr-namespace:ReverseR.ViewModels"
+                      prism:ViewModelLocator.AutoWireViewModel="True"
+        Title="{Binding Title}" Height="450" Width="800" Language="En-Us" 
+        NonActiveWindowTitleBrush="{Binding RelativeSource={RelativeSource Mode=Self},Path=WindowTitleBrush}"
+        WindowChrome.IsHitTestVisibleInChrome="True"
+        Background="{DynamicResource MahApps.Brushes.Background}"
+        local:InputBindingsBehavior.InputBindings="{Binding InputBindings}"
+        SaveWindowPosition="True" WindowState="Maximized"
+        Name="ReverseR_Shell">
+    <Controls:MetroWindow.TitleTemplate>
+        <DataTemplate>
+            <DockPanel Name="TitlebarContainer" VerticalAlignment="Center" Height="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Controls:MetroWindow},Path=TitleBarHeight}" MinHeight="30">
+                <WrapPanel Name="TitlebarWrapper" Margin="5 0 5 0" Orientation="Horizontal" VerticalAlignment="Center" DockPanel.Dock="Left">
+                    <WrapPanel.Resources>
+                        <local:TitlebarHeightConverter x:Key="TitlebarConverter"/>
+                    </WrapPanel.Resources>
+                    <behaviors:Interaction.Triggers>
+                        <behaviors:PropertyChangedTrigger Binding="{Binding ElementName=TitlebarWrapper,Path=ActualHeight,Converter={StaticResource TitlebarConverter}}">
+                            <behaviors:ChangePropertyAction TargetObject="{Binding ElementName=ReverseR_Shell}" PropertyName="TitleBarHeight" Value="{Binding ElementName=TitlebarWrapper,Path=ActualHeight,Converter={StaticResource TitlebarConverter}}"/>
+                        </behaviors:PropertyChangedTrigger>
+                    </behaviors:Interaction.Triggers>
+                    <Menu Name="MainMenu" ItemsSource="{Binding RootMenus}" DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window},Path=DataContext}" VerticalContentAlignment="Center" VerticalAlignment="Center">
+                        <Menu.CommandBindings>
+                            <CommandBinding Command="Copy" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
+                        </Menu.CommandBindings>
+                        <Menu.Resources>
+                            <Style x:Key="ReverseR.MenuItem" TargetType="{x:Type MenuItem}">
+                                <!--<Setter Property="HeaderTemplate">
+                                    <Setter.Value>
+                                        <DataTemplate>
+                                            <AccessText Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=MenuItem},Path=Header}" TextAlignment="Center" HorizontalAlignment="Center"/>
+                                        </DataTemplate>
+                                    </Setter.Value>
+                                </Setter>-->
+                                <Setter Property="Foreground" Value="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type MenuBase}}}" />
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type MenuItem}">
+                                            <Border x:Name="Border"
+                            Background="Transparent"
+                            BorderBrush="Transparent"
+                            BorderThickness="1"
+                            SnapsToDevicePixels="False">
+                                                <Grid x:Name="Grid">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition x:Name="Col0"
+                                                  Width="Auto"
+                                                  MinWidth="24"
+                                                  SharedSizeGroup="MenuItemIconColumnGroup" />
+                                                        <ColumnDefinition Width="*" SharedSizeGroup="MenuTextColumnGroup" />
+                                                        <ColumnDefinition Width="Auto" SharedSizeGroup="MenuItemIGTColumnGroup" />
+                                                        <ColumnDefinition x:Name="Col3" Width="16" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Grid x:Name="CheckMarkPanel"
+                                  Grid.Column="0"
+                                  Width="18"
+                                  Height="18"
+                                  Margin="2 0"
+                                  Background="{DynamicResource MahApps.Brushes.Menu.Checkmark.Background}"
+                                  Visibility="Collapsed">
+                                                        <Path x:Name="CheckMarkPath"
+                                      Width="16"
+                                      Height="16"
+                                      Margin="1 1 0 0"
+                                      Data="{StaticResource Checkmark}"
+                                      Fill="{DynamicResource MahApps.Brushes.Menu.Checkmark.Fill}"
+                                      FlowDirection="LeftToRight" />
+                                                    </Grid>
+                                                    <ContentPresenter x:Name="Icon"
+                                              Grid.Column="0"
+                                              VerticalAlignment="Center"
+                                              ContentSource="Icon" />
+                                                    <ContentPresenter x:Name="HeaderHost"
+                                              Grid.Column="1"
+                                              Margin="{TemplateBinding Padding}"
+                                              VerticalAlignment="Center"
+                                              HorizontalAlignment="Stretch"
+                                              ContentSource="Header"
+                                              RecognizesAccessKey="True" />
+                                                    <ContentPresenter x:Name="IGTHost"
+                                              Grid.Column="2"
+                                              Margin="8 1 8 1"
+                                              VerticalAlignment="Center"
+                                              ContentSource="InputGestureText" />
+                                                    <Grid x:Name="ArrowPanel"
+                                  Grid.Column="3"
+                                  Margin="4 0 6 0"
+                                  VerticalAlignment="Center">
+                                                        <Path x:Name="ArrowPanelPath"
+                                      HorizontalAlignment="Right"
+                                      VerticalAlignment="Center"
+                                      Data="M0,0 L0,8 L4,4 z"
+                                      Fill="{TemplateBinding Foreground}" />
+                                                    </Grid>
+                                                    <Popup x:Name="SubMenuPopup"
+                                   AllowsTransparency="True"
+                                   Focusable="false"
+                                   HorizontalOffset="-1"
+                                   IsOpen="{Binding Path=IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}"
+                                   Placement="Right"
+                                   PopupAnimation="{DynamicResource {x:Static SystemParameters.MenuPopupAnimationKey}}">
+                                                        <Grid Margin="0 0 5 5">
+                                                            <Border x:Name="SubMenuBorder"
+                                            Background="{DynamicResource MahApps.Brushes.SubmenuItem.Background}"
+                                            BorderBrush="{DynamicResource MahApps.Brushes.MenuSeparator.Border}"
+                                            BorderThickness="1"
+                                            SnapsToDevicePixels="True">
+                                                                <Grid x:Name="SubMenu"
+                                              Margin="2"
+                                              Grid.IsSharedSizeScope="True">
+                                                                    <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle" />
+                                                                </Grid>
+                                                                <Border.Effect>
+                                                                    <DropShadowEffect ShadowDepth="2" Color="{DynamicResource MahApps.Colors.MenuShadow}" />
+                                                                </Border.Effect>
+                                                            </Border>
+                                                            <Border x:Name="TransitionBorder"
+                                            Width="0"
+                                            Height="2"
+                                            Margin="1 0 0 0"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Top"
+                                            Background="{DynamicResource MahApps.Brushes.SubmenuItem.Background}"
+                                            BorderBrush="{DynamicResource MahApps.Brushes.SubmenuItem.Background}"
+                                            BorderThickness="1"
+                                            SnapsToDevicePixels="False" />
+                                                        </Grid>
+                                                    </Popup>
+                                                </Grid>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="Role" Value="TopLevelHeader">
+                                                    <Setter Property="Padding" Value="6 0 6 2" />
+                                                    <Setter TargetName="ArrowPanel" Property="Visibility" Value="Collapsed" />
+                                                    <Setter TargetName="Col0" Property="MinWidth" Value="0" />
+                                                    <Setter TargetName="Col3" Property="Width" Value="Auto" />
+                                                    <Setter TargetName="IGTHost" Property="Visibility" Value="Collapsed" />
+                                                    <Setter TargetName="Icon" Property="Visibility" Value="Collapsed" />
+                                                    <Setter TargetName="SubMenu" Property="Margin" Value="2 3 2 2" />
+                                                    <Setter TargetName="SubMenuBorder" Property="BorderThickness" Value="1 1 1 1" />
+                                                    <Setter TargetName="SubMenuPopup" Property="Placement" Value="Bottom" />
+                                                    <Setter TargetName="TransitionBorder" Property="Width" Value="{Binding ActualWidth, ElementName=Grid}" />
+                                                </Trigger>
+                                                <Trigger Property="Role" Value="TopLevelItem">
+                                                    <Setter Property="Padding" Value="6 0 6 2" />
+                                                    <Setter TargetName="ArrowPanel" Property="Visibility" Value="Collapsed" />
+                                                    <Setter TargetName="Col0" Property="MinWidth" Value="0" />
+                                                    <Setter TargetName="Col3" Property="Width" Value="Auto" />
+                                                    <Setter TargetName="IGTHost" Property="Visibility" Value="Collapsed" />
+                                                    <Setter TargetName="Icon" Property="Visibility" Value="Collapsed" />
+                                                </Trigger>
+                                                <Trigger Property="Role" Value="SubmenuHeader">
+                                                    <Setter Property="DockPanel.Dock" Value="Top" />
+                                                    <Setter Property="Padding" Value="10 3 0 3" />
+                                                    <Setter TargetName="Border" Property="Background" Value="{DynamicResource MahApps.Brushes.SubmenuItem.Background}" />
+                                                    <Setter TargetName="Border" Property="MinHeight" Value="22" />
+                                                </Trigger>
+                                                <Trigger Property="Role" Value="SubmenuItem">
+                                                    <Setter Property="DockPanel.Dock" Value="Top" />
+                                                    <Setter Property="Padding" Value="10 3 0 3" />
+                                                    <Setter TargetName="ArrowPanel" Property="Visibility" Value="Collapsed" />
+                                                    <Setter TargetName="Border" Property="Background" Value="{DynamicResource MahApps.Brushes.SubmenuItem.Background}" />
+                                                    <Setter TargetName="Border" Property="MinHeight" Value="22" />
+                                                </Trigger>
+
+                                                <MultiTrigger>
+                                                    <MultiTrigger.Conditions>
+                                                        <Condition Property="IsHighlighted" Value="true" />
+                                                        <Condition Property="Role" Value="TopLevelHeader" />
+                                                    </MultiTrigger.Conditions>
+                                                    <Setter TargetName="Border" Property="Background" Value="{DynamicResource MahApps.Brushes.MenuItem.BackgroundHighlighted}" />
+                                                </MultiTrigger>
+                                                <MultiTrigger>
+                                                    <MultiTrigger.Conditions>
+                                                        <Condition Property="IsHighlighted" Value="true" />
+                                                        <Condition Property="Role" Value="TopLevelItem" />
+                                                    </MultiTrigger.Conditions>
+                                                    <Setter TargetName="Border" Property="Background" Value="{DynamicResource MahApps.Brushes.MenuItem.BackgroundHighlighted}" />
+                                                </MultiTrigger>
+
+                                                <MultiTrigger>
+                                                    <MultiTrigger.Conditions>
+                                                        <Condition Property="IsChecked" Value="true" />
+                                                        <Condition Property="IsCheckable" Value="true" />
+                                                        <Condition Property="Role" Value="SubmenuItem" />
+                                                    </MultiTrigger.Conditions>
+                                                    <Setter TargetName="CheckMarkPanel" Property="Visibility" Value="Visible" />
+                                                </MultiTrigger>
+
+                                                <MultiTrigger>
+                                                    <MultiTrigger.Conditions>
+                                                        <Condition Property="IsHighlighted" Value="true" />
+                                                        <Condition Property="Role" Value="SubmenuHeader" />
+                                                    </MultiTrigger.Conditions>
+                                                    <Setter TargetName="Border" Property="Background" Value="{DynamicResource MahApps.Brushes.SubmenuItem.BackgroundHighlighted}" />
+                                                </MultiTrigger>
+                                                <MultiTrigger>
+                                                    <MultiTrigger.Conditions>
+                                                        <Condition Property="IsHighlighted" Value="true" />
+                                                        <Condition Property="Role" Value="SubmenuItem" />
+                                                    </MultiTrigger.Conditions>
+                                                    <Setter TargetName="Border" Property="Background" Value="{DynamicResource MahApps.Brushes.SubmenuItem.BackgroundHighlighted}" />
+                                                    <Setter TargetName="CheckMarkPath" Property="Fill" Value="{DynamicResource {x:Static SystemColors.MenuTextBrushKey}}" />
+                                                </MultiTrigger>
+
+                                                <MultiTrigger>
+                                                    <MultiTrigger.Conditions>
+                                                        <Condition Property="IsSubmenuOpen" Value="true" />
+                                                        <Condition Property="Role" Value="TopLevelHeader" />
+                                                    </MultiTrigger.Conditions>
+                                                    <Setter TargetName="Border" Property="Background" Value="{DynamicResource MahApps.Brushes.SubmenuItem.Background}" />
+                                                    <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.MenuSeparator.Border}" />
+                                                    <Setter TargetName="Border" Property="BorderThickness" Value="1 1 1 0" />
+                                                </MultiTrigger>
+
+                                                <Trigger Property="IsSubmenuOpen" Value="true">
+                                                    <Setter TargetName="ArrowPanelPath" Property="Fill" Value="{DynamicResource MahApps.Brushes.BackgroundSelected}" />
+                                                </Trigger>
+                                                <Trigger Property="IsSuspendingPopupAnimation" Value="true">
+                                                    <Setter TargetName="SubMenuPopup" Property="PopupAnimation" Value="None" />
+                                                </Trigger>
+                                                <Trigger Property="Icon" Value="{x:Null}">
+                                                    <Setter TargetName="Icon" Property="Visibility" Value="Collapsed" />
+                                                </Trigger>
+                                                <Trigger Property="IsEnabled" Value="False">
+                                                    <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Menu.ForegroundDisabled}" />
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Menu.Resources>
+                        <Menu.ItemTemplateSelector>
+                            <local:MenuTemplateSelector>
+                                <local:MenuTemplateSelector.MenuTemplate>
+                                    <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                                        <AccessText Text="{Binding Text}" TextAlignment="{Binding Alignment}" HorizontalAlignment="Center"/>
+                                    </HierarchicalDataTemplate>
+                                </local:MenuTemplateSelector.MenuTemplate>
+                                <local:MenuTemplateSelector.SeparatorTemplate>
+                                    <DataTemplate>
+                                        <Separator/>
+                                    </DataTemplate>
+                                </local:MenuTemplateSelector.SeparatorTemplate>
+                            </local:MenuTemplateSelector>
+                        </Menu.ItemTemplateSelector>
+                        <Menu.ItemContainerStyle>
+                            <Style TargetType="MenuItem" BasedOn="{StaticResource ReverseR.MenuItem}">
+                                <Setter Property="Command" Value="{Binding Command}"/>
+                                <Setter Property="InputGestureText" Value="{Binding GestureText}"/>
+                                <Setter Property="Icon" Value="{Binding Icon}"/>
+                                <Setter Property="Width" Value="{Binding Width}"/>
+                                <Setter Property="ToolTip" Value="{Binding Tooltip}"/>
+                            </Style>
+                        </Menu.ItemContainerStyle>
+                        <!--<MenuItem HorizontalAlignment="Center" HorizontalContentAlignment="Left" Width="56" Header="_File">
+                            <MenuItem Header="_Open" Command="{Binding OpenFileCommand}"/>
+                        </MenuItem>-->
+                    </Menu>
+                    <TextBox Name="QuickLaunchBar" VerticalAlignment="Center" VerticalContentAlignment="Center"
+                     Controls:TextBoxHelper.ButtonContent="{iconPacks:Modern Magnify,
+                                                                             Width=12,
+                                                                             Height=12}"
+                     Controls:TextBoxHelper.Watermark="Quick Launch (Ctrl+Q)"
+                     Style="{DynamicResource MahApps.Styles.TextBox.WindowQuickLaunch.VisualStudio}" />
+                </WrapPanel>
+            </DockPanel>
+        </DataTemplate>
+    </Controls:MetroWindow.TitleTemplate>
+    <Controls:MetroWindow.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/VS/Colors.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/VS/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Controls:MetroWindow.Resources>
+    <Controls:MetroWindow.WindowButtonCommands>
+        <Controls:WindowButtonCommands Style="{DynamicResource MahApps.Styles.WindowButtonCommands.Win10}" />
+    </Controls:MetroWindow.WindowButtonCommands>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <xcad:DockingManager Name="PART_LayoutRoot" prism:RegionManager.RegionName="RootDockRegion" ActiveContent="{Binding ActiveContent}">
+            <!--<behaviors:Interaction.Triggers>
+                <behaviors:EventTrigger EventName="ActiveContentChanged">
+                    <behaviors:ChangePropertyAction TargetObject="{Binding}" TargetName="ActiveContent" Value="{Binding ElementName=PART_LayoutRoot,Path=ActiveContent}"/>
+                </behaviors:EventTrigger>
+            </behaviors:Interaction.Triggers>-->
+            <xcad:DockingManager.Theme>
+                <xcad:Vs2013DarkTheme/>
+            </xcad:DockingManager.Theme>
+            <xcad:DockingManager.DocumentHeaderTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Content.DataContext.Title}" ToolTip="{Binding Content.DataContext.FilePath,Mode=OneWay}"/>
+                </DataTemplate>
+            </xcad:DockingManager.DocumentHeaderTemplate>
+            <xcad:DockingManager.DocumentTitleTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Content.DataContext.Title}" ToolTip="{Binding Content.DataContext.FilePath,Mode=OneWay}"/>
+                </DataTemplate>
+            </xcad:DockingManager.DocumentTitleTemplate>
+            <xcad:LayoutRoot>
+                <xcad:LayoutPanel>
+                    <xcad:LayoutDocumentPaneGroup>
+                        <xcad:LayoutDocumentPane DockWidth="300">
+                        </xcad:LayoutDocumentPane>
+                    </xcad:LayoutDocumentPaneGroup>
+                </xcad:LayoutPanel>
+            </xcad:LayoutRoot>
+        </xcad:DockingManager>
+        <StatusBar Padding="0" Grid.Row="2" Background="{DynamicResource MahApps.Brushes.BackgroundSelected}">
+            <StatusBar.Resources>
+                <Style x:Key="ReverseR.StatusButton" TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button.Flat}">
+                    <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.BackgroundSelected}"/>
+                    <Setter Property="Margin" Value="0"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#3395d6"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </StatusBar.Resources>
+            <StatusBar.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <DockPanel LastChildFill="True"/>
+                </ItemsPanelTemplate>
+            </StatusBar.ItemsPanel>
+            <StatusBarItem Padding="0" DockPanel.Dock="Left">
+                <Grid>
+                    <Button x:Name="MainLoadIndicator" Width="26" Height="25" Padding="0" Style="{StaticResource ReverseR.StatusButton}">
+                        <Button.Resources>
+                            <Storyboard x:Key="BackgroundRunningBoard" RepeatBehavior="Forever">
+                                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Left1" Storyboard.TargetProperty="Opacity" Duration="0:0:1.5">
+                                    <DiscreteDoubleKeyFrame Value="0" KeyTime="0:0:0"/>
+                                    <DiscreteDoubleKeyFrame Value="1" KeyTime="0:0:0.01"/>
+                                </DoubleAnimationUsingKeyFrames>
+                                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Right1" Storyboard.TargetProperty="Opacity" Duration="0:0:1.5">
+                                    <DiscreteDoubleKeyFrame Value="0" KeyTime="0:0:0"/>
+                                    <DiscreteDoubleKeyFrame Value="1" KeyTime="0:0:0.25"/>
+                                </DoubleAnimationUsingKeyFrames>
+                                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Left2" Storyboard.TargetProperty="Opacity" Duration="0:0:1.5">
+                                    <DiscreteDoubleKeyFrame Value="0" KeyTime="0:0:0"/>
+                                    <DiscreteDoubleKeyFrame Value="1" KeyTime="0:0:0.5"/>
+                                </DoubleAnimationUsingKeyFrames>
+                                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Right2" Storyboard.TargetProperty="Opacity" Duration="0:0:1.5">
+                                    <DiscreteDoubleKeyFrame Value="0" KeyTime="0:0:0"/>
+                                    <DiscreteDoubleKeyFrame Value="1" KeyTime="0:0:0.75"/>
+                                </DoubleAnimationUsingKeyFrames>
+                                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Left3" Storyboard.TargetProperty="Opacity" Duration="0:0:1.5">
+                                    <DiscreteDoubleKeyFrame Value="0" KeyTime="0:0:0"/>
+                                    <DiscreteDoubleKeyFrame Value="1" KeyTime="0:0:1"/>
+                                </DoubleAnimationUsingKeyFrames>
+                                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Right3" Storyboard.TargetProperty="Opacity" Duration="0:0:1.5">
+                                    <DiscreteDoubleKeyFrame Value="0" KeyTime="0:0:0"/>
+                                    <DiscreteDoubleKeyFrame Value="1" KeyTime="0:0:1.25"/>
+                                </DoubleAnimationUsingKeyFrames>
+                            </Storyboard>
+                        </Button.Resources>
+                        <behaviors:Interaction.Triggers>
+                            <behaviors:DataTrigger Binding="{Binding IsInIdle,Mode=OneWay}" Value="False">
+                                <behaviors:ControlStoryboardAction Storyboard="{StaticResource BackgroundRunningBoard}" ControlStoryboardOption="Play"/>
+                            </behaviors:DataTrigger>
+                            <behaviors:DataTrigger Binding="{Binding IsInIdle,Mode=OneWay}" Value="True">
+                                <behaviors:ControlStoryboardAction Storyboard="{StaticResource BackgroundRunningBoard}" ControlStoryboardOption="Stop"/>
+                            </behaviors:DataTrigger>
+                        </behaviors:Interaction.Triggers>
+                        <Grid>
+                            <Polygon Stroke="White" Name="PART_PolygonFrame" Points="1 11,4 0,18 0,15 11"/>
+                            <Line Opacity="0" Stroke="White" Name="Left1" X1="5" Y1="2.5" X2="13" Y2="2.5"/>
+                            <Line Opacity="0" Stroke="White" Name="Left2" X1="4" Y1="5.5" X2="12" Y2="5.5"/>
+                            <Line Opacity="0" Stroke="White" Name="Left3" X1="3" Y1="8.5" X2="11" Y2="8.5"/>
+                            <Line Opacity="0" Stroke="White" Name="Right1" X1="15.1" Y1="1.5" X2="14.25" Y2="4.5"/>
+                            <Line Opacity="0" Stroke="White" Name="Right2" X1="14.25" Y1="4.5" X2="13.4" Y2="7.5"/>
+                            <Line Opacity="0" Stroke="White" Name="Right3" X1="13.4" Y1="7.5" X2="12.65" Y2="10"/>
+                        </Grid>
+                    </Button>
+                    <ControlzEx:PopupEx AllowsTransparency="True" Name="IndicatorPopup" StaysOpen="False" AllowTopMost="False" PlacementTarget="{Binding ElementName=MainLoadIndicator}" Placement="Top">
+                        <behaviors:Interaction.Triggers>
+                            <behaviors:EventTrigger SourceName="MainLoadIndicator" EventName="Click">
+                                <behaviors:Interaction.Behaviors>
+                                    <behaviors:ConditionBehavior Condition="{Binding ElementName=IndicatorPopup,Path=IsOpen}"/>
+                                </behaviors:Interaction.Behaviors>
+                                <behaviors:ChangePropertyAction TargetName="IndicatorPopup" PropertyName="IsOpen" Value="True"/>
+                            </behaviors:EventTrigger>
+                        </behaviors:Interaction.Triggers>
+                        <Grid Background="Transparent">
+                            <Border Panel.ZIndex="-1" Margin="0 0 0 6" BorderThickness="1" Background="Transparent" BorderBrush="#3f3f46">
+                                <ContentPresenter>
+                                    <ContentPresenter.Style>
+                                        <Style TargetType="ContentPresenter">
+                                            <Setter Property="Content">
+                                                <Setter.Value>
+                                                    <ListBox ItemsSource="{Binding BackgroundTasks}">
+                                                        <ListBox.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <StackPanel Orientation="Vertical" Margin="5">
+                                                                    <TextBlock Text="{Binding TaskName}" Foreground="{DynamicResource MahApps.Brushes.BackgroundSelected}"/>
+                                                                    <ProgressBar IsIndeterminate="True">
+                                                                        <ProgressBar.Style>
+                                                                            <!--MaterialLinearProgressBar-->
+                                                                            <Style TargetType="{x:Type ProgressBar}">
+                                                                                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.BackgroundSelected}"/>
+                                                                                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Background}"/>
+                                                                                <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Border.Normal}"/>
+                                                                                <Setter Property="BorderThickness" Value="1"/>
+                                                                                <Setter Property="Height" Value="4"/>
+                                                                                <Setter Property="Template">
+                                                                                    <Setter.Value>
+                                                                                        <ControlTemplate TargetType="{x:Type ProgressBar}">
+                                                                                            <ControlTemplate.Resources>
+                                                                                                <Storyboard x:Key="OnLoaded">
+                                                                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="TemplateRoot">
+                                                                                                        <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                                                                        <EasingDoubleKeyFrame KeyTime="0:0:1" Value="1"/>
+                                                                                                    </DoubleAnimationUsingKeyFrames>
+                                                                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" Storyboard.TargetName="TemplateRoot">
+                                                                                                        <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                                                                        <EasingDoubleKeyFrame KeyTime="0:0:1" Value="1"/>
+                                                                                                    </DoubleAnimationUsingKeyFrames>
+                                                                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)" Storyboard.TargetName="TemplateRoot">
+                                                                                                        <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                                                                        <EasingDoubleKeyFrame KeyTime="0:0:1" Value="1"/>
+                                                                                                    </DoubleAnimationUsingKeyFrames>
+                                                                                                </Storyboard>
+                                                                                                <Storyboard x:Key="OnLoadedNoAnimation">
+                                                                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="TemplateRoot" To="1" Duration="0" />
+                                                                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" Storyboard.TargetName="TemplateRoot" To="1" Duration="0"/>
+                                                                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)" Storyboard.TargetName="TemplateRoot" To="1" Duration="0"/>
+                                                                                                </Storyboard>
+                                                                                            </ControlTemplate.Resources>
+                                                                                            <Grid x:Name="TemplateRoot" RenderTransformOrigin="0,0.5" Opacity="0">
+                                                                                                <Grid.RenderTransform>
+                                                                                                    <TransformGroup>
+                                                                                                        <ScaleTransform ScaleX="0" ScaleY="0" />
+                                                                                                        <SkewTransform/>
+                                                                                                        <RotateTransform/>
+                                                                                                        <TranslateTransform/>
+                                                                                                    </TransformGroup>
+                                                                                                </Grid.RenderTransform>
+                                                                                                <VisualStateManager.VisualStateGroups>
+                                                                                                    <VisualStateGroup x:Name="CommonStates">
+                                                                                                        <VisualState x:Name="Determinate"/>
+                                                                                                        <VisualState x:Name="Indeterminate">
+                                                                                                            <Storyboard RepeatBehavior="Forever">
+                                                                                                                <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" Storyboard.TargetName="Animation">
+                                                                                                                    <EasingDoubleKeyFrame KeyTime="0" Value="0.25"/>
+                                                                                                                    <EasingDoubleKeyFrame KeyTime="0:0:1" Value="0.25"/>
+                                                                                                                    <EasingDoubleKeyFrame KeyTime="0:0:2" Value="0.25"/>
+                                                                                                                </DoubleAnimationUsingKeyFrames>
+                                                                                                                <PointAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransformOrigin)" Storyboard.TargetName="Animation">
+                                                                                                                    <EasingPointKeyFrame KeyTime="0" Value="-0.5,0.5"/>
+                                                                                                                    <EasingPointKeyFrame KeyTime="0:0:1" Value="0.5,0.5"/>
+                                                                                                                    <EasingPointKeyFrame KeyTime="0:0:2" Value="1.5,0.5"/>
+                                                                                                                </PointAnimationUsingKeyFrames>
+                                                                                                            </Storyboard>
+                                                                                                        </VisualState>
+                                                                                                    </VisualStateGroup>
+                                                                                                </VisualStateManager.VisualStateGroups>
+                                                                                                <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}"/>
+                                                                                                <Rectangle x:Name="PART_Track"/>
+                                                                                                <Grid x:Name="PART_Indicator" ClipToBounds="true" HorizontalAlignment="Left">
+                                                                                                    <Rectangle x:Name="Indicator" Fill="{TemplateBinding Foreground}"/>
+                                                                                                    <Rectangle x:Name="Animation" Fill="{TemplateBinding Foreground}" RenderTransformOrigin="0.5,0.5">
+                                                                                                        <Rectangle.RenderTransform>
+                                                                                                            <TransformGroup>
+                                                                                                                <ScaleTransform/>
+                                                                                                                <SkewTransform/>
+                                                                                                                <RotateTransform/>
+                                                                                                                <TranslateTransform/>
+                                                                                                            </TransformGroup>
+                                                                                                        </Rectangle.RenderTransform>
+                                                                                                    </Rectangle>
+                                                                                                </Grid>
+                                                                                            </Grid>
+                                                                                            <ControlTemplate.Triggers>
+                                                                                                <Trigger Property="Orientation" Value="Vertical">
+                                                                                                    <Setter Property="LayoutTransform">
+                                                                                                        <Setter.Value>
+                                                                                                            <RotateTransform Angle="-90"/>
+                                                                                                        </Setter.Value>
+                                                                                                    </Setter>
+                                                                                                </Trigger>
+                                                                                                <Trigger Property="IsIndeterminate" Value="true">
+                                                                                                    <Setter Property="Visibility" TargetName="Indicator" Value="Collapsed"/>
+                                                                                                </Trigger>
+                                                                                            </ControlTemplate.Triggers>
+                                                                                        </ControlTemplate>
+                                                                                    </Setter.Value>
+                                                                                </Setter>
+                                                                                <Style.Triggers>
+                                                                                    <DataTrigger Binding="{Binding IsCompleted}" Value="True">
+                                                                                        <Setter Property="Template">
+                                                                                            <Setter.Value>
+                                                                                                <ControlTemplate TargetType="{x:Type ProgressBar}">
+                                                                                                    <StackPanel Orientation="Horizontal">
+                                                                                                        <iconPacks:PackIconMaterial Kind="CheckCircle" />
+                                                                                                        <TextBlock Text="Task successfully completed" Margin="2 0 0 0"/>
+                                                                                                    </StackPanel>
+                                                                                                </ControlTemplate>
+                                                                                            </Setter.Value>
+                                                                                        </Setter>
+                                                                                    </DataTrigger>
+                                                                                </Style.Triggers>
+                                                                            </Style>
+                                                                        </ProgressBar.Style>
+                                                                    </ProgressBar>
+                                                                    <TextBlock Text="{Binding TaskDescription}">
+                                                                        <TextBlock.Style>
+                                                                            <Style TargetType="TextBlock">
+                                                                                <Style.Triggers>
+                                                                                    <DataTrigger Binding="{Binding IsCompleted}" Value="True">
+                                                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                                                    </DataTrigger>
+                                                                                </Style.Triggers>
+                                                                            </Style>
+                                                                        </TextBlock.Style>
+                                                                    </TextBlock>
+                                                                </StackPanel>
+                                                            </DataTemplate>
+                                                        </ListBox.ItemTemplate>
+                                                    </ListBox>
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsInIdle}" Value="True">
+                                                    <Setter Property="Content">
+                                                        <Setter.Value>
+                                                            <TextBlock Margin="10" Text="No background task running"/>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ContentPresenter.Style>
+                                </ContentPresenter>
+                            </Border>
+                            <Canvas Panel.ZIndex="0" Height="6" Width="12" HorizontalAlignment="Left" VerticalAlignment="Bottom" Background="Transparent">
+                                <Polyline Fill="#252526" StrokeThickness="1" Stroke="#3f3f46" Points="0 0,6 6,12 0"/>
+                                <Polyline StrokeThickness="1" Stroke="#252526" Points="1 -1,12 -1"/>
+                                <Polyline StrokeThickness="1" Stroke="#252526" Points="1 0,11 0"/>
+                            </Canvas>
+                        </Grid>
+                    </ControlzEx:PopupEx>
+                </Grid>
+            </StatusBarItem>
+            <StatusBarItem Padding="0" DockPanel.Dock="Right">
+                <Button Height="25" Width="30" Style="{StaticResource ReverseR.StatusButton}" Padding="5 0 5 0">
+                    <Controls:Badged Badge="{Binding NotificationCount}" BadgeBackground="Red" BadgeMargin="2" BadgePlacementMode="BottomRight">
+                        <Controls:Badged.Style>
+                            <Style TargetType="Controls:Badged">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type Controls:Badged}">
+                                            <Grid>
+                                                <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                                                    <ContentPresenter Margin="{TemplateBinding Padding}"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              Content="{TemplateBinding Content}"
+                                              ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                                              ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}"
+                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                                                </Border>
+                                                <Border x:Name="PART_BadgeContainer"
+                                MinWidth="18"
+                                MinHeight="2"
+                                Padding="2"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top"
+                                Background="{TemplateBinding BadgeBackground}"
+                                CornerRadius="9"
+                                RenderTransformOrigin=".25,.25"
+                                TextElement.FontSize="8"
+                                TextElement.FontWeight="DemiBold"
+                                Visibility="{Binding NotificationCount, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                    <Border.RenderTransform>
+                                                        <ScaleTransform ScaleX="1" ScaleY="1" />
+                                                    </Border.RenderTransform>
+                                                    <ContentControl Margin="1 0 1 0"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Content="{TemplateBinding Badge}"
+                                            Focusable="False"
+                                            Foreground="{TemplateBinding BadgeForeground}"
+                                            IsTabStop="False" />
+                                                </Border>
+                                            </Grid>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="BadgePlacementMode" Value="TopLeft">
+                                                    <Setter TargetName="PART_BadgeContainer" Property="HorizontalAlignment" Value="Left" />
+                                                    <Setter TargetName="PART_BadgeContainer" Property="VerticalAlignment" Value="Top" />
+                                                </Trigger>
+                                                <Trigger Property="BadgePlacementMode" Value="Top">
+                                                    <Setter TargetName="PART_BadgeContainer" Property="HorizontalAlignment" Value="Center" />
+                                                    <Setter TargetName="PART_BadgeContainer" Property="VerticalAlignment" Value="Top" />
+                                                </Trigger>
+                                                <Trigger Property="BadgePlacementMode" Value="TopRight">
+                                                    <Setter TargetName="PART_BadgeContainer" Property="HorizontalAlignment" Value="Right" />
+                                                    <Setter TargetName="PART_BadgeContainer" Property="VerticalAlignment" Value="Top" />
+                                                </Trigger>
+                                                <Trigger Property="BadgePlacementMode" Value="Right">
+                                                    <Setter TargetName="PART_BadgeContainer" Property="HorizontalAlignment" Value="Right" />
+                                                    <Setter TargetName="PART_BadgeContainer" Property="VerticalAlignment" Value="Center" />
+                                                </Trigger>
+                                                <Trigger Property="BadgePlacementMode" Value="BottomRight">
+                                                    <Setter TargetName="PART_BadgeContainer" Property="HorizontalAlignment" Value="Right" />
+                                                    <Setter TargetName="PART_BadgeContainer" Property="VerticalAlignment" Value="Bottom" />
+                                                </Trigger>
+                                                <Trigger Property="BadgePlacementMode" Value="Bottom">
+                                                    <Setter TargetName="PART_BadgeContainer" Property="HorizontalAlignment" Value="Center" />
+                                                    <Setter TargetName="PART_BadgeContainer" Property="VerticalAlignment" Value="Bottom" />
+                                                </Trigger>
+                                                <Trigger Property="BadgePlacementMode" Value="BottomLeft">
+                                                    <Setter TargetName="PART_BadgeContainer" Property="HorizontalAlignment" Value="Left" />
+                                                    <Setter TargetName="PART_BadgeContainer" Property="VerticalAlignment" Value="Bottom" />
+                                                </Trigger>
+                                                <Trigger Property="BadgePlacementMode" Value="Left">
+                                                    <Setter TargetName="PART_BadgeContainer" Property="HorizontalAlignment" Value="Left" />
+                                                    <Setter TargetName="PART_BadgeContainer" Property="VerticalAlignment" Value="Center" />
+                                                </Trigger>
+                                                <Trigger Property="IsEnabled" Value="False">
+                                                    <Setter TargetName="PART_BadgeContainer" Property="Background" Value="{DynamicResource ResourceKey=MahApps.Brushes.Badged.DisabledBackground}" />
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Controls:Badged.Style>
+                        <iconPacks:PackIconOcticons Foreground="White" Kind="Bell" />
+                    </Controls:Badged>
+                </Button>
+            </StatusBarItem>
+            <StatusBarItem Margin="5 0 0 0" Padding="0" DockPanel.Dock="Left">
+                <TextBlock Text="{Binding StatusText}"/>
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</Controls:MetroWindow>

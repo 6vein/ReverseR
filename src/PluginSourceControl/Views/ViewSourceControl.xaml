@@ -1,0 +1,83 @@
+﻿<UserControl x:Class="PluginSourceControl.Views.ViewSourceControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:PluginSourceControl.ViewModels"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300"
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True" >
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Dark.Cobalt.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/VS/Colors.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/VS/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <TreeView ItemsSource="{Binding SourceTree}" Background="#252526">
+            <behaviors:Interaction.Triggers>
+                <behaviors:EventTrigger EventName="MouseDoubleClick">
+                    <behaviors:InvokeCommandAction Command="{Binding ItemDoubleClickCommand}" PassEventArgsToCommand="True"/>
+                </behaviors:EventTrigger>
+            </behaviors:Interaction.Triggers>
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="TreeViewItem" BasedOn="{StaticResource MahApps.Styles.TreeViewItem}">
+                    <Setter Property="IsExpanded" Value="{Binding IsExpanded,Mode=TwoWay}"/>
+                    <Setter Property="IsSelected" Value="{Binding IsSelected,Mode=TwoWay}"/>
+                    <Setter Property="Background" Value="#252526"/>
+                    <Setter Property="Controls:ItemHelper.ActiveSelectionBackgroundBrush" Value="{DynamicResource MahApps.Brushes.BackgroundSelected}"/>
+                    <Setter Property="Controls:ItemHelper.SelectedBackgroundBrush" Value="{DynamicResource MahApps.Brushes.Background.Normal}"/>
+                    <Setter Property="Controls:ItemHelper.HoverSelectedBackgroundBrush" Value="{DynamicResource MahApps.Brushes.BackgroundSelected}"/>
+                    <Setter Property="Controls:ItemHelper.HoverBackgroundBrush" Value="#252526"/>
+                </Style>
+            </TreeView.ItemContainerStyle>
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate DataType="{x:Type local:SourceTreeNode}" ItemsSource="{Binding Children}">
+                    <StackPanel Orientation="Horizontal" Height="16">
+                        <ContentControl Width="16" Height="16">
+                            <behaviors:Interaction.Triggers>
+                                <behaviors:PropertyChangedTrigger Binding="{Binding IsExpanded}">
+                                    <behaviors:CallMethodAction TargetObject="{Binding}" MethodName="UpdateChildren"/>
+                                </behaviors:PropertyChangedTrigger>
+                            </behaviors:Interaction.Triggers>
+                            <ContentControl.Style>
+                                <Style TargetType="ContentControl">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsPending}" Value="True">
+                                            <Setter Property="Content">
+                                                <Setter.Value>
+                                                    <Controls:ProgressRing Width="16" Height="16" IsActive="True"/>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ContentControl.Style>
+                            <Image Width="16" Height="16">
+                                <Image.Style>
+                                    <Style TargetType="Image">
+                                        <Setter Property="Source" Value="{Binding Icon}"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsExpanded}" Value="True">
+                                                <Setter Property="Source" Value="{Binding ExpandedIcon}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                        </ContentControl>
+                        <TextBlock Text="{Binding Text}"/>
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+    </Grid>
+</UserControl>
