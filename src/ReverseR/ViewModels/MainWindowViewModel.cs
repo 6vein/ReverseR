@@ -116,8 +116,8 @@ namespace ReverseR.ViewModels
                 }
             }
         });
-
-        public ObservableCollection<RootMenuItemWrapper> RootMenus { get; set; }
+        ObservableCollection<RootMenuItemWrapper> _rootMenus;
+        public ObservableCollection<RootMenuItemWrapper> RootMenus { get => _rootMenus; set => SetProperty(ref _rootMenus, value); }
         public ObservableCollection<IAbstractBackgroundTask> BackgroundTasks { get; set; } = new ObservableCollection<IAbstractBackgroundTask>();
         public bool IsInIdle { get => BackgroundTasks.Count == 0; }
 
@@ -153,12 +153,12 @@ namespace ReverseR.ViewModels
         internal void OnMenuUpdated(Tuple<IEnumerable<IMenuViewModel>,Guid> tuple)
         {
             RestoreMenu();
-            foreach(var item in tuple.Item1)
+            foreach(IMenuViewModel item in tuple.Item1)
             {
                 RootMenus.Insert(1, new RootMenuItemWrapper { Alignment = System.Windows.TextAlignment.Center, Width = 56, Model = item });
-                foreach(var child in item.Children)
+                foreach(IMenuViewModel child in item.Children)
                 {
-                    if (child.Command != null && !string.IsNullOrEmpty(child.GestureText))
+                    if (child.Command != null || !string.IsNullOrEmpty(child.GestureText))
                     {
                         InputBindings.Add(new InputBinding(child.Command, (new KeyGestureConverter()).ConvertFrom(child.GestureText) as InputGesture));
                     }

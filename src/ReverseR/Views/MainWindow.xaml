@@ -12,6 +12,7 @@
                       prism:ViewModelLocator.AutoWireViewModel="True"
         Title="{Binding Title}" Height="450" Width="800" Language="En-Us" 
         NonActiveWindowTitleBrush="{Binding RelativeSource={RelativeSource Mode=Self},Path=WindowTitleBrush}"
+        Style="{DynamicResource MahApps.Styles.MetroWindow.VisualStudio}"
         WindowChrome.IsHitTestVisibleInChrome="True"
         Background="{DynamicResource MahApps.Brushes.Background}"
         local:InputBindingsBehavior.InputBindings="{Binding InputBindings}"
@@ -273,7 +274,7 @@
                                                                              Width=12,
                                                                              Height=12}"
                      Controls:TextBoxHelper.Watermark="Quick Launch (Ctrl+Q)"
-                     Style="{DynamicResource MahApps.Styles.TextBox.WindowQuickLaunch.VisualStudio}" />
+                     Style="{DynamicResource MahApps.Styles.TextBox.Window.QuickLaunch.VisualStudio}" />
                 </WrapPanel>
             </DockPanel>
         </DataTemplate>
@@ -281,8 +282,8 @@
     <Controls:MetroWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/VS/Controls.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/VS/Colors.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/VS/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Controls:MetroWindow.Resources>
@@ -636,7 +637,7 @@
                                                     <Setter TargetName="PART_BadgeContainer" Property="VerticalAlignment" Value="Center" />
                                                 </Trigger>
                                                 <Trigger Property="IsEnabled" Value="False">
-                                                    <Setter TargetName="PART_BadgeContainer" Property="Background" Value="{DynamicResource ResourceKey=MahApps.Brushes.Badged.DisabledBackground}" />
+                                                    <Setter TargetName="PART_BadgeContainer" Property="Background" Value="{DynamicResource ResourceKey=MahApps.Brushes.Badged.Background.Disabled}" />
                                                 </Trigger>
                                             </ControlTemplate.Triggers>
                                         </ControlTemplate>

@@ -59,7 +59,7 @@ namespace ReverseR
                     {
                         token = Container.Resolve<IEventAggregator>().GetEvent<MenuUpdatedEvent>().
                         Subscribe((regionTarget.DataContext as ViewModels.MainWindowViewModel).OnMenuUpdated, ThreadOption.UIThread, false, r => r.Item2 == viewModel.Guid);
-                        Container.Resolve<IEventAggregator>().GetEvent<ViewActivatedEvent>().Publish(viewModel.Guid);
+                        (regionTarget.DataContext as ViewModels.MainWindowViewModel).ActiveContent = ActiveContent;
                     }
                 }
                 else
