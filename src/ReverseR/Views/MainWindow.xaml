@@ -18,6 +18,21 @@
         local:InputBindingsBehavior.InputBindings="{Binding InputBindings}"
         SaveWindowPosition="True" WindowState="Maximized"
         Name="ReverseR_Shell">
+    <Controls:MetroWindow.CommandBindings>
+        <CommandBinding Command="{x:Static ApplicationCommands.Copy}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
+        <CommandBinding Command="{x:Static ApplicationCommands.Cut}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
+        <CommandBinding Command="{x:Static ApplicationCommands.Paste}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
+        <CommandBinding Command="{x:Static ApplicationCommands.Undo}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
+        <CommandBinding Command="{x:Static ApplicationCommands.Redo}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
+        <CommandBinding Command="{x:Static ApplicationCommands.Delete}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
+        <CommandBinding Command="{x:Static ApplicationCommands.SelectAll}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
+        <CommandBinding Command="{x:Static ApplicationCommands.Replace}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
+        <CommandBinding Command="{x:Static ApplicationCommands.Find}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
+        
+        <CommandBinding Command="{x:Static ApplicationCommands.Open}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
+        <CommandBinding Command="{x:Static ApplicationCommands.Save}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
+        <CommandBinding Command="{x:Static ApplicationCommands.SaveAs}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
+    </Controls:MetroWindow.CommandBindings>
     <Controls:MetroWindow.TitleTemplate>
         <DataTemplate>
             <DockPanel Name="TitlebarContainer" VerticalAlignment="Center" Height="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Controls:MetroWindow},Path=TitleBarHeight}" MinHeight="30">
@@ -32,7 +47,7 @@
                     </behaviors:Interaction.Triggers>
                     <Menu Name="MainMenu" ItemsSource="{Binding RootMenus}" DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window},Path=DataContext}" VerticalContentAlignment="Center" VerticalAlignment="Center">
                         <Menu.CommandBindings>
-                            <CommandBinding Command="Copy" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
+                            <!---->
                         </Menu.CommandBindings>
                         <Menu.Resources>
                             <Style x:Key="ReverseR.MenuItem" TargetType="{x:Type MenuItem}">
@@ -246,7 +261,7 @@
                             <local:MenuTemplateSelector>
                                 <local:MenuTemplateSelector.MenuTemplate>
                                     <HierarchicalDataTemplate ItemsSource="{Binding Children}">
-                                        <AccessText Text="{Binding Text}" TextAlignment="{Binding Alignment}" HorizontalAlignment="Center"/>
+                                        <AccessText Text="{Binding Text}" TextAlignment="{Binding Alignment,FallbackValue=Left}" HorizontalAlignment="Center"/>
                                     </HierarchicalDataTemplate>
                                 </local:MenuTemplateSelector.MenuTemplate>
                                 <local:MenuTemplateSelector.SeparatorTemplate>
@@ -263,6 +278,17 @@
                                 <Setter Property="Icon" Value="{Binding Icon}"/>
                                 <Setter Property="Width" Value="{Binding Width}"/>
                                 <Setter Property="ToolTip" Value="{Binding Tooltip}"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsSeparator}" Value="True">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate>
+                                                    <Separator/>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
                             </Style>
                         </Menu.ItemContainerStyle>
                         <!--<MenuItem HorizontalAlignment="Center" HorizontalContentAlignment="Left" Width="56" Header="_File">

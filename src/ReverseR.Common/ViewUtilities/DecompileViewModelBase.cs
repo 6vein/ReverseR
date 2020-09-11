@@ -201,16 +201,7 @@ namespace ReverseR.Common.ViewUtilities
         public virtual void PublishMenuUpdate()
         {
             ObservableCollection<IMenuViewModel> menus = new ObservableCollection<IMenuViewModel>();
-            IMenuViewModel Edit = Container.Resolve<IMenuViewModel>();
-            Edit.Text = "_Edit";
-            Edit.Children = new ObservableCollection<IMenuViewModel>();
-            Edit.Children.Add(_InternalCreateMenu(ApplicationCommands.Undo));
-            Edit.Children.Add(_InternalCreateMenu(ApplicationCommands.Redo));
-            Edit.Children.Add(_InternalCreateMenuSeparator());
-            Edit.Children.Add(_InternalCreateMenu(ApplicationCommands.Cut));
-            Edit.Children.Add(_InternalCreateMenu(ApplicationCommands.Copy));
-
-            menus.Add(Edit);
+            
 
             menus.AddRange(_InternalMenuUpdate());
 
@@ -224,24 +215,9 @@ namespace ReverseR.Common.ViewUtilities
             }
 
             Container.Resolve<IEventAggregator>().GetEvent<MenuUpdatedEvent>().
-                Publish(new Tuple<IEnumerable<IMenuViewModel>, Guid>(menus, Guid));
+                Publish((menus, Guid));
         }
-        protected IMenuViewModel _InternalCreateMenu(ICommand command, string text = null, ImageSource icon = null, string inputgesture = "", string tooltip = null)
-        {
-            IMenuViewModel vm = Container.Resolve<IMenuViewModel>();
-            vm.Text = text;
-            vm.Command = command;
-            vm.Icon = icon;
-            vm.GestureText = inputgesture;
-            vm.Tooltip = tooltip;
-            return vm;
-        }
-        protected IMenuViewModel _InternalCreateMenuSeparator()
-        {
-            IMenuViewModel vm = Container.Resolve<IMenuViewModel>();
-            vm.IsSeparator = true;
-            return vm;
-        }
+        
 
         protected abstract ObservableCollection<IMenuViewModel> _InternalMenuUpdate();
 

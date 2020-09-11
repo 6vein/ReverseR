@@ -8,6 +8,6 @@ using System.Threading.Tasks;
 
 namespace ReverseR.Internal.Events
 {
-    public class TaskStartedEvent : PubSubEvent<IAbstractBackgroundTask> { }
-    public class TaskCompletedEvent : PubSubEvent<IAbstractBackgroundTask> { }
+    public class TaskStartedEvent : PubSubEvent<IBackgroundTask> { }
+    public class TaskCompletedEvent : PubSubEvent<IBackgroundTask> { }
 }

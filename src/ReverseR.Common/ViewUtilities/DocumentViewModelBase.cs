@@ -101,7 +101,8 @@ namespace ReverseR.Common.ViewUtilities
                     }
                 }
             }*/
-            BackgroundTask.CancelWithSync(Thread.CurrentThread);
+            DecompTaskTokenSource?.Cancel();
+            BackgroundTask.WaitUntilComplete(Thread.CurrentThread);
             BackgroundTask = null;
         }
         public bool Closing()
@@ -110,8 +111,7 @@ namespace ReverseR.Common.ViewUtilities
         }
         #endregion
         #region Threading
-        /*public Task DecompileTask { get; set; }
-        public CancellationTokenSource TokenSource { get; set; }*/
+        public CancellationTokenSource DecompTaskTokenSource { get; set; }
         public IBackgroundTask BackgroundTask { get; set; }
         #endregion
         public DocumentViewModelBase()

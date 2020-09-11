@@ -35,8 +35,8 @@ namespace ReverseR
             containerRegistry.RegisterDialog<ErrorDialog>();
             containerRegistry.RegisterDialogWindow<MetroDialogWindowHost>();
             containerRegistry.Register<IMenuViewModel, ViewModels.DefaultMenuItem>();
-            containerRegistry.Register<IDecompileResult, DecompUtilities.Internal.DefaultDecompResult>();
-            containerRegistry.RegisterSingleton<IBackgroundTaskBuilder, Internal.Services.DefaultBackgroundTaskBuilder>();
+            containerRegistry.Register<IDecompileResult, Internal.DecompUtilities.DefaultDecompResult>();
+            containerRegistry.Register<IBackgroundTaskBuilder, Internal.Services.DefaultBackgroundTaskBuilder>();
         }
 
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)

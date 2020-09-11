@@ -83,65 +83,68 @@ namespace ModuleFernflower.ViewModels
                   }
               });
             viewModel.DecompileTask.Start();*/
-            viewModel.AttachDecompileTask(Container.Resolve<IBackgroundTaskBuilder>().Create(obj =>
-            {
-                var token = obj as CancellationToken?;
-                if (MapSourceToMd5.ContainsKey(path.Path))
+            viewModel.DecompTaskTokenSource = new CancellationTokenSource();
+            viewModel.AttachDecompileTask(Container.Resolve<IBackgroundTaskBuilder>()
+                .WithTask(obj =>
                 {
-                    if (APIHelper.GetMd5Of(path.Path) == MapSourceToMd5[path.Path])
+                    var token = obj as CancellationToken?;
+                    if (MapSourceToMd5.ContainsKey(path.Path))
                     {
-                        //TODO  
-                    }
-                }
-                var basedir = Path.GetDirectoryName(path.Path);
-                var tempPath = Path.GetTempFileName();
-                File.Delete(tempPath);
-                Directory.CreateDirectory(tempPath);
-                File.Copy(path.Path, Path.Combine(tempPath, Path.GetFileName(path.Path)));
-                if (path.InnerClassPaths != null)
-                {
-                    foreach (var p in path.InnerClassPaths)
-                    {
-                        File.Copy(p, Path.Combine(tempPath, Path.GetFileName(p)));
-                    }
-                }
-                IDecompileResult result = null;
-                try
-                {
-                    result = Decompiler.Decompile(tempPath, r => MessageWhole = r, token, BaseDirectory + "\\raw.jar");
-                }
-                catch (Exception e)
-                {
-                    if (e is OperationCanceledException)
-                    {
-                        Documents.Remove(viewModel);
-                    }
-                    else
-                    {
-                        string message = null;
-                        if (e is Win32Exception win32Exception)
+                        if (APIHelper.GetMd5Of(path.Path) == MapSourceToMd5[path.Path])
                         {
-                            message = $"Unexpected exception:\n{win32Exception.Message}\nHRESULT is {System.Runtime.InteropServices.Marshal.GetHRForLastWin32Error().ToString("x")}";
+                            //TODO  
                         }
-                        else message = $"Unexpected exception:\n{e.Message}\n";
-                        Container.Resolve<IDialogService>().ReportError(message, r => { }, e.StackTrace);
                     }
-                }
-                if (token.HasValue)
-                {
-                    token.Value.ThrowIfCancellationRequested();
-                }
+                    var basedir = Path.GetDirectoryName(path.Path);
+                    var tempPath = Path.GetTempFileName();
+                    File.Delete(tempPath);
+                    Directory.CreateDirectory(tempPath);
+                    File.Copy(path.Path, Path.Combine(tempPath, Path.GetFileName(path.Path)));
+                    if (path.InnerClassPaths != null)
+                    {
+                        foreach (var p in path.InnerClassPaths)
+                        {
+                            File.Copy(p, Path.Combine(tempPath, Path.GetFileName(p)));
+                        }
+                    }
+                    IDecompileResult result = null;
+                    try
+                    {
+                        result = Decompiler.Decompile(tempPath, r => MessageWhole = r, token, BaseDirectory + "\\raw.jar");
+                    }
+                    catch (Exception e)
+                    {
+                        if (e is OperationCanceledException)
+                        {
+                            Documents.Remove(viewModel);
+                        }
+                        else
+                        {
+                            string message = null;
+                            if (e is Win32Exception win32Exception)
+                            {
+                                message = $"Unexpected exception:\n{win32Exception.Message}\nHRESULT is {System.Runtime.InteropServices.Marshal.GetHRForLastWin32Error().ToString("x")}";
+                            }
+                            else message = $"Unexpected exception:\n{e.Message}\n";
+                            Container.Resolve<IDialogService>().ReportError(message, r => { }, e.StackTrace);
+                        }
+                    }
+                    if (token.HasValue)
+                    {
+                        token.Value.ThrowIfCancellationRequested();
+                    }
 
-                if (result.ResultCode == DecompileResultEnum.Success)
-                {
-                    var files = Directory.GetFiles(result.OutputDir);
+                    if (result.ResultCode == DecompileResultEnum.Success)
+                    {
+                        var files = Directory.GetFiles(result.OutputDir);
 #if DEBUG
-                    Debug.Assert(files.Length == 1);
+                        Debug.Assert(files.Length == 1);
 #endif
-                    viewModel.Load(files[0]);
-                }
-                Directory.Delete(tempPath, true);
-            }));
+                        viewModel.Load(files[0]);
+                    }
+                    Directory.Delete(tempPath, true);
+                })
+                .Build());
             viewModel.BackgroundTask.Start();
             return viewModel;
         }

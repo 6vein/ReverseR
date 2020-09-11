@@ -21,6 +21,12 @@ namespace ReverseR.Views
 
         private void CommandBinding_CanExecute(object sender, System.Windows.Input.CanExecuteRoutedEventArgs e)
         {
+            //stop it from passing on
+            e.Handled = true;
+            if ((DataContext as ViewModels.MainWindowViewModel).HandleMenuCanExecuteEvent(sender,e))
+            {
+                return;
+            }
             if(((DataContext as ViewModels.MainWindowViewModel).ActiveContent 
                 as FrameworkElement).DataContext is IDecompileViewModel viewModel)
             {
@@ -30,6 +36,12 @@ namespace ReverseR.Views
 
         private void CommandBinding_Executed(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
         {
+            //stop it from passing on
+            e.Handled = true;
+            if ((DataContext as ViewModels.MainWindowViewModel).HandleMenuExecutedEvent(sender, e))
+            {
+                return;
+            }
             if (((DataContext as ViewModels.MainWindowViewModel).ActiveContent
                 as FrameworkElement).DataContext is IDecompileViewModel viewModel)
             {

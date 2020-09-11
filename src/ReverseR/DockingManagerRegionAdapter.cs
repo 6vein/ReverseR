@@ -58,7 +58,7 @@ namespace ReverseR
                     if (vm is IDecompileViewModel viewModel)
                     {
                         token = Container.Resolve<IEventAggregator>().GetEvent<MenuUpdatedEvent>().
-                        Subscribe((regionTarget.DataContext as ViewModels.MainWindowViewModel).OnMenuUpdated, ThreadOption.UIThread, false, r => r.Item2 == viewModel.Guid);
+                        Subscribe((regionTarget.DataContext as ViewModels.MainWindowViewModel).OnMenuUpdated, ThreadOption.UIThread, false, r => r.guid == viewModel.Guid);
                         (regionTarget.DataContext as ViewModels.MainWindowViewModel).ActiveContent = ActiveContent;
                     }
                 }

@@ -13,7 +13,7 @@ namespace ReverseR.Common.Events
     /// Event that indicates that menu should be updated.
     /// The application shell only creates and handles the "File" and "Help" menu
     /// </summary>
-    public class MenuUpdatedEvent:PubSubEvent<Tuple<IEnumerable<IMenuViewModel>, Guid>>
+    public class MenuUpdatedEvent:PubSubEvent<(IEnumerable<IMenuViewModel> viewModels, Guid guid)>
     {
     }
 }

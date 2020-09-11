@@ -118,7 +118,7 @@ namespace ReverseR.ViewModels
         });
         ObservableCollection<RootMenuItemWrapper> _rootMenus;
         public ObservableCollection<RootMenuItemWrapper> RootMenus { get => _rootMenus; set => SetProperty(ref _rootMenus, value); }
-        public ObservableCollection<IAbstractBackgroundTask> BackgroundTasks { get; set; } = new ObservableCollection<IAbstractBackgroundTask>();
+        public ObservableCollection<IBackgroundTask> BackgroundTasks { get; set; } = new ObservableCollection<IBackgroundTask>();
         public bool IsInIdle { get => BackgroundTasks.Count == 0; }
 
         ObservableCollection<InputBinding> _inputBindings = new ObservableCollection<InputBinding>();
@@ -141,44 +141,73 @@ namespace ReverseR.ViewModels
         {
             InputBindings.Clear();
             RootMenus = new ObservableCollection<RootMenuItemWrapper>();
+
             RootMenuItemWrapper file = new RootMenuItemWrapper()
             { Model = containerProvider.Resolve<IMenuViewModel>(), Alignment = System.Windows.TextAlignment.Center, Width = 56 };
             file.Text = "_File";
             file.Children = new ObservableCollection<IMenuViewModel>();
-            file.Children.Add(_InternalCreateMenu("_Open", OpenFileCommand, null, "Ctrl+O", "Open a new file"));
+            file.Children.Add(this.CreateMenu("_Open", ApplicationCommands.Open, "Ctrl+O", null, "Open a new file"));
             RootMenus.Add(file);
-            return 1;
+
+            RootMenuItemWrapper Edit = new RootMenuItemWrapper();
+            Edit.Text = "_Edit";
+            Edit.Children = new ObservableCollection<IMenuViewModel>();
+            Edit.Children.Add(this.CreateMenu("_Undo",ApplicationCommands.Undo,"Ctrl+Z"));
+            Edit.Children.Add(this.CreateMenu("_Redo",ApplicationCommands.Redo,"Ctrl+Y"));
+            Edit.Children.Add(this.CreateMenuSeparator());
+            Edit.Children.Add(this.CreateMenu("Cu_t",ApplicationCommands.Cut,"Ctrl+X"));
+            Edit.Children.Add(this.CreateMenu("_Copy",ApplicationCommands.Copy,"Ctrl+C"));
+            Edit.Children.Add(this.CreateMenu("_Paste", ApplicationCommands.Copy, "Ctrl+V"));
+
+            RootMenus.Add(Edit);
+
+            return 2;
         }
 
-        internal void OnMenuUpdated(Tuple<IEnumerable<IMenuViewModel>,Guid> tuple)
+        internal void OnMenuUpdated((IEnumerable<IMenuViewModel> menuViewModels, Guid guid) tuple)
         {
-            RestoreMenu();
-            foreach(IMenuViewModel item in tuple.Item1)
+            int insIndex = RestoreMenu();
+            foreach(IMenuViewModel item in tuple.menuViewModels.Reverse())
             {
-                RootMenus.Insert(1, new RootMenuItemWrapper { Alignment = System.Windows.TextAlignment.Center, Width = 56, Model = item });
-                foreach(IMenuViewModel child in item.Children)
+                RootMenus.Insert(insIndex, new RootMenuItemWrapper { Alignment = System.Windows.TextAlignment.Center, Width = 56, Model = item });
+                /*foreach(IMenuViewModel child in item.Children)
                 {
                     if (child.Command != null || !string.IsNullOrEmpty(child.GestureText))
                     {
-                        InputBindings.Add(new InputBinding(child.Command, (new KeyGestureConverter()).ConvertFrom(child.GestureText) as InputGesture));
+                        InputBindings.Add(new InputBinding(child.Command, new KeyGestureConverter().ConvertFrom(child.GestureText) as InputGesture));
+                    }
+                }*/
+            }
+            foreach(RootMenuItemWrapper itemWrapper in RootMenus)
+            {
+                foreach(IMenuViewModel menu in itemWrapper.Children)
+                {
+                    if (menu.Command != null || !string.IsNullOrEmpty(menu.GestureText))
+                    {
+                        InputBindings.Add(new InputBinding(menu.Command, new KeyGestureConverter().ConvertFrom(menu.GestureText) as InputGesture));
                     }
                 }
             }
         }
 
-        protected IMenuViewModel _InternalCreateMenu(string text, ICommand command, ImageSource icon, string inputgesture, string tooltip = null)
+        internal bool HandleMenuCanExecuteEvent(object sender, CanExecuteRoutedEventArgs e)
         {
-            IMenuViewModel vm = containerProvider.Resolve<IMenuViewModel>();
-            vm.Text = text;
-            vm.Command = command;
-            vm.Icon = icon;
-            vm.GestureText = inputgesture;
-            vm.Tooltip = tooltip;
-            if (command != null && !string.IsNullOrEmpty(inputgesture)) 
+            if (e.Command == ApplicationCommands.Open)
             {
-                InputBindings.Add(new InputBinding(command, (new KeyGestureConverter()).ConvertFrom(inputgesture) as InputGesture));
+                e.CanExecute = true;
+                return true;
             }
-            return vm;
+            return false;
+        }
+
+        internal bool HandleMenuExecutedEvent(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (e.Command == ApplicationCommands.Open)
+            {
+                OpenFileCommand.Execute();
+                return true;
+            }
+            return false;
         }
         #endregion
     }

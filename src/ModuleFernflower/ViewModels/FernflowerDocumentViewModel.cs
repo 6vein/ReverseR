@@ -81,7 +81,8 @@ namespace ModuleFernflower.ViewModels
             if (e.Text.Trim().Length != 0)
             {
                 CompletionProvider.BaseDirectory = Parent.BaseDirectory;
-                _previousCompletionTask?.CancelWithSync();
+                _TokenSource.Cancel();
+                _previousCompletionTask?.WaitUntilComplete();
                 _TokenSource.Dispose();
                 _TokenSource = new CancellationTokenSource();
                 _previousCompletionTask = CompletionProvider.CompleteAsync(e.Text, Editor.Document.Text, _TokenSource.Token,

@@ -25,11 +25,11 @@ namespace ReverseR.Internal.Services
         string _taskdescription;
         public string TaskDescription { get => _taskdescription; set => SetProperty(ref _taskdescription, value); }
         bool _isCompleted;
-        public bool IsCompleted { get => _isCompleted; set => SetProperty(ref _isCompleted, value); }
+        public bool IsCompleted { get => _isCompleted;protected set => SetProperty(ref _isCompleted, value); }
 
         protected Task completedCallbackTask;
 
-        private Action<Task> _oncompletedCallback;
+        protected Action<Task> _oncompletedCallback;
         public Action<Task> OnCompletedCallback
         {
             get => _oncompletedCallback;
@@ -43,7 +43,7 @@ namespace ReverseR.Internal.Services
                 _oncompletedCallback = value;
             }
         }
-        private TaskScheduler _oncompletedcallbackScheduler = TaskScheduler.Default;
+        protected TaskScheduler _oncompletedcallbackScheduler = TaskScheduler.Default;
         public TaskScheduler OnCompletedCallbackScheduler
         {
             get => _oncompletedcallbackScheduler;
@@ -59,16 +59,15 @@ namespace ReverseR.Internal.Services
         }
 
         public Task Task { get; set; }
-        public CancellationTokenSource TokenSource { get; set; } = new CancellationTokenSource();
+        public CancellationToken? Token { get; set; }
 
-        public void CancelWithSync(Thread UIThread=null)
+        public void WaitUntilComplete(Thread UIThread=null)
         {
             AssertNotDisposed();
             if(Task==null)
             {
                 throw new InvalidOperationException("The task of IBackgroundTask has not been created.");
             }
-            TokenSource.Cancel();
             if (Task.Status != TaskStatus.Running)
                 return;
             Dispatcher dispatcher = Dispatcher.FromThread(UIThread??App.Current.Dispatcher.Thread);
@@ -83,7 +82,7 @@ namespace ReverseR.Internal.Services
                     DispatcherFrame frame = new DispatcherFrame();
                     Func<object, object> callback = obj =>
                     {
-                        (obj as DispatcherFrame).Continue = !Task.IsCompleted;
+                        (obj as DispatcherFrame).Continue = !Task.IsCompleted || !completedCallbackTask.IsCompleted;
                         return null;
                     };
                     dispatcher.BeginInvoke(DispatcherPriority.Loaded, callback, frame);
@@ -102,14 +101,14 @@ namespace ReverseR.Internal.Services
         /// <summary>
         /// Call this if you want to use <see cref="IBackgroundTask.OnCompletedCallback"/>
         /// </summary>
-        public void Start()
+        public virtual void Start()
         {
             AssertNotDisposed();
             if (Task == null)
                 throw new InvalidOperationException("The task of IBackgroundTask has not been created.");
             completedCallbackTask = Task.ContinueWith(task => 
             {
-                if(!TokenSource.IsCancellationRequested)
+                if (!(Token.HasValue && Token.Value.IsCancellationRequested)) 
                     OnCompletedCallback?.Invoke(task);
                 IsCompleted = true;
                 this.GetIContainer().Resolve<IEventAggregator>().GetEvent<TaskCompletedEvent>().Publish(this);
@@ -119,6 +118,16 @@ namespace ReverseR.Internal.Services
             Task.Start();
         }
 
+        internal void SetTask(Task task)
+        {
+            Task = task;
+        }
+
+        internal void SetCompleteCallback(Action<Task> callback)
+        {
+            _oncompletedCallback = callback;
+        }
+
         #region IDisposable Support
         private bool disposedValue = false; // 要检测冗余调用
 
@@ -133,8 +142,7 @@ namespace ReverseR.Internal.Services
                     Task = null;
                     completedCallbackTask?.Dispose();
                     completedCallbackTask = null;
-                    TokenSource?.Dispose();
-                    TokenSource = null;
+                    Token = null;
                 }
 
                 // TODO: 释放未托管的资源(未托管的对象)并在以下内容中替代终结器。
@@ -160,7 +168,7 @@ namespace ReverseR.Internal.Services
             // GC.SuppressFinalize(this);
         }
 
-        void AssertNotDisposed()
+        internal void AssertNotDisposed()
         {
             if (disposedValue)
                 throw new ObjectDisposedException(nameof(DefaultBackgroundTask));
@@ -168,99 +176,49 @@ namespace ReverseR.Internal.Services
         #endregion
     }
 
-    internal class DefaultBackgroundTask<T>:BindableBase,IBackgroundTask<T>
+    internal class DefaultBackgroundTask<TResult>:DefaultBackgroundTask,IBackgroundTask<TResult>
     {
-        string _taskName;
-        public string TaskName { get => _taskName; set => SetProperty(ref _taskName, value); }
-        string _taskdescription;
-        public string TaskDescription { get => _taskdescription; set => SetProperty(ref _taskdescription, value); }
-        bool _isCompleted;
-        public bool IsCompleted { get => _isCompleted; set => SetProperty(ref _isCompleted, value); }
-
-        protected Task completedCallbackTask;
-
-        private Action<Task<T>> _oncompletedCallback;
-        public Action<Task<T>> OnCompletedCallback
+        public TResult Result
         {
-            get => _oncompletedCallback;
-            set
+            get
             {
-                AssertNotDisposed();
-                if (Task.Status != TaskStatus.WaitingToRun)
+                if (Task is Task<TResult> task)
                 {
-                    throw new InvalidOperationException("The task has already started,can not set completed callback now");
+                    return task.Result;
                 }
-                _oncompletedCallback = value;
-            }
-        }
-        private TaskScheduler _oncompletedcallbackScheduler = TaskScheduler.Default;
-        public TaskScheduler OnCompletedCallbackScheduler
-        {
-            get => _oncompletedcallbackScheduler;
-            set
-            {
-                AssertNotDisposed();
-                if (Task.Status != TaskStatus.WaitingToRun)
+                else
                 {
-                    throw new InvalidOperationException("The task has already started");
+                    throw new InvalidOperationException("Calling get_Result on a non_generic IBackgroundTask!");
                 }
-                _oncompletedcallbackScheduler = value;
             }
         }
 
-        public Task<T> Task { get; set; }
-        public CancellationTokenSource TokenSource { get; set; } = new CancellationTokenSource();
+        internal void SetTask(Task<TResult> task)
+        {
+            Task = task;
+        }
+        internal void SetCompleteCallback(Action<Task<TResult>> callback)
+        {
+            _oncompletedCallback = (Action<Task>)callback;
+        }
 
-        public void CancelWithSync(Thread UIThread = null)
+        public override void Start()
         {
             AssertNotDisposed();
-            if (Task == null)
-            {
-                throw new InvalidOperationException("The task of IBackgroundTask has not been created.");
-            }
-            TokenSource.Cancel();
-            if (Task.Status != TaskStatus.Running)
-                return;
-            Dispatcher dispatcher = Dispatcher.FromThread(UIThread ?? App.Current.Dispatcher.Thread);
-#if DEBUG
-            System.Diagnostics.Debug.Assert(dispatcher != null);
-#endif
-            //We are not going to block the ui thread specified
-            if (dispatcher.Thread == Thread.CurrentThread)
-            {
-                dispatcher.Invoke(() =>
-                {
-                    DispatcherFrame frame = new DispatcherFrame();
-                    Func<object, object> callback = obj =>
-                    {
-                        (obj as DispatcherFrame).Continue = !Task.IsCompleted;
-                        return null;
-                    };
-                    dispatcher.BeginInvoke(DispatcherPriority.Loaded, callback, frame);
-                    Dispatcher.PushFrame(frame);
-                });
-            }
-            else
-            {
-                var wait = new SpinWait();
-                while (!Task.IsCompleted)
-                {
-                    wait.SpinOnce();
-                }
-            }
-        }
-        /// <summary>
-        /// Call this if you want to use <see cref="IBackgroundTask.OnCompletedCallback"/>
-        /// </summary>
-        public void Start()
-        {
-            AssertNotDisposed();
-            if (Task == null)
-                throw new InvalidOperationException("The task of IBackgroundTask has not been created.");
+            if (Task == null || !(Task is Task<TResult>))
+                throw new InvalidOperationException("The task of IBackgroundTask has not been created or is invalid.");
             completedCallbackTask = Task.ContinueWith(task =>
             {
-                if (!TokenSource.IsCancellationRequested)
-                    OnCompletedCallback?.Invoke(task);
+                if (!(Token.HasValue && Token.Value.IsCancellationRequested))
+                {
+                    if (task is Task<TResult> taskT)
+                    {
+                        if (OnCompletedCallback is Action<Task<TResult>> callback)
+                        {
+                            callback?.Invoke(taskT);
+                        }
+                    }
+                }
                 IsCompleted = true;
                 this.GetIContainer().Resolve<IEventAggregator>().GetEvent<TaskCompletedEvent>().Publish(this);
 
@@ -268,53 +226,5 @@ namespace ReverseR.Internal.Services
             this.GetIContainer().Resolve<IEventAggregator>().GetEvent<TaskStartedEvent>().Publish(this);
             Task.Start();
         }
-
-        #region IDisposable Support
-        private bool disposedValue = false; // 要检测冗余调用
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    // TODO: 释放托管状态(托管对象)。
-                    Task?.Dispose();
-                    Task = null;
-                    completedCallbackTask?.Dispose();
-                    completedCallbackTask = null;
-                    TokenSource?.Dispose();
-                    TokenSource = null;
-                }
-
-                // TODO: 释放未托管的资源(未托管的对象)并在以下内容中替代终结器。
-                // TODO: 将大型字段设置为 null。
-
-                disposedValue = true;
-            }
-        }
-
-        // TODO: 仅当以上 Dispose(bool disposing) 拥有用于释放未托管资源的代码时才替代终结器。
-        // ~DefaultBackgroundTask()
-        // {
-        //   // 请勿更改此代码。将清理代码放入以上 Dispose(bool disposing) 中。
-        //   Dispose(false);
-        // }
-
-        // 添加此代码以正确实现可处置模式。
-        public void Dispose()
-        {
-            // 请勿更改此代码。将清理代码放入以上 Dispose(bool disposing) 中。
-            Dispose(true);
-            // TODO: 如果在以上内容中替代了终结器，则取消注释以下行。
-            // GC.SuppressFinalize(this);
-        }
-
-        void AssertNotDisposed()
-        {
-            if (disposedValue)
-                throw new ObjectDisposedException(nameof(DefaultBackgroundTask));
-        }
-        #endregion
     }
 }

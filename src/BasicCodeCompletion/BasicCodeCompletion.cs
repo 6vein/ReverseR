@@ -84,8 +84,12 @@ namespace BasicCodeCompletion
 
         public IBackgroundTask<IList<ICompletionData>> CompleteAsync(string text, string path, CancellationToken? token = null, Action<Task<IList<ICompletionData>>> completedCallback = null)
         {
-            var task = Container.Resolve<IBackgroundTaskBuilder>().Create(tok => Complete(text, path, (CancellationToken)tok));
-            task.OnCompletedCallback = completedCallback;
+            /*var task = Container.Resolve<IBackgroundTaskBuilder>().Create(tok => Complete(text, path, (CancellationToken)tok));
+            task.OnCompletedCallback = completedCallback;*/
+            var task = Container.Resolve<IBackgroundTaskBuilder>()
+                .WithTask(tok => Complete(text, path, (CancellationToken?)tok), token)
+                .WithOnCompleteCallback(completedCallback)
+                .Build();
             task.Start();
             return task;
         }

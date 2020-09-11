@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ReverseR.Common.DecompUtilities;
 
-namespace ReverseR.DecompUtilities.Internal
+namespace ReverseR.Internal.DecompUtilities
 {
     class DefaultDecompResult:IDecompileResult
     {
