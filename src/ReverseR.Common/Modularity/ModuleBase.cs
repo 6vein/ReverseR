@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -27,6 +28,7 @@ namespace ReverseR.Common.Modularity
 
         public void OnInitialized(IContainerProvider containerProvider)
         {
+            
             Initialized(containerProvider);
         }
         public abstract void Initialized(IContainerProvider containerProvider);
@@ -35,8 +37,11 @@ namespace ReverseR.Common.Modularity
         public ModuleBase()
         {
 #pragma warning disable 0618
+            var moduleManager = APIHelper.GetIContainer().Resolve<IModuleManager>();
+            IModuleInfo thisModuleInfo = moduleManager.Modules.
+                FirstOrDefault(mi => mi.ModuleType == GetType().AssemblyQualifiedName);
             //We need to modify it runtime
-            AppDomain.CurrentDomain.AppendPrivatePath($"Plugins\\{ModuleName}");
+            AppDomain.CurrentDomain.AppendPrivatePath($"Plugins\\{thisModuleInfo.ModuleName}");
 #pragma warning restore 0618
         }
     }

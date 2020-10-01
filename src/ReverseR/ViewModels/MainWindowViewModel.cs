@@ -149,7 +149,8 @@ namespace ReverseR.ViewModels
             file.Children.Add(this.CreateMenu("_Open", ApplicationCommands.Open, "Ctrl+O", null, "Open a new file"));
             RootMenus.Add(file);
 
-            RootMenuItemWrapper Edit = new RootMenuItemWrapper();
+            RootMenuItemWrapper Edit = new RootMenuItemWrapper()
+            { Model = containerProvider.Resolve<IMenuViewModel>(), Alignment = System.Windows.TextAlignment.Center, Width = 56 };
             Edit.Text = "_Edit";
             Edit.Children = new ObservableCollection<IMenuViewModel>();
             Edit.Children.Add(this.CreateMenu("_Undo",ApplicationCommands.Undo,"Ctrl+Z"));
