@@ -77,7 +77,7 @@ namespace ReverseR.Common.ViewUtilities
             try
             {
                 Md5 = APIHelper.GetMd5Of(FilePath);
-                BaseDirectory = CommonStorage.GlobalConfig.CachePath + $"\\{Md5}";
+                BaseDirectory = GlobalUtils.GlobalConfig.CachePath + $"\\{Md5}";
                 ContentDirectory = BaseDirectory + "\\Content";
                 Directory.CreateDirectory(BaseDirectory);
                 Directory.CreateDirectory(ContentDirectory);
@@ -244,7 +244,7 @@ namespace ReverseR.Common.ViewUtilities
             Container = this.GetIContainer();
             Container.Resolve<IEventAggregator>().GetEvent<OpenFileEvent>().Subscribe(OnOpenFile, ThreadOption.BackgroundThread,false,filter=>filter.Item3==Guid);
             Container.Resolve<IEventAggregator>().GetEvent<ViewActivatedEvent>().Subscribe(guid => OnActivated(), ThreadOption.UIThread, false, filter => filter == this.Guid);
-            foreach(CommonStorage.DockablePluginInfo info in CommonStorage.DockablePlugins)
+            foreach(GlobalUtils.DockablePluginInfo info in GlobalUtils.DockablePlugins)
             {
                 Plugins.Add(Container.Resolve(info.PluginType) as IDockablePlugin);
             }

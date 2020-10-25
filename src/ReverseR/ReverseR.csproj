@@ -278,6 +278,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Internal\DecompUtilities\DefaultDecompilerResolver.cs" />
     <Compile Include="Internal\DecompUtilities\DefaultDecompResult.cs" />
     <Compile Include="DockingManagerRegionAdapter.cs" />
     <Compile Include="Internal\Events\BackgroundTaskLifespan.cs" />
@@ -352,6 +353,10 @@
     <ProjectReference Include="..\ReverseR.Common\ReverseR.Common.csproj">
       <Project>{2cc5437d-95a8-4fc8-bded-882ad381081d}</Project>
       <Name>ReverseR.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ReverseR.DecompileView.Default\ReverseR.DecompileView.Default.csproj">
+      <Project>{8eb186ff-c1e2-48cf-ba42-a84c63ebc6ec}</Project>
+      <Name>ReverseR.DecompileView.Default</Name>
     </ProjectReference>
     <ProjectReference Include="..\Xceed.Wpf.AvalonDock.Themes.VS2013\Xceed.Wpf.AvalonDock.Themes.VS2013.csproj">
       <Project>{89286eb4-b4a1-418c-839a-067b00f442d8}</Project>

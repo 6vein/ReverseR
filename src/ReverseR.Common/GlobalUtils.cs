@@ -11,7 +11,7 @@ using ReverseR.Common.DecompUtilities;
 
 namespace ReverseR.Common
 {
-    public static class CommonStorage
+    public static class GlobalUtils
     {
         public class ConfigStorage
         {
@@ -33,7 +33,7 @@ namespace ReverseR.Common
             /// Path of java.exe to run jars
             /// </summary>
             public string JavaPath { get; set; }
-            public CommonDecompiler.RunTypes RunType { get; set; }
+            public ICommonPreferences.RunTypes RunType { get; set; }
         }
         public static ConfigStorage GlobalConfig { get; set; }
         public static void Save()
@@ -44,7 +44,7 @@ namespace ReverseR.Common
         }
         public static void Load()
         {
-            if (Properties.Settings.Default.Properties["config"] != null && Properties.Settings.Default.Properties["config"].DefaultValue != null) 
+            if (Properties.Settings.Default.Properties["config"]?.DefaultValue != null) 
             {
                 GlobalConfig = JsonConvert.DeserializeObject(Properties.Settings.Default.Properties["config"].DefaultValue as string, typeof(ConfigStorage)) as ConfigStorage;
                 //check valid and set default values
@@ -53,7 +53,7 @@ namespace ReverseR.Common
                     if (Environment.GetEnvironmentVariable("JAVA_HOME") == null) 
                     {
                         GlobalConfig.JavaPath = null;
-                        GlobalConfig.RunType = CommonDecompiler.RunTypes.Embedded;
+                        GlobalConfig.RunType = ICommonPreferences.RunTypes.Embedded;
                     }
                     else
                     {
@@ -71,7 +71,6 @@ namespace ReverseR.Common
                 if (Environment.GetEnvironmentVariable("JAVA_HOME") == null)
                 {
                     GlobalConfig.JavaPath = null;
-                    GlobalConfig.RunType = CommonDecompiler.RunTypes.Embedded;
                 }
                 else
                 {
@@ -86,7 +85,7 @@ namespace ReverseR.Common
         {
             public string Name { get; set; }
             public Type ViewType { get; set; }
-            public ICommonPreferences DefaultPreference { get; set; }
+            public ICommonPreferences Options { get; set; }
         }
         public struct DockablePluginInfo
         {
@@ -95,9 +94,18 @@ namespace ReverseR.Common
         public static List<DecompilerInfo> Decompilers { get; set; } = new List<DecompilerInfo>();
         public static List<DockablePluginInfo> DockablePlugins { get; set; } = new List<DockablePluginInfo>();
         public static DecompilerInfo PreferredDecompiler { get; set; }
-        public static void RegisterDecompiler(Type viewtype,ICommonPreferences pref, string name)
+        /// <summary>
+        /// Register a decompiler
+        /// <para>
+        /// IMPORTANT:this does NOT register the decompiler with the container,users should register them themselves
+        /// </para>
+        /// </summary>
+        /// <param name="name">the friendly name of your decompiler</param>
+        /// <param name="pref">default configuaration</param>
+        /// <param name="viewtype">your own implementation to view the decompiled file,specify null to use the default one</param>
+        public static void RegisterDecompiler(string name, ICommonPreferences pref, Type viewtype = null)
         {
-            Decompilers.Add(new DecompilerInfo { Name = name, ViewType = viewtype,DefaultPreference=pref });
+            Decompilers.Add(new DecompilerInfo { Name = name, ViewType = viewtype,Options=pref });
             /*System.Xml.XmlDocument xmlDocument = new System.Xml.XmlDocument();
             //Do not move the configuration file
             xmlDocument.Load(AppDomain.CurrentDomain.BaseDirectory + AppDomain.CurrentDomain.FriendlyName + ".config");
@@ -120,7 +128,9 @@ namespace ReverseR.Common
         public static dynamic ResolveViewByIndex(int index)
         {
             var container = (System.Windows.Application.Current as Prism.PrismApplicationBase).Container;
-            return container.Resolve(Decompilers[index].ViewType);
+            return Decompilers[index].ViewType == null ?
+                container.Resolve<ViewUtilities.IDecompileViewModel>() :
+                container.Resolve(Decompilers[index].ViewType);
         }
         public static Type GetViewTypeByIndex(int index)
         {

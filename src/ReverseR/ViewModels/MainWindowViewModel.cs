@@ -14,6 +14,7 @@ using System.Linq;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Reflection;
 using System.Collections.Generic;
 
 namespace ReverseR.ViewModels
@@ -66,7 +67,7 @@ namespace ReverseR.ViewModels
             {
                 var group = new Microsoft.WindowsAPICodePack.Dialogs.Controls.CommonFileDialogGroupBox("&Decompiler");
                 var comboBox = new Microsoft.WindowsAPICodePack.Dialogs.Controls.CommonFileDialogComboBox("DecompilerCombo");
-                foreach (CommonStorage.DecompilerInfo info in CommonStorage.Decompilers)
+                foreach (GlobalUtils.DecompilerInfo info in GlobalUtils.Decompilers)
                 {
                     comboBox.Items.Add(new Microsoft.WindowsAPICodePack.Dialogs.Controls.CommonFileDialogComboBoxItem(info.Name));
                 }
@@ -92,20 +93,14 @@ namespace ReverseR.ViewModels
                     foreach (string path in openFileDialog.FileNames)
                     {
                         int index = (openFileDialog.Controls["DecompilerCombo"] as Microsoft.WindowsAPICodePack.Dialogs.Controls.CommonFileDialogComboBox).SelectedIndex;
-                        if (ActiveContent != null && (ActiveContent.GetType() == CommonStorage.GetViewTypeByIndex(index)))
+                        GlobalUtils.PreferredDecompiler = GlobalUtils.Decompilers[index];
+                        if (ActiveContent != null && ActiveContent is IDecompileViewModel)
                         {
-                            if(!string.IsNullOrEmpty(((ActiveContent as System.Windows.FrameworkElement).DataContext as IDecompileViewModel).FilePath))
-                            {
-                                view = ActiveContent;
-                            }
-                            else
-                            {
-                                view= CommonStorage.ResolveViewByIndex(index);
-                            }
+                            view = ActiveContent;
                         }
                         else
                         {
-                            view = CommonStorage.ResolveViewByIndex(index);
+                            view = GlobalUtils.ResolveViewByIndex(index);
                         }
                         Guid guid = ((view as System.Windows.FrameworkElement).DataContext as IDecompileViewModel).Guid;
                         regionManager.AddToRegion("RootDockRegion", view);

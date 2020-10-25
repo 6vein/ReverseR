@@ -13,7 +13,7 @@ namespace ModuleFernflower
 {
     public class ModuleFernflowerModule : ModuleBase
     {
-        public override string ModuleName => "ModuleFernflower";
+        public override string DependencyPath => "ModuleFernflower";
         public override void Initialized(IContainerProvider containerProvider)
         {
         }
@@ -22,12 +22,12 @@ namespace ModuleFernflower
         {
             containerRegistry.Register<FernflowerDecompiler,Decompile.Internal.JVMFernflowerDecompiler>(CommonDecompiler.RunTypes.JVM.ToString());
             ICommonPreferences preferences;
-            if (File.Exists(CommonStorage.GlobalConfig.ConfigPrefix + "fernflower,json"))
-                preferences = JsonConvert.DeserializeObject(File.ReadAllText(CommonStorage.GlobalConfig.ConfigPrefix + "fernflower,json")) as FernflowerPreferences;
+            if (File.Exists(GlobalUtils.GlobalConfig.ConfigPrefix + "fernflower,json"))
+                preferences = JsonConvert.DeserializeObject(File.ReadAllText(GlobalUtils.GlobalConfig.ConfigPrefix + "fernflower,json")) as FernflowerPreferences;
             else preferences = new FernflowerPreferences();
             //Actually we should register default Decompiler based on default preference's runtype
             containerRegistry.Register<FernflowerDecompiler, Decompile.Internal.JVMFernflowerDecompiler>();
-            CommonStorage.RegisterDecompiler(typeof(ViewFernflower),preferences,"Fernflower");
+            GlobalUtils.RegisterDecompiler("Fernflower",preferences);
         }
     }
 }

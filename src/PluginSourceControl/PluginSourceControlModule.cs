@@ -9,7 +9,7 @@ namespace PluginSourceControl
 {
     public class PluginSourceControlModule : ModuleBase
     {
-        public override string ModuleName => "PluginSourceControl";
+        public override string DependencyPath => "PluginSourceControl";
         public override void Initialized(IContainerProvider containerProvider)
         {
  
@@ -17,7 +17,7 @@ namespace PluginSourceControl
 
         public override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            CommonStorage.RegisterDockablePlugin(typeof(Plugin.SourceControlPlugin));
+            GlobalUtils.RegisterDockablePlugin(typeof(Plugin.SourceControlPlugin));
         }
     }
 }

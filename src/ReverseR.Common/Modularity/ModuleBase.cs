@@ -20,11 +20,11 @@ namespace ReverseR.Common.Modularity
     /// YourModuleName.dll
     /// </item>
     /// </list>
-    /// And you should set <see cref="ModuleName"/> to let it perform correctly
+    /// If you want to change the behavior, you should set <see cref="DependencyPath"/> to let it perform correctly
     /// </summary>
     public abstract class ModuleBase : IModule
     {
-        public abstract string ModuleName { get; }
+        public virtual string DependencyPath { get; }
 
         public void OnInitialized(IContainerProvider containerProvider)
         {
@@ -40,8 +40,12 @@ namespace ReverseR.Common.Modularity
             var moduleManager = APIHelper.GetIContainer().Resolve<IModuleManager>();
             IModuleInfo thisModuleInfo = moduleManager.Modules.
                 FirstOrDefault(mi => mi.ModuleType == GetType().AssemblyQualifiedName);
+            string catalogModuleName = thisModuleInfo.ModuleName.EndsWith("Module")
+                ? thisModuleInfo.ModuleName.Remove(thisModuleInfo.ModuleName.Length - 6) : thisModuleInfo.ModuleName;
+            string modulePath = string.IsNullOrEmpty(DependencyPath) ? catalogModuleName : DependencyPath;
             //We need to modify it runtime
-            AppDomain.CurrentDomain.AppendPrivatePath($"Plugins\\{thisModuleInfo.ModuleName}");
+            AppDomain.CurrentDomain.
+                AppendPrivatePath($"Plugins\\{modulePath}");
 #pragma warning restore 0618
         }
     }

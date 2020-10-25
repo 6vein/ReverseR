@@ -18,7 +18,13 @@ namespace ReverseR.Common.DecompUtilities
             public bool IsSet { get; set; }
             public string GetArgument();
         }
-        public CommonDecompiler.RunTypes RunType { get; set; }
+
+        public enum RunTypes
+        {
+            JVM,
+            Embedded
+        }
+        public RunTypes RunType { get; set; }
         /// <summary>
         /// Get arguments for the decompiler
         /// </summary>

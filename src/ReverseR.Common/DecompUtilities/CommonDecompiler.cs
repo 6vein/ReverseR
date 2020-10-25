@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -10,17 +11,9 @@ namespace ReverseR.Common.DecompUtilities
     //For some reasons,it had to be implemented as class
     public abstract class CommonDecompiler
     {
-        public ICommonPreferences Preferences { get; set; }
+        public ICommonPreferences Preferences { get; protected set; }
         public Action PreDecompileCallback { get; set; }
         public Action AfterDecompileCallback { get; set; }
-
-        public enum RunTypes
-        {
-            JVM,
-            Embedded
-        }
-        public RunTypes RunType { get; set; } = RunTypes.JVM;
-
         public IDecompileResult Decompile(string path, Action<string> msgSetter, CancellationToken? token = null, params string[] referlib)
         {
             PreDecompileCallback?.Invoke();

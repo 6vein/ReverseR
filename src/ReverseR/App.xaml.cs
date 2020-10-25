@@ -2,6 +2,7 @@
 using ReverseR.Common.Services;
 using ReverseR.Common.DecompUtilities;
 using ReverseR.Common.ViewUtilities;
+using ReverseR.DecompileView.Default.ViewModels;
 using Prism.Ioc;
 using Prism.Modularity;
 using System.Windows;
@@ -34,7 +35,10 @@ namespace ReverseR
         {
             containerRegistry.RegisterDialog<ErrorDialog>();
             containerRegistry.RegisterDialogWindow<MetroDialogWindowHost>();
+
+            containerRegistry.Register<IDecompileViewModel, ViewDecompileViewModel>();
             containerRegistry.Register<IMenuViewModel, ViewModels.DefaultMenuItem>();
+
             containerRegistry.Register<IDecompileResult, Internal.DecompUtilities.DefaultDecompResult>();
             containerRegistry.Register<IBackgroundTaskBuilder, Internal.Services.DefaultBackgroundTaskBuilder>();
         }
@@ -58,7 +62,7 @@ namespace ReverseR
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            Common.CommonStorage.Load();
+            Common.GlobalUtils.Load();
             base.OnStartup(e);
         }
 
@@ -67,8 +71,14 @@ namespace ReverseR
             if(IsProcessingUnhandledException==false)
             {
                 IsProcessingUnhandledException = true;
-                Container.Resolve<IDialogService>().ReportError($"Fatal:An unhandled exception:{e.Exception.ToString()}\nMessage:{e.Exception.Message}\nFrom:{e.Exception.Source}", null, e.Exception.StackTrace);
-                Environment.FailFast($"An unhandled exception:{e.Exception.Message}", e.Exception);
+                try
+                {
+                    Container.Resolve<IDialogService>().ReportError($"Fatal:An unhandled exception:{e.Exception.ToString()}\nMessage:{e.Exception.Message}\nFrom:{e.Exception.Source}", null, e.Exception.StackTrace);
+                }
+                finally
+                {
+                    Environment.FailFast($"An unhandled exception:{e.Exception.Message}", e.Exception);
+                }
             }
             
         }

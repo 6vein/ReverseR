@@ -16,6 +16,9 @@ namespace ReverseR.Common.ViewUtilities
     /// </summary>
     public interface IDecompileViewModel:ITitleSupport
     {
+        /// <summary>
+        /// Initalize the view and its plugins
+        /// </summary>
         public void Initalize();
         /// <summary>
         /// Open a document,Please use it with <see cref="System.ComponentModel.BackgroundWorker"/>

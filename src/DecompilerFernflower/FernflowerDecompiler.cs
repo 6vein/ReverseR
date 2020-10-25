@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 using System.ComponentModel;
 using Prism.Ioc;
 
-namespace ModuleFernflower.Decompile
+namespace DecompilerFernflower.Decompile
 {
     /// <summary>
     /// Fernflower decompiler,please use <see cref="Prism.Ioc.IContainerProvider"/> to create a instance
@@ -21,9 +21,6 @@ namespace ModuleFernflower.Decompile
         public FernflowerDecompiler(IContainerProvider containerProvider)
         {
             Container = containerProvider;
-            if (File.Exists(GlobalUtils.GlobalConfig.ConfigPrefix + "fernflower,json"))
-                Preferences = JsonConvert.DeserializeObject(File.ReadAllText(GlobalUtils.GlobalConfig.ConfigPrefix + "fernflower,json"), typeof(FernflowerPreferences)) as FernflowerPreferences;
-            else Preferences = new FernflowerPreferences();
         }
     }
 }

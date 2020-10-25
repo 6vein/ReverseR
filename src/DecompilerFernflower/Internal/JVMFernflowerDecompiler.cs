@@ -13,7 +13,7 @@ using Prism.Services.Dialogs;
 using System.ComponentModel;
 using ReverseR.Common.DecompUtilities;
 
-namespace ModuleFernflower.Decompile.Internal
+namespace DecompilerFernflower.Decompile.Internal
 {
     internal class JVMFernflowerDecompiler:FernflowerDecompiler
     {

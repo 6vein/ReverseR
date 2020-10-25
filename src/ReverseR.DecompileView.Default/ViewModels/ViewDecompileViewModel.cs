@@ -5,7 +5,6 @@ using ReverseR.Common.DecompUtilities;
 using ReverseR.Common.Extensibility;
 using System;
 using System.IO;
-using ModuleFernflower.Decompile;
 using System.Windows;
 using System.Windows.Controls;
 using ICSharpCode.SharpZipLib.Zip;
@@ -24,18 +23,19 @@ using System.ComponentModel;
 using System.Windows.Data;
 using System.Diagnostics;
 
-namespace ModuleFernflower.ViewModels
+namespace ReverseR.DecompileView.Default.ViewModels
 {
-    public class ViewFernflowerViewModel : DecompileViewModelBase
+    public class ViewDecompileViewModel : DecompileViewModelBase
     {
-        public FernflowerDecompiler Decompiler { get; set; }
-        public ViewFernflowerViewModel(FernflowerDecompiler decompiler)
+        public CommonDecompiler Decompiler { get; set; }
+        public ViewDecompileViewModel()
         {
-            Decompiler = decompiler;
+            Decompiler = Container.Resolve<CommonDecompiler>(GlobalUtils.PreferredDecompiler.Name);
+            DecompileViewName = GlobalUtils.PreferredDecompiler.Name;
             IsWholeLoaderOpen = false;
         }
         #region FileOperations
-        public override string DecompileViewName => "Fernflower";
+        public override string DecompileViewName { get; }
         public override void HandleOpenFile()
         {
             if(GlobalUtils.GlobalConfig.DecompileWhole)
@@ -51,8 +51,8 @@ namespace ModuleFernflower.ViewModels
 
         protected override IDocumentViewModel _InnerOpenDocument(JPath path)
         {
-            FernflowerDocumentViewModel viewModel;
-            viewModel = Container.Resolve<FernflowerDocumentViewModel>();
+            DecompileDocumentViewModel viewModel;
+            viewModel = Container.Resolve<DecompileDocumentViewModel>();
             viewModel.Parent = this;
             viewModel.Title = Path.GetFileName(path.Path);
             Documents.Add(viewModel);

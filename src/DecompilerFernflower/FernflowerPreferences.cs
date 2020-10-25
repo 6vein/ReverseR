@@ -8,14 +8,14 @@ using ReverseR.Common.DecompUtilities;
 using Newtonsoft.Json;
 using System.IO;
 
-namespace ModuleFernflower.Decompile
+namespace DecompilerFernflower.Decompile
 {
     [JsonObject(MemberSerialization.OptIn)]
     public class FernflowerPreferences : ICommonPreferences
     {
         [JsonProperty(PropertyName ="Path")]
         protected string DecompilerPath { get; set; }
-        public CommonDecompiler.RunTypes RunType { get; set; }
+        public ICommonPreferences.RunTypes RunType { get; set; }
         /// <summary>
         /// Constructor of <see cref="FernflowerPreferences"/>,needs %JAVA_HOME% to be set.
         /// </summary>
@@ -27,7 +27,7 @@ namespace ModuleFernflower.Decompile
         public FernflowerPreferences()
         {
             DecompilerPath = $"\"{AppDomain.CurrentDomain.BaseDirectory}Plugins\\Jars\\fernflower.jar\"";
-            RunType = GlobalUtils.GlobalConfig.RunType;
+            RunType = ICommonPreferences.RunTypes.JVM;
         }
         public string GetDecompilerPath()
         {
