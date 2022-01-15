@@ -25,17 +25,25 @@ using System.Diagnostics;
 
 namespace ReverseR.DecompileView.Default.ViewModels
 {
-    public class ViewDecompileViewModel : DecompileViewModelBase
+    public class ViewDecompileViewModel : DecompileViewModelBase,IDefaultViewModel
     {
         public CommonDecompiler Decompiler { get; set; }
+        public void SetDecompiler(string id)
+        {
+            if (id == Decompiler?.Id)
+                return;
+            Decompiler = Container
+                .Resolve<IDecompilerResolver>()
+                .Resolve<CommonDecompiler>(id);
+            DecompileViewName = GlobalUtils.Decompilers.Find(item => item.Id == id).FriendlyName;
+        }
         public ViewDecompileViewModel()
         {
-            Decompiler = Container.Resolve<CommonDecompiler>(GlobalUtils.PreferredDecompiler.Name);
-            DecompileViewName = GlobalUtils.PreferredDecompiler.Name;
+            SetDecompiler(GlobalUtils.PreferredDecompiler.Id);
             IsWholeLoaderOpen = false;
         }
         #region FileOperations
-        public override string DecompileViewName { get; }
+        public override string DecompileViewName { get; protected set; }
         public override void HandleOpenFile()
         {
             if(GlobalUtils.GlobalConfig.DecompileWhole)
@@ -142,8 +150,12 @@ namespace ReverseR.DecompileView.Default.ViewModels
 #endif
                         viewModel.Load(files[0]);
                     }
+                    else
+                    {
+                        Container.Resolve<IDialogService>().ReportError(result.ResultCode.ToString(), _ => { });
+                    }
                     Directory.Delete(tempPath, true);
-                })
+                },viewModel.DecompTaskTokenSource.Token)
                 .Build());
             viewModel.BackgroundTask.Start();
             return viewModel;

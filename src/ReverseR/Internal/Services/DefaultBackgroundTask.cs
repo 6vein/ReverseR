@@ -29,8 +29,8 @@ namespace ReverseR.Internal.Services
 
         protected Task completedCallbackTask;
 
-        protected Action<Task> _oncompletedCallback;
-        public Action<Task> OnCompletedCallback
+        protected object _oncompletedCallback;
+        public object OnCompletedCallback
         {
             get => _oncompletedCallback;
             set
@@ -109,7 +109,10 @@ namespace ReverseR.Internal.Services
             completedCallbackTask = Task.ContinueWith(task => 
             {
                 if (!(Token.HasValue && Token.Value.IsCancellationRequested)) 
-                    OnCompletedCallback?.Invoke(task);
+                    if(_oncompletedCallback is Action<Task> callback)
+                    {
+                        callback?.Invoke(task);
+                    }
                 IsCompleted = true;
                 this.GetIContainer().Resolve<IEventAggregator>().GetEvent<TaskCompletedEvent>().Publish(this);
                 
@@ -199,7 +202,7 @@ namespace ReverseR.Internal.Services
         }
         internal void SetCompleteCallback(Action<Task<TResult>> callback)
         {
-            _oncompletedCallback = (Action<Task>)callback;
+            _oncompletedCallback = callback;
         }
 
         public override void Start()
@@ -213,7 +216,7 @@ namespace ReverseR.Internal.Services
                 {
                     if (task is Task<TResult> taskT)
                     {
-                        if (OnCompletedCallback is Action<Task<TResult>> callback)
+                        if (_oncompletedCallback is Action<Task<TResult>> callback)
                         {
                             callback?.Invoke(taskT);
                         }

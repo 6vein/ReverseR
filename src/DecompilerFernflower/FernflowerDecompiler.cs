@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Diagnostics;
 using ReverseR.Common;
@@ -18,9 +19,11 @@ namespace DecompilerFernflower.Decompile
     public abstract class FernflowerDecompiler : CommonDecompiler
     {
         protected IContainerProvider Container { get; set; }
+        public override string Id => typeof(FernflowerDecompiler).FullName;
         public FernflowerDecompiler(IContainerProvider containerProvider)
         {
             Container = containerProvider;
+            Options = GlobalUtils.Decompilers.First(info => info.Id == Id).Options;
         }
     }
 }

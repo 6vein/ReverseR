@@ -22,8 +22,8 @@ namespace ModuleFernflower.Decompile
         {
             Container = containerProvider;
             if (File.Exists(GlobalUtils.GlobalConfig.ConfigPrefix + "fernflower,json"))
-                Preferences = JsonConvert.DeserializeObject(File.ReadAllText(GlobalUtils.GlobalConfig.ConfigPrefix + "fernflower,json"), typeof(FernflowerPreferences)) as FernflowerPreferences;
-            else Preferences = new FernflowerPreferences();
+                Options = JsonConvert.DeserializeObject(File.ReadAllText(GlobalUtils.GlobalConfig.ConfigPrefix + "fernflower,json"), typeof(FernflowerPreferences)) as FernflowerPreferences;
+            else Options = new FernflowerPreferences();
         }
     }
 }

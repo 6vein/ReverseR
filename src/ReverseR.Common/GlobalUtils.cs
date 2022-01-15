@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Prism.Ioc;
 using ReverseR.Common.DecompUtilities;
+using ReverseR.Common.ViewUtilities;
+using System.Linq.Expressions;
 
 namespace ReverseR.Common
 {
@@ -33,40 +35,66 @@ namespace ReverseR.Common
             /// Path of java.exe to run jars
             /// </summary>
             public string JavaPath { get; set; }
+            /// <summary>
+            /// Path of modules
+            /// </summary>
+            public string ModulePath { get; set; }
+            /// <summary>
+            /// Names of modules to load
+            /// </summary>
+            public string[] ModuleNames { get; set; }
             public ICommonPreferences.RunTypes RunType { get; set; }
         }
         public static ConfigStorage GlobalConfig { get; set; }
-        public static void Save()
+        public static void Save<T>(T holder,Expression<Func<T,string>> prop)
         {
-            Properties.Settings.Default.Properties["config"].DefaultValue = JsonConvert.SerializeObject(GlobalConfig);
+            MemberExpression memberExpression = prop.Body as MemberExpression;
+            var property = typeof(T).GetProperties().First(l => l.Name == memberExpression.Member.Name);
+            property.SetValue(holder, JsonConvert.SerializeObject(GlobalConfig));
 
             //File.WriteAllText("config.json", JsonConvert.SerializeObject(GlobalConfig));
         }
-        public static void Load()
+        public static void Load<T>(T holder,Expression<Func<T,string>> prop)
         {
-            if (Properties.Settings.Default.Properties["config"]?.DefaultValue != null) 
+            MemberExpression memberExpression = prop.Body as MemberExpression;
+            var property = typeof(T).GetProperties().First(l => l.Name == memberExpression.Member.Name);
+            if (property?.GetValue(holder) != null) 
             {
-                GlobalConfig = JsonConvert.DeserializeObject(Properties.Settings.Default.Properties["config"].DefaultValue as string, typeof(ConfigStorage)) as ConfigStorage;
-                //check valid and set default values
-                if (!File.Exists(Environment.ExpandEnvironmentVariables(GlobalConfig.JavaPath)))
+#if DEBUG
+                object str = property.GetValue(holder);
+#endif
+                try 
                 {
-                    if (Environment.GetEnvironmentVariable("JAVA_HOME") == null) 
-                    {
-                        GlobalConfig.JavaPath = null;
-                        GlobalConfig.RunType = ICommonPreferences.RunTypes.Embedded;
-                    }
-                    else
-                    {
-                        GlobalConfig.JavaPath = Environment.GetEnvironmentVariable("JAVA_HOME") + "\\bin\\java.exe";
-                    }
+                    GlobalConfig = JsonConvert.DeserializeObject(property.GetValue(holder) as string, typeof(ConfigStorage)) as ConfigStorage;
                 }
-                if(!File.Exists(Environment.ExpandEnvironmentVariables(GlobalConfig.CachePath)))
+                catch { }
+                //check valid and set default values
+                if (GlobalConfig != null)
                 {
-                    GlobalConfig.CachePath = Environment.ExpandEnvironmentVariables("%UserProfile%\\.ReverseR\\Cache");
-                    Directory.CreateDirectory(GlobalConfig.CachePath);
+                    if (!File.Exists(Environment.ExpandEnvironmentVariables(GlobalConfig.JavaPath)))
+                    {
+                        if (Environment.GetEnvironmentVariable("JAVA_HOME") == null)
+                        {
+                            GlobalConfig.JavaPath = null;
+                            GlobalConfig.RunType = ICommonPreferences.RunTypes.Embedded;
+                        }
+                        else
+                        {
+                            GlobalConfig.JavaPath = Environment.GetEnvironmentVariable("JAVA_HOME") + "\\bin\\java.exe";
+                        }
+                    }
+                    if (!File.Exists(Environment.ExpandEnvironmentVariables(GlobalConfig.CachePath)))
+                    {
+                        GlobalConfig.CachePath = Environment.ExpandEnvironmentVariables("%UserProfile%\\.ReverseR\\Cache");
+                        Directory.CreateDirectory(GlobalConfig.CachePath);
+                    }
+                    if (!File.Exists(Environment.ExpandEnvironmentVariables(GlobalConfig.ModulePath)))
+                    {
+                        GlobalConfig.ModulePath = AppDomain.CurrentDomain.BaseDirectory + "Plugins\\";
+                    }
                 }
             }
-            else
+            if (GlobalConfig == null)
             {
                 if (Environment.GetEnvironmentVariable("JAVA_HOME") == null)
                 {
@@ -77,14 +105,18 @@ namespace ReverseR.Common
                     GlobalConfig = new ConfigStorage();
                     GlobalConfig.JavaPath = Environment.ExpandEnvironmentVariables("%JAVA_HOME%\\bin\\java.exe");
                     GlobalConfig.CachePath = Environment.ExpandEnvironmentVariables("%UserProfile%\\.ReverseR\\Cache");
+                    GlobalConfig.ModulePath = AppDomain.CurrentDomain.BaseDirectory + "Plugins\\";
+                    GlobalConfig.ModuleNames = new string[] { "BasicCodeCompletion", "DecompilerFernflower", "PluginSourceControl" };
                     Directory.CreateDirectory(GlobalConfig.CachePath);
                 }
             }
         }
         public struct DecompilerInfo
         {
-            public string Name { get; set; }
+            public string Id { get; set; }
+            public string FriendlyName { get; set; }
             public Type ViewType { get; set; }
+            public (Type jvmDecompiler, Type embeddedDecompiler) DecompilerTypes { get; set; }
             public ICommonPreferences Options { get; set; }
         }
         public struct DockablePluginInfo
@@ -101,11 +133,18 @@ namespace ReverseR.Common
         /// </para>
         /// </summary>
         /// <param name="name">the friendly name of your decompiler</param>
-        /// <param name="pref">default configuaration</param>
+        /// <param name="pref">default options</param>
         /// <param name="viewtype">your own implementation to view the decompiled file,specify null to use the default one</param>
-        public static void RegisterDecompiler(string name, ICommonPreferences pref, Type viewtype = null)
+        public static void RegisterDecompiler(string id,string name, ICommonPreferences pref, 
+            (Type jvmDecompiler, Type embeddedDecompiler) decompilers, Type viewtype = null)
         {
-            Decompilers.Add(new DecompilerInfo { Name = name, ViewType = viewtype,Options=pref });
+            Decompilers.Add(new DecompilerInfo { Id = id, FriendlyName = name,
+                DecompilerTypes=decompilers,
+                ViewType = viewtype, Options = pref });
+            (System.Windows.Application.Current as Prism.PrismApplicationBase)
+                .Container
+                .Resolve<IDecompilerResolver>()
+                .Register(id, decompilers.jvmDecompiler, decompilers.embeddedDecompiler);
             /*System.Xml.XmlDocument xmlDocument = new System.Xml.XmlDocument();
             //Do not move the configuration file
             xmlDocument.Load(AppDomain.CurrentDomain.BaseDirectory + AppDomain.CurrentDomain.FriendlyName + ".config");
@@ -125,12 +164,22 @@ namespace ReverseR.Common
         {
             DockablePlugins.Add(new DockablePluginInfo() { PluginType = type });
         }
-        public static dynamic ResolveViewByIndex(int index)
+        public static object ResolveViewByIndex(int index)
         {
             var container = (System.Windows.Application.Current as Prism.PrismApplicationBase).Container;
-            return Decompilers[index].ViewType == null ?
-                container.Resolve<ViewUtilities.IDecompileViewModel>() :
-                container.Resolve(Decompilers[index].ViewType);
+            object view = null;
+            if(Decompilers[index].ViewType == null)
+            {
+                var defaultView = container.Resolve<IDefaultView>();
+                defaultView.SetDecompiler(Decompilers[index].Id);
+                view = defaultView;
+            }
+            else
+            {
+                view= container.Resolve(Decompilers[index].ViewType);
+            }
+
+            return view;
         }
         public static Type GetViewTypeByIndex(int index)
         {

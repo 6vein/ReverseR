@@ -69,7 +69,7 @@ namespace ReverseR.ViewModels
                 var comboBox = new Microsoft.WindowsAPICodePack.Dialogs.Controls.CommonFileDialogComboBox("DecompilerCombo");
                 foreach (GlobalUtils.DecompilerInfo info in GlobalUtils.Decompilers)
                 {
-                    comboBox.Items.Add(new Microsoft.WindowsAPICodePack.Dialogs.Controls.CommonFileDialogComboBoxItem(info.Name));
+                    comboBox.Items.Add(new Microsoft.WindowsAPICodePack.Dialogs.Controls.CommonFileDialogComboBoxItem(info.FriendlyName));
                 }
                 group.IsProminent = true;
                 group.Items.Add(comboBox);
@@ -94,14 +94,15 @@ namespace ReverseR.ViewModels
                     {
                         int index = (openFileDialog.Controls["DecompilerCombo"] as Microsoft.WindowsAPICodePack.Dialogs.Controls.CommonFileDialogComboBox).SelectedIndex;
                         GlobalUtils.PreferredDecompiler = GlobalUtils.Decompilers[index];
-                        if (ActiveContent != null && ActiveContent is IDecompileViewModel)
-                        {
+                        /*if (ActiveContent != null && (ActiveContent as System.Windows.FrameworkElement).DataContext is IDecompileViewModel)
+                        { 
                             view = ActiveContent;
                         }
                         else
                         {
                             view = GlobalUtils.ResolveViewByIndex(index);
-                        }
+                        }*/
+                        view = GlobalUtils.ResolveViewByIndex(index);
                         Guid guid = ((view as System.Windows.FrameworkElement).DataContext as IDecompileViewModel).Guid;
                         regionManager.AddToRegion("RootDockRegion", view);
                         var ea = containerProvider.Resolve<IEventAggregator>();

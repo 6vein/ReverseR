@@ -12,13 +12,14 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ReverseR.Common.ViewUtilities;
 
 namespace ReverseR.DecompileView.Default.Views
 {
     /// <summary>
     /// Interaction logic for ViewA.xaml
     /// </summary>
-    public partial class ViewDecompile : UserControl
+    public partial class ViewDecompile : UserControl,IDefaultView
     {
         public ViewDecompile()
         {
@@ -29,6 +30,11 @@ namespace ReverseR.DecompileView.Default.Views
             {
                 (DataContext as ViewModels.ViewDecompileViewModel).Initalize();
             });
+        }
+
+        public void SetDecompiler(string id)
+        {
+            (DataContext as ViewModels.ViewDecompileViewModel).SetDecompiler(id);
         }
     }
 }

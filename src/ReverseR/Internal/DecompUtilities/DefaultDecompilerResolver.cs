@@ -16,30 +16,30 @@ namespace ReverseR.Internal.DecompUtilities
         {
             Container = ContainerLocator.Container as IContainerExtension;
         }
-        public void Register(string friendlyName, Type jvmDecompiler, Type embeddedDecompiler)
+        public void Register(string id, Type jvmDecompiler, Type embeddedDecompiler)
         {
             if (jvmDecompiler != null && jvmDecompiler.IsSubclassOf(typeof(CommonDecompiler)))
             {
                 Container.Register(typeof(CommonDecompiler), jvmDecompiler,
-                    $"{friendlyName}.{ICommonPreferences.RunTypes.JVM}");
+                    $"{id}.{ICommonPreferences.RunTypes.JVM}");
             }
             if (embeddedDecompiler != null && embeddedDecompiler.IsSubclassOf(typeof(CommonDecompiler)))
             {
                 Container.Register(typeof(CommonDecompiler), embeddedDecompiler,
-                    $"{friendlyName}.{ICommonPreferences.RunTypes.Embedded}");
+                    $"{id}.{ICommonPreferences.RunTypes.Embedded}");
             }
         }
 
-        public object Resolve(string friendlyName)
+        public object Resolve(string id)
         {
-            var list = GlobalUtils.Decompilers.Where(info => info.Name == friendlyName);
+            var list = GlobalUtils.Decompilers.Where(info => info.Id == id);
             if (list.Count()!=1)
             {
-                throw new ContainerResolutionException(typeof(ICommonPreferences), friendlyName, 
+                throw new ContainerResolutionException(typeof(ICommonPreferences), id, 
                     new Exception("Decompiler not registered in the global catalog or registered twice or more!"));
             }
-            var runtypeString = list.First().DefaultPreference.RunType.ToString();
-            return Container.Resolve<CommonDecompiler>($"{friendlyName}.{runtypeString}");
+            var runtypeString = list.First().Options.RunType.ToString();
+            return Container.Resolve<CommonDecompiler>($"{id}.{runtypeString}");
         }
     }
 }

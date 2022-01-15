@@ -18,7 +18,8 @@ namespace ReverseR.Internal.Services
         public IBackgroundTask Build()
         {
             var task = new DefaultBackgroundTask();
-            task.OnCompletedCallbackScheduler = _scheduler;
+            if (_scheduler != null)
+                task.OnCompletedCallbackScheduler = _scheduler;
             task.Token = _token;
             task.SetCompleteCallback(_callback);
             task.SetTask(new Task(_action,_token));

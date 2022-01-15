@@ -11,7 +11,8 @@ namespace ReverseR.Common.DecompUtilities
     //For some reasons,it had to be implemented as class
     public abstract class CommonDecompiler
     {
-        public ICommonPreferences Preferences { get; protected set; }
+        public abstract string Id { get; }
+        public ICommonPreferences Options { get; protected set; }
         public Action PreDecompileCallback { get; set; }
         public Action AfterDecompileCallback { get; set; }
         public IDecompileResult Decompile(string path, Action<string> msgSetter, CancellationToken? token = null, params string[] referlib)

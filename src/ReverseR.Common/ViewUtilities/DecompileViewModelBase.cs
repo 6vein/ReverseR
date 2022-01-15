@@ -53,20 +53,16 @@ namespace ReverseR.Common.ViewUtilities
         #region FileOperations
         public string FilePath { get => _filePath; set => SetProperty(ref _filePath, value); }
         public FileTypes FileType { get; set; }
-        public string GetFileName()
-        {
-            return FilePath;
-        }
         public string Md5 { get; set; }
         /// <summary>
-        /// name of the base directory,doesnt include "\\"
+        /// name of the base directory,doesn't include "\\"
         /// </summary>
         public string BaseDirectory { get; set; }
         public string ContentDirectory { get; set; }
         public Dictionary<string, string> MapSourceToMd5 { get;private set; }
         public Action PreOpenfileCallback { get; set; }
         public Action AfterOpenfileCallback { get; set; }
-        public abstract string DecompileViewName { get; }
+        public abstract string DecompileViewName { get; protected set; }
         public void OnOpenFile(Tuple<string,FileTypes,Guid> tuple)
         {
             IsWholeLoaderOpen = true;

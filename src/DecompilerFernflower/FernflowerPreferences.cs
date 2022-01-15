@@ -31,6 +31,10 @@ namespace DecompilerFernflower.Decompile
         }
         public string GetDecompilerPath()
         {
+            if (!File.Exists(DecompilerPath))
+            {
+                throw new InvalidOperationException($"Decompiler at {DecompilerPath} does not exist!");
+            }
             return DecompilerPath;
         }
 

@@ -9,22 +9,24 @@ using ReverseR.Common.DecompUtilities;
 using ReverseR.Common;
 using Newtonsoft.Json;
 using System.IO;
+using Prism.Modularity;
 using DecompilerFernflower.Decompile;
+using DecompilerFernflower.Decompile.Internal;
 
 namespace DecompilerFernflower
 {
-    class DecompilerFernflowerModule : DecompilerModuleBase<FernflowerPreferences>
+    public class DecompilerFernflowerModule : DecompilerModuleBase,IModule
     {
         public override string DependencyPath => "DecompilerFernflower";
-        public override string FriendlyName => "Fernflower";
+        protected override string FriendlyName => "Fernflower";
+        protected override string Id => typeof(FernflowerDecompiler).FullName;
 
-        public override void Initialized(IContainerProvider containerProvider)
+        protected override (Type jvmDecompiler, Type embeddedDecompiler) Decompilers
+            => (typeof(JVMFernflowerDecompiler), null);
+
+        public override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            ICommonPreferences preferences;
-            if (File.Exists(GlobalUtils.GlobalConfig.ConfigPrefix + "fernflower,json"))
-                preferences = JsonConvert.DeserializeObject(File.ReadAllText(GlobalUtils.GlobalConfig.ConfigPrefix + "fernflower,json"), typeof(FernflowerPreferences)) as FernflowerPreferences;
-            else preferences = new FernflowerPreferences();
-            GlobalUtils.RegisterDecompiler(FriendlyName, preferences);
+            RegisterDecompilerHelper<FernflowerPreferences>("fernflower.json");
         }
     }
 }

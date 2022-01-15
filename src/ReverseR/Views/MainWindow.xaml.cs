@@ -28,7 +28,7 @@ namespace ReverseR.Views
                 return;
             }
             if(((DataContext as ViewModels.MainWindowViewModel).ActiveContent 
-                as FrameworkElement).DataContext is IDecompileViewModel viewModel)
+                as FrameworkElement)?.DataContext is IDecompileViewModel viewModel)
             {
                 Container.Resolve<IEventAggregator>().GetEvent<MenuCanExecuteEvent>().Publish(e);
             }

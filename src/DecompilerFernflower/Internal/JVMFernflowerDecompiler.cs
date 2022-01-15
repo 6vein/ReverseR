@@ -57,7 +57,7 @@ namespace DecompilerFernflower.Decompile.Internal
                 });
                 process.StartInfo.RedirectStandardOutput = true;
                 process.StartInfo.RedirectStandardError = true;
-                process.StartInfo.Arguments = "-jar " + Preferences.GetDecompilerPath() + Preferences.GetArgumentsString(path, output, referlib);
+                process.StartInfo.Arguments = "-jar " + Options.GetDecompilerPath() + Options.GetArgumentsString(path, output, referlib);
                 process.OutputDataReceived += (s, e) =>
                 {
                     if (!IsCancelled()) 

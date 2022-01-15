@@ -2,7 +2,7 @@
 using ReverseR.Common.Services;
 using ReverseR.Common.DecompUtilities;
 using ReverseR.Common.ViewUtilities;
-using ReverseR.DecompileView.Default.ViewModels;
+using ReverseR.DecompileView.Default.Views;
 using Prism.Ioc;
 using Prism.Modularity;
 using System.Windows;
@@ -11,6 +11,7 @@ using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using Prism.Services.Dialogs;
+using ReverseR.Properties;
 
 namespace ReverseR
 {
@@ -36,10 +37,14 @@ namespace ReverseR
             containerRegistry.RegisterDialog<ErrorDialog>();
             containerRegistry.RegisterDialogWindow<MetroDialogWindowHost>();
 
-            containerRegistry.Register<IDecompileViewModel, ViewDecompileViewModel>();
-            containerRegistry.Register<IMenuViewModel, ViewModels.DefaultMenuItem>();
+            containerRegistry
+                .Register<IDefaultView, ViewDecompile>()
+                .Register<IMenuViewModel, ViewModels.DefaultMenuItem>();
 
-            containerRegistry.Register<IDecompileResult, Internal.DecompUtilities.DefaultDecompResult>();
+            containerRegistry
+                .Register<IDecompileResult, Internal.DecompUtilities.DefaultDecompResult>()
+                .RegisterSingleton<IDecompilerResolver, Internal.DecompUtilities.DefaultDecompilerResolver>();
+
             containerRegistry.Register<IBackgroundTaskBuilder, Internal.Services.DefaultBackgroundTaskBuilder>();
         }
 
@@ -51,7 +56,7 @@ namespace ReverseR
 
         protected override IModuleCatalog CreateModuleCatalog()
         {
-            return new DirectoryModuleCatalog() { ModulePath = AppDomain.CurrentDomain.BaseDirectory + "\\Plugins\\" };
+            return new Internal.Modularity.DefaultModuleCatalog();
         }
 
         protected override void ConfigureRegionAdapterMappings(RegionAdapterMappings regionAdapterMappings)
@@ -62,8 +67,15 @@ namespace ReverseR
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            Common.GlobalUtils.Load();
+            Common.GlobalUtils.Load(Settings.Default, l => l.JsonConfig);
             base.OnStartup(e);
+        }
+        protected override void OnExit(ExitEventArgs e)
+        {
+            Common.GlobalUtils.Save(Settings.Default, l => l.JsonConfig);
+            //save to file
+            Settings.Default.Save();
+            base.OnExit(e);
         }
 
         private void PrismApplication_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
