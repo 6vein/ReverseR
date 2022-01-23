@@ -5,6 +5,7 @@ using ReverseR.Common.DecompUtilities;
 using ReverseR.Common.Extensibility;
 using System;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using ICSharpCode.SharpZipLib.Zip;
@@ -93,7 +94,7 @@ namespace ReverseR.DecompileView.Default.ViewModels
             viewModel.DecompileTask.Start();*/
             viewModel.DecompTaskTokenSource = new CancellationTokenSource();
             viewModel.AttachDecompileTask(Container.Resolve<IBackgroundTaskBuilder>()
-                .WithTask(obj =>
+                .WithTask(async obj =>
                 {
                     var token = obj as CancellationToken?;
                     if (MapSourceToMd5.ContainsKey(path.Path))
@@ -119,6 +120,24 @@ namespace ReverseR.DecompileView.Default.ViewModels
                     try
                     {
                         result = Decompiler.Decompile(tempPath, r => MessageWhole = r, token, BaseDirectory + "\\raw.jar");
+                        if (result.ResultCode == DecompileResultEnum.Success)
+                        {
+                            var files = Directory.GetFiles(result.OutputDir);
+#if DEBUG
+                            Debug.Assert(files.Length == 1);
+#endif
+                            await viewModel.LoadAsync(files[0], path);
+                            
+                            Application.Current.Dispatcher.Invoke(() =>
+                            {
+                                if (!(Manager.ActiveContent is IDocumentViewModel))
+                                    ActivateDocument(viewModel);
+                            });
+                        }
+                        else
+                        {
+                            Container.Resolve<IDialogService>().ReportError(result.ResultCode.ToString(), _ => { });
+                        }
                     }
                     catch (Exception e)
                     {
@@ -141,26 +160,18 @@ namespace ReverseR.DecompileView.Default.ViewModels
                     {
                         token.Value.ThrowIfCancellationRequested();
                     }
-
-                    if (result.ResultCode == DecompileResultEnum.Success)
-                    {
-                        var files = Directory.GetFiles(result.OutputDir);
-#if DEBUG
-                        Debug.Assert(files.Length == 1);
-#endif
-                        viewModel.Load(files[0]);
-                    }
-                    else
-                    {
-                        Container.Resolve<IDialogService>().ReportError(result.ResultCode.ToString(), _ => { });
-                    }
                     Directory.Delete(tempPath, true);
                 },viewModel.DecompTaskTokenSource.Token)
+                .WithName($"{Path.GetFileName(path.Path)}")
+                .WithDescription($"Decompiler {Decompiler.GetDecompilerInfo().FriendlyName}")
                 .Build());
             viewModel.BackgroundTask.Start();
             return viewModel;
         }
-
+        public override void ActivateDocument(IDocumentViewModel documentViewModel)
+        {
+            Manager.ActiveContent = documentViewModel;
+        }
         #endregion
         #region UserInterface
         public DockingManager Manager { get; set; }

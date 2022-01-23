@@ -15,14 +15,20 @@ namespace ReverseR.Internal.Services
         Action<object> _action;
         CancellationToken? _token;
         TaskCreationOptions _options;
+        string _name;
+        string _description;
         public IBackgroundTask Build()
         {
             var task = new DefaultBackgroundTask();
+            task.TaskName = _name;
+            task.TaskDescription = _description;
             if (_scheduler != null)
                 task.OnCompletedCallbackScheduler = _scheduler;
             task.Token = _token;
             task.SetCompleteCallback(_callback);
-            task.SetTask(new Task(_action,_token));
+            if (_token.HasValue)
+                task.SetTask(new Task(_action, _token, _token.Value));
+            else task.SetTask(new Task(_action, _token));
             return task;
         }
 
@@ -56,6 +62,17 @@ namespace ReverseR.Internal.Services
             return this;
         }
 
+        public IBackgroundTaskBuilder WithName(string name)
+        {
+            _name = name;
+            return this;
+        }
+        public IBackgroundTaskBuilder WithDescription(string description)
+        {
+            _description = description;
+            return this;
+        }
+
         public IBackgroundTaskBuilder<TResult> WithTask<TResult>(Func<object, TResult> func, CancellationToken? token = null, TaskCreationOptions options = TaskCreationOptions.None)
         {
             var builder = new DefaultBackgroundTaskBuilder<TResult>();
@@ -74,13 +91,21 @@ namespace ReverseR.Internal.Services
         internal Func<object,TResult> _func;
         internal CancellationToken? _token;
         internal TaskCreationOptions _options;
+        internal string _name;
+        internal string _description;
         public IBackgroundTask<TResult> Build()
         {
             var task = new DefaultBackgroundTask<TResult>();
-            task.OnCompletedCallbackScheduler = _scheduler;
+            task.TaskName = _name;
+            task.TaskDescription = _description;
+            if (_scheduler != null)
+                task.OnCompletedCallbackScheduler = _scheduler;
             task.Token = _token;
             task.SetCompleteCallback(_callback);
-            task.SetTask(new Task<TResult>(_func,_token));
+            if (_token.HasValue)
+                task.SetTask(new Task<TResult>(_func, _token, _token.Value));
+            else
+                task.SetTask(new Task<TResult>(_func, _token));
             return task;
         }
 
@@ -101,6 +126,16 @@ namespace ReverseR.Internal.Services
             _func = func;
             _token = token;
             _options = options;
+            return this;
+        }
+        public IBackgroundTaskBuilder<TResult> WithName(string name)
+        {
+            _name = name;
+            return this;
+        }
+        public IBackgroundTaskBuilder<TResult> WithDescription(string description)
+        {
+            _description = description;
             return this;
         }
     }

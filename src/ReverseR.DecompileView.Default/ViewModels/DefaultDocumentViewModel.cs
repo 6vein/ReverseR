@@ -18,6 +18,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Xml;
 using ReverseR.Common.Services;
+using ReverseR.Common.DecompUtilities;
 
 namespace ReverseR.DecompileView.Default.ViewModels
 {
@@ -93,7 +94,9 @@ namespace ReverseR.DecompileView.Default.ViewModels
                         Application.Current.Dispatcher.Invoke(() =>
                         {
                             _completionWindow = new CompletionWindow(EditorControl.TextArea);
-                            _completionWindow.WindowStyle = WindowStyle.None;
+                            _completionWindow.ExpectInsertionBeforeStart = true;
+                            //_completionWindow.BorderThickness = new Thickness(0);
+                            _completionWindow.CompletionList.Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255));
                             _completionWindow.CompletionList.Background = new SolidColorBrush(Color.FromRgb(45, 45, 48));
                             _completionWindow.CloseAutomatically = true;
                             _completionWindow.CloseWhenCaretAtBeginning = true;
@@ -101,6 +104,7 @@ namespace ReverseR.DecompileView.Default.ViewModels
                             {
                                 _completionWindow.CompletionList.CompletionData.Add(item);
                             }
+                            _completionWindow.ResizeMode = ResizeMode.NoResize;
                             _completionWindow.Show();
                         });
                     }
@@ -113,9 +117,9 @@ namespace ReverseR.DecompileView.Default.ViewModels
         EditorViewModel _editor = new EditorViewModel();
         [JsonProperty]
         public EditorViewModel Editor { get => _editor; set => SetProperty(ref _editor, value); }
-        public override void Load(string path)
+        public override async Task LoadAsync(string path, JPath jPath)
         {
-            Title = System.IO.Path.GetFileName(path);
+            //Title = System.IO.Path.GetFileName(path);
             if (HighlightingManager.Instance.GetDefinition("Java-Dark") == null)
             {
                 using (XmlTextReader reader = new XmlTextReader(Application.GetResourceStream(new Uri("pack://application:,,,/ReverseR.DecompileView.Default;component/Resources/Java-Dark.xshd")).Stream))
@@ -125,15 +129,16 @@ namespace ReverseR.DecompileView.Default.ViewModels
                 }
             }
             Editor.SyntaxHighlighting = HighlightingManager.Instance.GetDefinition("Java-Dark");
-            Path = path;
+            Path = jPath.ClassPath;
             using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read)) 
             {
                 using (StreamReader reader = new StreamReader(fs, Editor.Encoding ?? Encoding.UTF8)) 
                 {
-                    var task = reader.ReadToEndAsync();
-                    Application.Current.Dispatcher.Invoke(async () =>
+                    string str = await reader.ReadToEndAsync();
+                    Application.Current.Dispatcher.Invoke(() =>
                     {
-                        Editor.Document.Text = await task;
+                        Editor.Document.Text = str;
+                        Editor.Document.UndoStack.ClearAll();
                     });
                     Editor.Encoding = reader.CurrentEncoding;
                 }

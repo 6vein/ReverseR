@@ -51,6 +51,18 @@ namespace ReverseR.Common.Services
         /// <param name="scheduler">the scheduler,<see cref="TaskScheduler.Default"/> by default</param>
         /// <returns></returns>
         IBackgroundTaskBuilder WithCallbackTaskScheduler(TaskScheduler scheduler);
+        /// <summary>
+        /// Set the <see cref="IBackgroundTask.TaskName"/>
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        IBackgroundTaskBuilder WithName(string name);
+        /// <summary>
+        /// Set the <see cref="IBackgroundTask.TaskDescription"/>
+        /// </summary>
+        /// <param name="description"></param>
+        /// <returns></returns>
+        IBackgroundTaskBuilder WithDescription(string description);
         IBackgroundTask Build();
     }
 
@@ -81,6 +93,18 @@ namespace ReverseR.Common.Services
         /// <param name="scheduler">the scheduler,<see cref="TaskScheduler.Default"/> by default</param>
         /// <returns></returns>
         IBackgroundTaskBuilder<TResult> WithCallbackTaskScheduler(TaskScheduler scheduler);
+        /// <summary>
+        /// Set the <see cref="IBackgroundTask{TResult}.TaskName"/>
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        IBackgroundTaskBuilder<TResult> WithName(string name);
+        /// <summary>
+        /// Set the <see cref="IBackgroundTask{TResult}.TaskDescription"/>
+        /// </summary>
+        /// <param name="description"></param>
+        /// <returns></returns>
+        IBackgroundTaskBuilder<TResult> WithDescription(string description);
         IBackgroundTask<TResult> Build();
 
     }

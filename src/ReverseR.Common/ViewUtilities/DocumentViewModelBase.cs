@@ -14,6 +14,7 @@ using ReverseR.Common.Code;
 using System.Threading;
 using System.Windows.Threading;
 using System.Diagnostics;
+using ReverseR.Common.DecompUtilities;
 
 namespace ReverseR.Common.ViewUtilities
 {
@@ -70,7 +71,7 @@ namespace ReverseR.Common.ViewUtilities
         #endregion
         #region FileOperations
         protected ICodeCompletion CompletionProvider { get; set; }
-        public abstract void Load(string path);
+        public abstract Task LoadAsync(string path, JPath classPath);
 
         /// <summary>
         /// Cancels the background task

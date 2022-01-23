@@ -24,17 +24,30 @@ namespace BasicCodeCompletion
 
         public IList<ICompletionData> Complete(string text, string path, CancellationToken? token = null)
         {
-            string md5 = APIHelper.GetMd5Of(path);
+            string md5 = APIHelper.GetMd5OfText(path);
             if (md5!=fileMd5)
             {
                 fileMd5 = md5;
                 List<ICompletionData> data = new List<ICompletionData>();
-                string content = File.ReadAllText(path, Encoding.UTF8);
+                string content = path;
                 if (token.HasValue && token.Value.IsCancellationRequested)
                     return null;
-                var list = content.Split(new char[] { ' ', '\n', '\t' },StringSplitOptions.RemoveEmptyEntries);
-                var unique = list.ToHashSet();
-                unique.Remove(text);
+                HashSet<string> unique = new HashSet<string>();
+                char[] str = new char[100];
+                int indexer = 0;
+                foreach (char ch in content)
+                {
+                    if (char.IsLetter(ch) && indexer < 100 - 1)
+                    {
+                        str[indexer++] = ch;
+                    }
+                    else
+                    {
+                        if (indexer > 3)
+                            unique.Add(new string(str, 0, indexer));
+                        indexer = 0;
+                    }
+                }
                 foreach (var item in unique)
                 {
                     if (token.HasValue && token.Value.IsCancellationRequested)

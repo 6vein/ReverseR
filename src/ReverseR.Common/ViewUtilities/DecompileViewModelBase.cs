@@ -163,11 +163,6 @@ namespace ReverseR.Common.ViewUtilities
         {
             return _InnerOpenDocument(path);
         }
-        [Obsolete("Not using ReverseR.Common.DecompUtilities.JPath may cause some problems,for example,when there are inner classes exist")]
-        public IDocumentViewModel OpenDocument(string path)
-        {
-            return _InnerOpenDocument(path);
-        }
         protected abstract void InitalizePlugins();
         protected ContentControl CreatePluginRegion(IDockablePlugin plugin)
         {
@@ -226,7 +221,7 @@ namespace ReverseR.Common.ViewUtilities
         {
             throw new NotImplementedException();
         }
-
+        public abstract void ActivateDocument(IDocumentViewModel documentViewModel);
         public void CloseDocument(IDocumentViewModel documentViewModel, bool ForceClose = false)
         {
             if (documentViewModel.Closing()||ForceClose)

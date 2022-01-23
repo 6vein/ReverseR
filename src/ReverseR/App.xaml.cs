@@ -12,6 +12,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using Prism.Services.Dialogs;
 using ReverseR.Properties;
+using System.Configuration;
 
 namespace ReverseR
 {

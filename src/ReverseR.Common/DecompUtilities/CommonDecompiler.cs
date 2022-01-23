@@ -22,6 +22,10 @@ namespace ReverseR.Common.DecompUtilities
             AfterDecompileCallback?.Invoke();
             return result;
         }
+        public GlobalUtils.DecompilerInfo GetDecompilerInfo()
+        {
+            return GlobalUtils.Decompilers.First(item => item.Id == Id);
+        }
         protected abstract IDecompileResult RunDecompiler(string path, Action<string> msgSetter, CancellationToken? token, params string[] referlib);
     }
 }

@@ -34,7 +34,8 @@ namespace PluginSourceControl.ViewModels
             get { return _title; }
             set { SetProperty(ref _title, value); }
         }
-
+        private string classRoot;
+        private string JarName => Path.GetFileNameWithoutExtension(Parent.FilePath);
         /*private double _width;
         public double Width
         {
@@ -62,6 +63,7 @@ namespace PluginSourceControl.ViewModels
         {
             Title = "Source Control - Loading...";
             SourceTree = new ObservableCollection<SourceTreeNode>();
+            classRoot = baseDir + "\\Content";
             /*string contentRoot = baseDir + "\\Content";
             var directories = Directory.GetDirectories(contentRoot);
             foreach (var directory in directories)
@@ -180,7 +182,7 @@ namespace PluginSourceControl.ViewModels
                 SourceTreeNode node = Container.Resolve<SourceTreeNode>();
                 node.Text = Path.GetFileName(directory);
                 node.Type = SourceTreeNode.NodeType.Directory;
-                node.JPath = directory;
+                node.JPath = new JPath(directory, directory.Replace(classRoot, JarName));
                 XmlDocument document = new XmlDocument();
                 XmlNamespaceManager nsmgr = new XmlNamespaceManager(document.NameTable);
                 nsmgr.AddNamespace("wpf", "http://schemas.microsoft.com/winfx/2006/xaml/presentation");
@@ -227,7 +229,8 @@ namespace PluginSourceControl.ViewModels
                         Regex engine = new Regex($@"{match.Result("$1")}\$\w+");
                         node.Type = SourceTreeNode.NodeType.JavaClass;
                         node.JPath = new JPath(Path.Combine(Path.GetDirectoryName(path), match.Result("$1") + Path.GetExtension(path)),
-                            files.Where(s => engine.Match(Path.GetFileNameWithoutExtension(s)).Success));
+                            path.Replace(classRoot,JarName)
+                            ,files.Where(s => engine.Match(Path.GetFileNameWithoutExtension(s)).Success));
                         node.Text = Path.GetFileNameWithoutExtension(node.JPath.Path);
                         //add to the ignore list to prevent from duplicating
                         fileIgnore.Add(node.JPath.Path);
@@ -236,7 +239,7 @@ namespace PluginSourceControl.ViewModels
                     else
                     {
                         node.Type = SourceTreeNode.NodeType.JavaClass;
-                        node.JPath = path;
+                        node.JPath = new JPath(path, path.Replace(classRoot, JarName));
                         node.Text = Path.GetFileNameWithoutExtension(path);
                     }
                     XmlDocument document = new XmlDocument();
@@ -260,7 +263,7 @@ namespace PluginSourceControl.ViewModels
                 else
                 {
                     node.Type = SourceTreeNode.NodeType.Others;
-                    node.JPath = path;
+                    node.JPath = new JPath(path, "");
                     node.Text = Path.GetFileName(path);
                     using (var icon = System.Drawing.Icon.ExtractAssociatedIcon(path))
                     {
@@ -303,7 +306,10 @@ namespace PluginSourceControl.ViewModels
                       var node = (item.DataContext as SourceTreeNode);
                       if (node.Type == SourceTreeNode.NodeType.JavaClass)
                       {
-                          node.AssociatedDocument = Parent.OpenDocument(node.JPath);
+                          if (node.AssociatedDocument == null)
+                              node.AssociatedDocument = Parent.OpenDocument(node.JPath);
+                          else
+                              Parent.ActivateDocument(node.AssociatedDocument);
                           //prevent from expanding/collapsing
                           node.IsExpanded = !node.IsExpanded;
                       }

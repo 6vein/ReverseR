@@ -321,7 +321,10 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <xcad:DockingManager Name="PART_LayoutRoot" prism:RegionManager.RegionName="RootDockRegion" ActiveContent="{Binding ActiveContent}">
+        <xcad:DockingManager Name="PART_LayoutRoot" 
+                             prism:RegionManager.RegionName="RootDockRegion" 
+                             ActiveContent="{Binding ActiveContent}"
+                             local:InputBindingsBehavior.InputBindings="{Binding ElementName=ReverseR_Shell,Path=DataContext.InputBindings}">
             <!--<behaviors:Interaction.Triggers>
                 <behaviors:EventTrigger EventName="ActiveContentChanged">
                     <behaviors:ChangePropertyAction TargetObject="{Binding}" TargetName="ActiveContent" Value="{Binding ElementName=PART_LayoutRoot,Path=ActiveContent}"/>

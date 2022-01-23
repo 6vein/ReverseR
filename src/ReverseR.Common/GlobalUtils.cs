@@ -15,6 +15,7 @@ namespace ReverseR.Common
 {
     public static class GlobalUtils
     {
+        [Serializable]
         public class ConfigStorage
         {
             /// <summary>
@@ -46,31 +47,26 @@ namespace ReverseR.Common
             public ICommonPreferences.RunTypes RunType { get; set; }
         }
         public static ConfigStorage GlobalConfig { get; set; }
-        public static void Save<T>(T holder,Expression<Func<T,string>> prop)
+        public static string SaveToString()
         {
-            MemberExpression memberExpression = prop.Body as MemberExpression;
-            var property = typeof(T).GetProperties().First(l => l.Name == memberExpression.Member.Name);
-            property.SetValue(holder, JsonConvert.SerializeObject(GlobalConfig));
-
-            //File.WriteAllText("config.json", JsonConvert.SerializeObject(GlobalConfig));
+            return JsonConvert.SerializeObject(GlobalConfig);
         }
-        public static void Load<T>(T holder,Expression<Func<T,string>> prop)
+        public static void LoadFromString(string data)
         {
-            MemberExpression memberExpression = prop.Body as MemberExpression;
-            var property = typeof(T).GetProperties().First(l => l.Name == memberExpression.Member.Name);
-            if (property?.GetValue(holder) != null) 
+            if (!string.IsNullOrEmpty(data))
             {
-#if DEBUG
-                object str = property.GetValue(holder);
-#endif
-                try 
+                try
                 {
-                    GlobalConfig = JsonConvert.DeserializeObject(property.GetValue(holder) as string, typeof(ConfigStorage)) as ConfigStorage;
+                    GlobalConfig = JsonConvert.DeserializeObject(data, typeof(ConfigStorage)) as ConfigStorage;
                 }
                 catch { }
                 //check valid and set default values
                 if (GlobalConfig != null)
                 {
+                    if (!File.Exists(Environment.ExpandEnvironmentVariables(GlobalConfig.ConfigPrefix)))
+                    {
+                        GlobalConfig.ConfigPrefix = AppDomain.CurrentDomain.BaseDirectory;
+                    }
                     if (!File.Exists(Environment.ExpandEnvironmentVariables(GlobalConfig.JavaPath)))
                     {
                         if (Environment.GetEnvironmentVariable("JAVA_HOME") == null)
@@ -103,6 +99,7 @@ namespace ReverseR.Common
                 else
                 {
                     GlobalConfig = new ConfigStorage();
+                    GlobalConfig.ConfigPrefix = AppDomain.CurrentDomain.BaseDirectory;
                     GlobalConfig.JavaPath = Environment.ExpandEnvironmentVariables("%JAVA_HOME%\\bin\\java.exe");
                     GlobalConfig.CachePath = Environment.ExpandEnvironmentVariables("%UserProfile%\\.ReverseR\\Cache");
                     GlobalConfig.ModulePath = AppDomain.CurrentDomain.BaseDirectory + "Plugins\\";
@@ -110,6 +107,23 @@ namespace ReverseR.Common
                     Directory.CreateDirectory(GlobalConfig.CachePath);
                 }
             }
+        }
+        public static void Save<T>(T holder,Expression<Func<T,string>> prop)
+        {
+            MemberExpression memberExpression = prop.Body as MemberExpression;
+            var property = typeof(T).GetProperties().First(l => l.Name == memberExpression.Member.Name);
+            property.SetValue(holder, JsonConvert.SerializeObject(GlobalConfig));
+
+            //File.WriteAllText("config.json", JsonConvert.SerializeObject(GlobalConfig));
+        }
+        public static void Load<T>(T holder,Expression<Func<T,string>> prop)
+        {
+            MemberExpression memberExpression = prop.Body as MemberExpression;
+            var property = typeof(T).GetProperties().First(l => l.Name == memberExpression.Member.Name);
+#if DEBUG
+            object str = property?.GetValue(holder);
+#endif
+            LoadFromString(property?.GetValue(holder) as string);
         }
         public struct DecompilerInfo
         {

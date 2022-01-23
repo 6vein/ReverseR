@@ -26,6 +26,7 @@ namespace ReverseR.Common.ViewUtilities
         /// <param name="path"></param>
         /// <returns></returns>
         public IDocumentViewModel OpenDocument(JPath path);
+        public void ActivateDocument(IDocumentViewModel documentViewModel);
         /// <summary>
         /// Closes the document,will call <see cref="IDocumentViewModel.Cleanup"/>
         /// </summary>
