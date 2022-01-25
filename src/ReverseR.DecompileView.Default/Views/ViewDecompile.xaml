@@ -118,12 +118,22 @@
                             </DataTemplate>
                         </local:DocumentTemplateSelector.DocumentTemplate>
                         <local:DocumentTemplateSelector.DefaultTemplate>
-                            <DataTemplate>
-                                <Controls:ContentControlEx Content="{Binding}"/>
+                            <DataTemplate xmlns:con="clr-namespace:ReverseR.Common.Controls;assembly=ReverseR.Common">
+                                <con:ViewRegionControl/>
                             </DataTemplate>
                         </local:DocumentTemplateSelector.DefaultTemplate>
                     </local:DocumentTemplateSelector>
                 </xcad:DockingManager.LayoutItemTemplateSelector>
+                <xcad:DockingManager.AnchorableHeaderTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Content.Title}"/>
+                    </DataTemplate>
+                </xcad:DockingManager.AnchorableHeaderTemplate>
+                <xcad:DockingManager.AnchorableTitleTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Content.Title}"/>
+                    </DataTemplate>
+                </xcad:DockingManager.AnchorableTitleTemplate>
                 <xcad:DockingManager.DocumentHeaderTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Content.Title}" ToolTip="{Binding Content.Path}"/>

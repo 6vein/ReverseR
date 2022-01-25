@@ -7,7 +7,7 @@ using Prism.Events;
 
 namespace ReverseR.Common.Events
 {
-    public class ArchiveOpenedEvent:PubSubEvent<string>
+    public class ArchiveOpenedEvent:PubSubEvent<(string,Guid)>
     {
     }
 }

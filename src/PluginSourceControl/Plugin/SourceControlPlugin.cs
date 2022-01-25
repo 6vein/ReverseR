@@ -37,9 +37,9 @@ namespace PluginSourceControl.Plugin
             Container.Resolve<IRegionManager>().AddToRegion(RegionName, View);
         }
 
-        void OnArchiveOpened(string baseDir)
+        void OnArchiveOpened((string baseDir,Guid guid) payload)
         {
-            (ViewModel as ViewModels.ViewSourceControlViewModel).UpdateSourceTree(baseDir);
+            (ViewModel as ViewModels.ViewSourceControlViewModel).UpdateSourceTree(payload.baseDir);
         }
 
         public ObservableCollection<IMenuViewModel> InsertPluginMenu()
@@ -50,7 +50,10 @@ namespace PluginSourceControl.Plugin
         public SourceControlPlugin()
         {
             Container = this.GetIContainer();
-            Container.Resolve<IEventAggregator>().GetEvent<ArchiveOpenedEvent>().Subscribe(OnArchiveOpened, ThreadOption.BackgroundThread);
+            Container.Resolve<IEventAggregator>().GetEvent<ArchiveOpenedEvent>()
+                .Subscribe(OnArchiveOpened, ThreadOption.BackgroundThread, false,
+                payload => payload.Item2 == ParentViewModel?.Guid
+                );
         }
     }
 }

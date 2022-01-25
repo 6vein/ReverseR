@@ -2,12 +2,14 @@
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 using Prism.Ioc;
 
 namespace ReverseR.Common
 {
+    public interface IDIAble { }
     public static class APIHelper
     {
         [DllImport("Kernel32.dll", CharSet = CharSet.Auto)]
@@ -21,7 +23,7 @@ namespace ReverseR.Common
         {
             return (System.Windows.Application.Current as Prism.PrismApplicationBase).Container;
         }
-        public static IContainerProvider GetIContainer(this ViewUtilities.IDockablePlugin obj)
+        public static IContainerProvider GetIContainer(this IDIAble obj)
         {
             return (System.Windows.Application.Current as Prism.PrismApplicationBase).Container;
         }
@@ -41,7 +43,16 @@ namespace ReverseR.Common
             md5 = md5.Replace("-", "");
             return md5;
         }
+        public static string GetMd5OfIncludingPath(string path)
+        {
+            var md5obj = new System.Security.Cryptography.MD5CryptoServiceProvider();
+            //FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
 
+            byte[] buffer = md5obj.ComputeHash(File.ReadAllBytes(path).Concat(Encoding.Unicode.GetBytes(path)).ToArray());
+            string md5 = BitConverter.ToString(buffer);
+            md5 = md5.Replace("-", "");
+            return md5;
+        }
         public static string GetMd5OfText(string text)
         {
             var md5obj = new System.Security.Cryptography.MD5CryptoServiceProvider();

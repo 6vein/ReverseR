@@ -17,7 +17,7 @@ namespace ReverseR.Common.ViewUtilities
     /// the Region Name is <see cref="IDockablePlugin.PluginName"/> + <see cref="IDecompileViewModel.Guid"/>
     /// </para>
     /// </summary>
-    public interface IDockablePlugin:IPlugin
+    public interface IDockablePlugin:IPlugin,IDIAble
     {
         public string PluginName { get; }
         public AnchorableShowStrategy Side { get; set; }

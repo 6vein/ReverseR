@@ -23,6 +23,7 @@ using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Windows.Data;
 using System.Diagnostics;
+using ReverseR.Common.Controls;
 
 namespace ReverseR.DecompileView.Default.ViewModels
 {
@@ -188,14 +189,15 @@ namespace ReverseR.DecompileView.Default.ViewModels
                 {
                     RaisePropertyChanged();
                 };
-                layoutAnchorable.Content = CreatePluginRegion(plugin);
+                var container = CreatePluginRegion(plugin);
+                layoutAnchorable.Content = container;
                 MapPluginAnchor[plugin] = layoutAnchorable;
                 layoutAnchorable.AddToLayout(Manager, plugin.Side);
                 //(layoutAnchorable.Parent as LayoutAnchorablePane).DockMinWidth = plugin.InitialWidth;
                 //(layoutAnchorable.Parent as LayoutAnchorablePane).DockMinHeight = plugin.InitialHeight;
                 plugin.InitalizePlugin(this);
                 Binding binding = new Binding("Title") { Source = plugin.ViewModel, Mode = BindingMode.OneWay };
-                BindingOperations.SetBinding(layoutAnchorable, LayoutAnchorable.TitleProperty, binding);
+                BindingOperations.SetBinding(container, ViewRegionControl.TitleProperty, binding);
             }
             foreach(IPlugin plugin in Plugins)
             {

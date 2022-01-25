@@ -72,7 +72,7 @@ namespace ReverseR.Common.ViewUtilities
             //TitleTooltip = FilePath;
             try
             {
-                Md5 = APIHelper.GetMd5Of(FilePath);
+                Md5 = APIHelper.GetMd5OfIncludingPath(FilePath);
                 BaseDirectory = GlobalUtils.GlobalConfig.CachePath + $"\\{Md5}";
                 ContentDirectory = BaseDirectory + "\\Content";
                 Directory.CreateDirectory(BaseDirectory);
@@ -164,9 +164,9 @@ namespace ReverseR.Common.ViewUtilities
             return _InnerOpenDocument(path);
         }
         protected abstract void InitalizePlugins();
-        protected ContentControl CreatePluginRegion(IDockablePlugin plugin)
+        protected Controls.ViewRegionControl CreatePluginRegion(IDockablePlugin plugin)
         {
-            ContentControl contentControl = new ContentControl();
+            Controls.ViewRegionControl contentControl = new Controls.ViewRegionControl();
             RegionManager.SetRegionName(contentControl, $"{plugin.PluginName}{{{Guid.ToString()}}}");
             RegionManager.SetRegionManager(contentControl, Container.Resolve<IRegionManager>());
             return contentControl;
@@ -184,7 +184,7 @@ namespace ReverseR.Common.ViewUtilities
             {
                 if(plugin.NotifyOption.HasFlag(option))
                 {
-                    Container.Resolve<IEventAggregator>().GetEvent<ArchiveOpenedEvent>().Publish(BaseDirectory);
+                    Container.Resolve<IEventAggregator>().GetEvent<ArchiveOpenedEvent>().Publish((BaseDirectory,Guid));
                 }
             }
         }

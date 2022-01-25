@@ -102,6 +102,19 @@ namespace ReverseR.ViewModels
                         {
                             view = GlobalUtils.ResolveViewByIndex(index);
                         }*/
+                        var curr = regionManager.Regions["RootDockRegion"].Views
+                            .Where(item => {
+                                if ((item as System.Windows.FrameworkElement)?.DataContext is IDecompileViewModel vm)
+                                {
+                                    if (vm.FilePath == path) return true;
+                                }
+                                return false;
+                            });
+                        if (curr.Any())
+                        {
+                            ActiveContent = curr.First();
+                            continue;
+                        }
                         view = GlobalUtils.ResolveViewByIndex(index);
                         Guid guid = ((view as System.Windows.FrameworkElement).DataContext as IDecompileViewModel).Guid;
                         regionManager.AddToRegion("RootDockRegion", view);
