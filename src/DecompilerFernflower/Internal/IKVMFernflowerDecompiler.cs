@@ -13,23 +13,23 @@ using Prism.Services.Dialogs;
 using System.ComponentModel;
 using ReverseR.Common.DecompUtilities;
 
-namespace ModuleFernflower.Decompile.Internal
+namespace DecompilerFernflower.Decompile.Internal
 {
-    internal class JVMFernflowerDecompiler:FernflowerDecompiler
+    internal class IKVMFernflowerDecompiler:FernflowerDecompiler
     {
-        public JVMFernflowerDecompiler(IContainerProvider containerProvider) : base(containerProvider) { }
-        protected override IDecompileResult RunDecompiler(string path, Action<string> msgSetter,CancellationToken? token,params string[] referlib)
+        public IKVMFernflowerDecompiler(IContainerProvider containerProvider) : base(containerProvider) { }
+        protected override IDecompileResult RunDecompiler(string path, Action<string> msgSetter, CancellationToken? token, params string[] referlib)
         {
             string output = null;
             IDecompileResult result = Container.Resolve<IDecompileResult>();
             //check if path is a directory
-            if(Directory.Exists(path))
+            if (Directory.Exists(path))
             {
                 output = Path.Combine(path, "decompiled");
                 path += "\\\\";//add backslash for fernflower
                 Directory.CreateDirectory(output);
             }
-            else if(File.Exists(path))
+            else if (File.Exists(path))
             {
                 output = Path.Combine(Path.GetDirectoryName(path), "decompiled");
                 Directory.CreateDirectory(output);
@@ -38,16 +38,11 @@ namespace ModuleFernflower.Decompile.Internal
             {
                 throw new ArgumentException($"Error:\"{path}\" is not a valid path!");
             }
-            string executePath = GlobalUtils.GlobalConfig.JavaPath;
+            string executePath = Options.GetDecompilerPath();
             using (Process process = new Process())
             {
                 bool IsCancelled() => token.HasValue && token.Value.IsCancellationRequested == true;
                 process.StartInfo.FileName = executePath;
-#if DEBUG
-                process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
-#else
-                process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-#endif
                 process.StartInfo.ErrorDialog = true;
                 process.StartInfo.UseShellExecute = false;
                 System.Windows.Application.Current.Dispatcher.Invoke(() =>
@@ -57,10 +52,15 @@ namespace ModuleFernflower.Decompile.Internal
                 });
                 process.StartInfo.RedirectStandardOutput = true;
                 process.StartInfo.RedirectStandardError = true;
-                process.StartInfo.Arguments = "-jar " + Options.GetDecompilerPath() + Options.GetArgumentsString(path, output, referlib);
+                process.StartInfo.Arguments = Options.GetArgumentsString(path, output, referlib);
+#if DEBUG
+                process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
+#else
+                process.StartInfo.CreateNoWindow = true;
+#endif
                 process.OutputDataReceived += (s, e) =>
                 {
-                    if (!IsCancelled()) 
+                    if (!IsCancelled())
                         msgSetter.Invoke(e.Data);
                     else
                     {
@@ -69,7 +69,7 @@ namespace ModuleFernflower.Decompile.Internal
                 };
                 process.ErrorDataReceived += (s, e) =>
                 {
-                    if(e.Data!=null)
+                    if (e.Data != null)
                     {
                         result.HasError = true;
                     }
@@ -100,12 +100,12 @@ namespace ModuleFernflower.Decompile.Internal
                 }
                 catch (Exception e)
                 {
-                    if(!process.HasExited)
+                    if (!process.HasExited)
                     {
                         throw e;
                     }
                 }
-                if (IsCancelled()) 
+                if (IsCancelled())
                 {
                     throw new OperationCanceledException();
                 }

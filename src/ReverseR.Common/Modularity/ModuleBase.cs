@@ -33,7 +33,7 @@ namespace ReverseR.Common.Modularity
         }
 
 
-        public abstract void Initialized(IContainerProvider containerProvider);
+        public virtual void Initialized(IContainerProvider containerProvider) { }
         public abstract void RegisterTypes(IContainerRegistry containerRegistry);
 
         public ModuleBase()
@@ -41,7 +41,7 @@ namespace ReverseR.Common.Modularity
 #pragma warning disable 0618
 #pragma warning disable 0612
             _container = APIHelper.GetIContainer();
-            var moduleManager = _container.Resolve<IModuleManager>();
+            /*var moduleManager = _container.Resolve<IModuleManager>();
             IModuleInfo thisModuleInfo = moduleManager.Modules.
                 FirstOrDefault(mi => mi.ModuleType == GetType().AssemblyQualifiedName);
             string catalogModuleName = thisModuleInfo.ModuleName.EndsWith("Module")
@@ -49,7 +49,7 @@ namespace ReverseR.Common.Modularity
             string modulePath = string.IsNullOrEmpty(DependencyPath) ? catalogModuleName : DependencyPath;
             //We need to modify it runtime
             AppDomain.CurrentDomain.
-                AppendPrivatePath($"Plugins\\{modulePath}");
+                AppendPrivatePath($"Plugins\\{modulePath}");*/
 #pragma warning restore 0612
 #pragma warning restore 0618
         }

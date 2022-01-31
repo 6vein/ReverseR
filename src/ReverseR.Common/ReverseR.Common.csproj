@@ -255,6 +255,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="APIHelper.cs" />
+    <Compile Include="Code\IClassParser.cs" />
     <Compile Include="Code\ICodeCompletion.cs" />
     <Compile Include="Controls\ViewRegionControl.cs" />
     <Compile Include="DecompUtilities\CommonDecompiler.cs" />

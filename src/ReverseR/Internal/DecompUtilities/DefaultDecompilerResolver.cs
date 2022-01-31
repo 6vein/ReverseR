@@ -26,7 +26,7 @@ namespace ReverseR.Internal.DecompUtilities
             if (embeddedDecompiler != null && embeddedDecompiler.IsSubclassOf(typeof(CommonDecompiler)))
             {
                 Container.Register(typeof(CommonDecompiler), embeddedDecompiler,
-                    $"{id}.{ICommonPreferences.RunTypes.Embedded}");
+                    $"{id}.{ICommonPreferences.RunTypes.IKVM}");
             }
         }
 

@@ -90,7 +90,8 @@ namespace ReverseR
                 }
                 finally
                 {
-                    Environment.FailFast($"An unhandled exception:{e.Exception.Message}", e.Exception);
+                    //Environment.FailFast($"An unhandled exception:{e.Exception.Message}", e.Exception);
+                    throw new Exception("An unhandled exception:{e.Exception.ToString()}\nMessage:{e.Exception.Message}\nFrom:{e.Exception.Source}");
                 }
             }
             

@@ -22,7 +22,7 @@ namespace DecompilerFernflower
         protected override string Id => typeof(FernflowerDecompiler).FullName;
 
         protected override (Type jvmDecompiler, Type embeddedDecompiler) Decompilers
-            => (typeof(JVMFernflowerDecompiler), null);
+            => (typeof(JVMFernflowerDecompiler), typeof(IKVMFernflowerDecompiler));
 
         public override void RegisterTypes(IContainerRegistry containerRegistry)
         {

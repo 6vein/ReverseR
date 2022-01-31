@@ -14,7 +14,9 @@ namespace DecompilerFernflower.Decompile
     public class FernflowerPreferences : ICommonPreferences
     {
         [JsonProperty(PropertyName ="Path")]
-        protected string DecompilerPath { get; set; }
+        protected string DecompilerBasePath { get; set; }
+        protected string DecompilerPath => DecompilerBasePath +
+            (RunType == ICommonPreferences.RunTypes.JVM ? "fernflower.jar\"" : "fernflower.exe\"");
         public ICommonPreferences.RunTypes RunType { get; set; }
         /// <summary>
         /// Constructor of <see cref="FernflowerPreferences"/>,needs %JAVA_HOME% to be set.
@@ -26,14 +28,14 @@ namespace DecompilerFernflower.Decompile
         [JsonConstructor]
         public FernflowerPreferences()
         {
-            DecompilerPath = $"\"{AppDomain.CurrentDomain.BaseDirectory}Plugins\\Jars\\fernflower.jar\"";
             RunType = ICommonPreferences.RunTypes.JVM;
+            DecompilerBasePath = $"\"{AppDomain.CurrentDomain.BaseDirectory}Plugins\\{nameof(DecompilerFernflower)}\\";
         }
         public string GetDecompilerPath()
         {
             if (!File.Exists(DecompilerPath.Replace("\"","")))
             {
-                throw new InvalidOperationException($"Decompiler at {DecompilerPath} does not exist!");
+                return null;
             }
             return DecompilerPath;
         }

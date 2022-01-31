@@ -19,6 +19,7 @@
 // Ambiguous reference in cref attribute
 #pragma warning disable 419
 
+namespace AntlrParser {
 using System;
 using System.IO;
 using System.Text;
@@ -286,13 +287,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_literal; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterLiteral(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitLiteral(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitLiteral(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -342,13 +340,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_primitiveType; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterPrimitiveType(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitPrimitiveType(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitPrimitiveType(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -424,13 +419,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_numericType; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterNumericType(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitNumericType(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitNumericType(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -485,13 +477,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_integralType; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterIntegralType(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitIntegralType(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitIntegralType(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -533,13 +522,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_floatingPointType; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterFloatingPointType(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitFloatingPointType(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitFloatingPointType(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -588,13 +574,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_referenceType; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterReferenceType(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitReferenceType(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitReferenceType(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -661,13 +644,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_classOrInterfaceType; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterClassOrInterfaceType(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitClassOrInterfaceType(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitClassOrInterfaceType(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -752,13 +732,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_classType; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterClassType(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitClassType(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitClassType(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -859,13 +836,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_classType_lf_classOrInterfaceType; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterClassType_lf_classOrInterfaceType(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitClassType_lf_classOrInterfaceType(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitClassType_lf_classOrInterfaceType(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -930,13 +904,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_classType_lfno_classOrInterfaceType; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterClassType_lfno_classOrInterfaceType(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitClassType_lfno_classOrInterfaceType(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitClassType_lfno_classOrInterfaceType(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -993,13 +964,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_interfaceType; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterInterfaceType(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitInterfaceType(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitInterfaceType(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1033,13 +1001,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_interfaceType_lf_classOrInterfaceType; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterInterfaceType_lf_classOrInterfaceType(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitInterfaceType_lf_classOrInterfaceType(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitInterfaceType_lf_classOrInterfaceType(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1073,13 +1038,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_interfaceType_lfno_classOrInterfaceType; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterInterfaceType_lfno_classOrInterfaceType(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitInterfaceType_lfno_classOrInterfaceType(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitInterfaceType_lfno_classOrInterfaceType(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1117,13 +1079,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_typeVariable; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterTypeVariable(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitTypeVariable(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitTypeVariable(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1180,13 +1139,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_arrayType; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterArrayType(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitArrayType(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitArrayType(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1252,13 +1208,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_dims; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterDims(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitDims(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitDims(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1344,13 +1297,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_typeParameter; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterTypeParameter(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitTypeParameter(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitTypeParameter(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1407,13 +1357,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_typeParameterModifier; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterTypeParameterModifier(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitTypeParameterModifier(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitTypeParameterModifier(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1457,13 +1404,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_typeBound; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterTypeBound(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitTypeBound(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitTypeBound(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1526,13 +1470,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_additionalBound; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterAdditionalBound(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitAdditionalBound(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitAdditionalBound(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1569,13 +1510,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_typeArguments; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterTypeArguments(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitTypeArguments(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitTypeArguments(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1618,13 +1556,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_typeArgumentList; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterTypeArgumentList(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitTypeArgumentList(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitTypeArgumentList(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1676,13 +1611,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_typeArgument; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterTypeArgument(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitTypeArgument(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitTypeArgument(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1735,13 +1667,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_wildcard; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterWildcard(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitWildcard(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitWildcard(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1800,13 +1729,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_wildcardBounds; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterWildcardBounds(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitWildcardBounds(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitWildcardBounds(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1858,13 +1784,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_packageName; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterPackageName(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitPackageName(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitPackageName(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1935,13 +1858,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_typeName; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterTypeName(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitTypeName(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitTypeName(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1991,13 +1911,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_packageOrTypeName; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterPackageOrTypeName(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitPackageOrTypeName(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitPackageOrTypeName(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2068,13 +1985,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_expressionName; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterExpressionName(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitExpressionName(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitExpressionName(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2120,13 +2034,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_methodName; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterMethodName(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitMethodName(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitMethodName(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2162,13 +2073,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_ambiguousName; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterAmbiguousName(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitAmbiguousName(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitAmbiguousName(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2250,13 +2158,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_compilationUnit; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterCompilationUnit(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitCompilationUnit(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitCompilationUnit(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2334,13 +2239,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_packageDeclaration; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterPackageDeclaration(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitPackageDeclaration(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitPackageDeclaration(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2390,13 +2292,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_packageModifier; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterPackageModifier(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitPackageModifier(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitPackageModifier(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2439,13 +2338,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_importDeclaration; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterImportDeclaration(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitImportDeclaration(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitImportDeclaration(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2505,13 +2401,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_singleTypeImportDeclaration; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterSingleTypeImportDeclaration(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitSingleTypeImportDeclaration(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitSingleTypeImportDeclaration(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2551,13 +2444,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_typeImportOnDemandDeclaration; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterTypeImportOnDemandDeclaration(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitTypeImportOnDemandDeclaration(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitTypeImportOnDemandDeclaration(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2600,13 +2490,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_singleStaticImportDeclaration; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterSingleStaticImportDeclaration(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitSingleStaticImportDeclaration(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitSingleStaticImportDeclaration(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2650,13 +2537,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_staticImportOnDemandDeclaration; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterStaticImportOnDemandDeclaration(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitStaticImportOnDemandDeclaration(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStaticImportOnDemandDeclaration(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2699,13 +2583,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_typeDeclaration; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterTypeDeclaration(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitTypeDeclaration(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitTypeDeclaration(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2760,13 +2641,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_classDeclaration; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterClassDeclaration(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitClassDeclaration(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitClassDeclaration(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2829,13 +2707,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_normalClassDeclaration; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterNormalClassDeclaration(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitNormalClassDeclaration(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitNormalClassDeclaration(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2919,13 +2794,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_classModifier; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterClassModifier(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitClassModifier(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitClassModifier(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3011,13 +2883,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_typeParameters; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterTypeParameters(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitTypeParameters(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitTypeParameters(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3060,13 +2929,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_typeParameterList; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterTypeParameterList(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitTypeParameterList(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitTypeParameterList(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3116,13 +2982,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_superclass; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterSuperclass(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitSuperclass(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitSuperclass(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3158,13 +3021,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_superinterfaces; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterSuperinterfaces(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitSuperinterfaces(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitSuperinterfaces(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3206,13 +3066,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_interfaceTypeList; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterInterfaceTypeList(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitInterfaceTypeList(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitInterfaceTypeList(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3266,13 +3123,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_classBody; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterClassBody(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitClassBody(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitClassBody(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3330,13 +3184,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_classBodyDeclaration; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterClassBodyDeclaration(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitClassBodyDeclaration(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitClassBodyDeclaration(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3404,13 +3255,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_classMemberDeclaration; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterClassMemberDeclaration(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitClassMemberDeclaration(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitClassMemberDeclaration(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3484,13 +3332,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_fieldDeclaration; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterFieldDeclaration(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitFieldDeclaration(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitFieldDeclaration(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3547,13 +3392,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_fieldModifier; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterFieldModifier(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitFieldModifier(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitFieldModifier(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3644,13 +3486,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_variableDeclaratorList; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterVariableDeclaratorList(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitVariableDeclaratorList(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitVariableDeclaratorList(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3703,13 +3542,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_variableDeclarator; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterVariableDeclarator(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitVariableDeclarator(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitVariableDeclarator(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3755,13 +3591,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_variableDeclaratorId; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterVariableDeclaratorId(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitVariableDeclaratorId(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitVariableDeclaratorId(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3808,13 +3641,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_variableInitializer; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterVariableInitializer(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitVariableInitializer(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitVariableInitializer(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3891,13 +3721,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_unannType; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterUnannType(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitUnannType(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitUnannType(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3944,13 +3771,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_unannPrimitiveType; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterUnannPrimitiveType(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitUnannPrimitiveType(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitUnannPrimitiveType(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -4010,13 +3834,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_unannReferenceType; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterUnannReferenceType(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitUnannReferenceType(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitUnannReferenceType(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -4083,13 +3904,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_unannClassOrInterfaceType; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterUnannClassOrInterfaceType(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitUnannClassOrInterfaceType(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitUnannClassOrInterfaceType(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -4174,13 +3992,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_unannClassType; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterUnannClassType(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitUnannClassType(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitUnannClassType(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -4268,13 +4083,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_unannClassType_lf_unannClassOrInterfaceType; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterUnannClassType_lf_unannClassOrInterfaceType(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitUnannClassType_lf_unannClassOrInterfaceType(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitUnannClassType_lf_unannClassOrInterfaceType(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -4333,13 +4145,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_unannClassType_lfno_unannClassOrInterfaceType; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterUnannClassType_lfno_unannClassOrInterfaceType(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitUnannClassType_lfno_unannClassOrInterfaceType(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitUnannClassType_lfno_unannClassOrInterfaceType(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -4383,13 +4192,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_unannInterfaceType; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterUnannInterfaceType(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitUnannInterfaceType(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitUnannInterfaceType(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -4423,13 +4229,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_unannInterfaceType_lf_unannClassOrInterfaceType; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterUnannInterfaceType_lf_unannClassOrInterfaceType(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitUnannInterfaceType_lf_unannClassOrInterfaceType(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitUnannInterfaceType_lf_unannClassOrInterfaceType(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -4463,13 +4266,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_unannInterfaceType_lfno_unannClassOrInterfaceType; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterUnannInterfaceType_lfno_unannClassOrInterfaceType(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitUnannInterfaceType_lfno_unannClassOrInterfaceType(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitUnannInterfaceType_lfno_unannClassOrInterfaceType(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -4501,13 +4301,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_unannTypeVariable; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterUnannTypeVariable(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitUnannTypeVariable(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitUnannTypeVariable(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -4550,13 +4347,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_unannArrayType; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterUnannArrayType(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitUnannArrayType(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitUnannArrayType(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -4620,13 +4414,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_methodDeclaration; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterMethodDeclaration(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitMethodDeclaration(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitMethodDeclaration(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -4684,13 +4475,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_methodModifier; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterMethodModifier(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitMethodModifier(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitMethodModifier(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -4801,13 +4589,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_methodHeader; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterMethodHeader(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitMethodHeader(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitMethodHeader(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -4900,13 +4685,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_result; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterResult(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitResult(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitResult(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -4968,13 +4750,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_methodDeclarator; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterMethodDeclarator(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitMethodDeclarator(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitMethodDeclarator(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -5036,13 +4815,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_formalParameterList; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterFormalParameterList(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitFormalParameterList(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitFormalParameterList(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -5106,13 +4882,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_formalParameters; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterFormalParameters(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitFormalParameters(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitFormalParameters(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -5200,13 +4973,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_formalParameter; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterFormalParameter(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitFormalParameter(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitFormalParameter(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -5256,13 +5026,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_variableModifier; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterVariableModifier(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitVariableModifier(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitVariableModifier(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -5329,13 +5096,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_lastFormalParameter; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterLastFormalParameter(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitLastFormalParameter(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitLastFormalParameter(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -5419,13 +5183,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_receiverParameter; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterReceiverParameter(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitReceiverParameter(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitReceiverParameter(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -5485,13 +5246,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_throws_; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterThrows_(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitThrows_(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitThrows_(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -5533,13 +5291,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_exceptionTypeList; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterExceptionTypeList(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitExceptionTypeList(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitExceptionTypeList(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -5591,13 +5346,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_exceptionType; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterExceptionType(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitExceptionType(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitExceptionType(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -5644,13 +5396,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_methodBody; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterMethodBody(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitMethodBody(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitMethodBody(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -5698,13 +5447,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_instanceInitializer; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterInstanceInitializer(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitInstanceInitializer(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitInstanceInitializer(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -5739,13 +5485,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_staticInitializer; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterStaticInitializer(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitStaticInitializer(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStaticInitializer(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -5792,13 +5535,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_constructorDeclaration; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterConstructorDeclaration(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitConstructorDeclaration(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitConstructorDeclaration(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -5859,13 +5599,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_constructorModifier; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterConstructorModifier(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitConstructorModifier(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitConstructorModifier(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -5933,13 +5670,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_constructorDeclarator; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterConstructorDeclarator(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitConstructorDeclarator(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitConstructorDeclarator(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -5992,13 +5726,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_simpleTypeName; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterSimpleTypeName(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitSimpleTypeName(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitSimpleTypeName(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -6037,13 +5768,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_constructorBody; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterConstructorBody(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitConstructorBody(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitConstructorBody(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -6112,13 +5840,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_explicitConstructorInvocation; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterExplicitConstructorInvocation(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitExplicitConstructorInvocation(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitExplicitConstructorInvocation(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -6276,13 +6001,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_enumDeclaration; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterEnumDeclaration(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitEnumDeclaration(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitEnumDeclaration(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -6347,13 +6069,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_enumBody; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterEnumBody(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitEnumBody(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitEnumBody(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -6423,13 +6142,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_enumConstantList; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterEnumConstantList(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitEnumConstantList(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitEnumConstantList(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -6492,13 +6208,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_enumConstant; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterEnumConstant(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitEnumConstant(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitEnumConstant(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -6574,13 +6287,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_enumConstantModifier; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterEnumConstantModifier(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitEnumConstantModifier(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitEnumConstantModifier(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -6618,13 +6328,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_enumBodyDeclarations; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterEnumBodyDeclarations(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitEnumBodyDeclarations(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitEnumBodyDeclarations(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -6675,13 +6382,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_interfaceDeclaration; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterInterfaceDeclaration(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitInterfaceDeclaration(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitInterfaceDeclaration(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -6741,13 +6445,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_normalInterfaceDeclaration; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterNormalInterfaceDeclaration(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitNormalInterfaceDeclaration(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitNormalInterfaceDeclaration(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -6821,13 +6522,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_interfaceModifier; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterInterfaceModifier(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitInterfaceModifier(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitInterfaceModifier(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -6906,13 +6604,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_extendsInterfaces; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterExtendsInterfaces(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitExtendsInterfaces(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitExtendsInterfaces(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -6952,13 +6647,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_interfaceBody; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterInterfaceBody(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitInterfaceBody(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitInterfaceBody(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -7017,13 +6709,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_interfaceMemberDeclaration; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterInterfaceMemberDeclaration(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitInterfaceMemberDeclaration(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitInterfaceMemberDeclaration(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -7097,13 +6786,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_constantDeclaration; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterConstantDeclaration(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitConstantDeclaration(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitConstantDeclaration(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -7156,13 +6842,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_constantModifier; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterConstantModifier(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitConstantModifier(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitConstantModifier(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -7231,13 +6914,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_interfaceMethodDeclaration; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterInterfaceMethodDeclaration(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitInterfaceMethodDeclaration(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitInterfaceMethodDeclaration(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -7291,13 +6971,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_interfaceMethodModifier; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterInterfaceMethodModifier(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitInterfaceMethodModifier(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitInterfaceMethodModifier(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -7378,13 +7055,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_annotationTypeDeclaration; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterAnnotationTypeDeclaration(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitAnnotationTypeDeclaration(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitAnnotationTypeDeclaration(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -7442,13 +7116,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_annotationTypeBody; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterAnnotationTypeBody(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitAnnotationTypeBody(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitAnnotationTypeBody(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -7507,13 +7178,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_annotationTypeMemberDeclaration; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterAnnotationTypeMemberDeclaration(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitAnnotationTypeMemberDeclaration(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitAnnotationTypeMemberDeclaration(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -7593,13 +7261,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_annotationTypeElementDeclaration; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterAnnotationTypeElementDeclaration(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitAnnotationTypeElementDeclaration(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitAnnotationTypeElementDeclaration(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -7671,13 +7336,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_annotationTypeElementModifier; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterAnnotationTypeElementModifier(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitAnnotationTypeElementModifier(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitAnnotationTypeElementModifier(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -7732,13 +7394,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_defaultValue; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterDefaultValue(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitDefaultValue(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitDefaultValue(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -7779,13 +7438,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_annotation; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterAnnotation(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitAnnotation(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitAnnotation(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -7843,13 +7499,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_normalAnnotation; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterNormalAnnotation(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitNormalAnnotation(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitNormalAnnotation(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -7903,13 +7556,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_elementValuePairList; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterElementValuePairList(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitElementValuePairList(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitElementValuePairList(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -7960,13 +7610,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_elementValuePair; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterElementValuePair(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitElementValuePair(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitElementValuePair(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -8008,13 +7655,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_elementValue; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterElementValue(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitElementValue(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitElementValue(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -8069,13 +7713,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_elementValueArrayInitializer; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterElementValueArrayInitializer(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitElementValueArrayInitializer(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitElementValueArrayInitializer(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -8136,13 +7777,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_elementValueList; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterElementValueList(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitElementValueList(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitElementValueList(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -8194,13 +7832,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_markerAnnotation; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterMarkerAnnotation(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitMarkerAnnotation(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitMarkerAnnotation(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -8241,13 +7876,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_singleElementAnnotation; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterSingleElementAnnotation(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitSingleElementAnnotation(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitSingleElementAnnotation(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -8288,13 +7920,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_arrayInitializer; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterArrayInitializer(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitArrayInitializer(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitArrayInitializer(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -8355,13 +7984,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_variableInitializerList; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterVariableInitializerList(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitVariableInitializerList(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitVariableInitializerList(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -8414,13 +8040,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_block; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterBlock(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitBlock(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitBlock(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -8468,13 +8091,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_blockStatements; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterBlockStatements(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitBlockStatements(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitBlockStatements(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -8527,13 +8147,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_blockStatement; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterBlockStatement(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitBlockStatement(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitBlockStatement(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -8586,13 +8203,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_localVariableDeclarationStatement; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterLocalVariableDeclarationStatement(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitLocalVariableDeclarationStatement(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitLocalVariableDeclarationStatement(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -8636,13 +8250,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_localVariableDeclaration; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterLocalVariableDeclaration(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitLocalVariableDeclaration(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitLocalVariableDeclaration(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -8706,13 +8317,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_statement; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterStatement(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitStatement(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStatement(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -8794,13 +8402,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_statementNoShortIf; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterStatementNoShortIf(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitStatementNoShortIf(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStatementNoShortIf(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -8897,13 +8502,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_statementWithoutTrailingSubstatement; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterStatementWithoutTrailingSubstatement(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitStatementWithoutTrailingSubstatement(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStatementWithoutTrailingSubstatement(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -9031,13 +8633,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_emptyStatement; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterEmptyStatement(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitEmptyStatement(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitEmptyStatement(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -9073,13 +8672,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_labeledStatement; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterLabeledStatement(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitLabeledStatement(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitLabeledStatement(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -9117,13 +8713,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_labeledStatementNoShortIf; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterLabeledStatementNoShortIf(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitLabeledStatementNoShortIf(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitLabeledStatementNoShortIf(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -9160,13 +8753,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_expressionStatement; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterExpressionStatement(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitExpressionStatement(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitExpressionStatement(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -9219,13 +8809,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_statementExpression; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterStatementExpression(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitStatementExpression(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStatementExpression(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -9307,13 +8894,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_ifThenStatement; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterIfThenStatement(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitIfThenStatement(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitIfThenStatement(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -9361,13 +8945,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_ifThenElseStatement; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterIfThenElseStatement(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitIfThenElseStatement(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitIfThenElseStatement(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -9417,13 +8998,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_ifThenElseStatementNoShortIf; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterIfThenElseStatementNoShortIf(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitIfThenElseStatementNoShortIf(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitIfThenElseStatementNoShortIf(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -9469,13 +9047,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_assertStatement; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterAssertStatement(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitAssertStatement(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitAssertStatement(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -9533,13 +9108,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_switchStatement; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterSwitchStatement(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitSwitchStatement(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitSwitchStatement(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -9588,13 +9160,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_switchBlock; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterSwitchBlock(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitSwitchBlock(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitSwitchBlock(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -9662,13 +9231,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_switchBlockStatementGroup; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterSwitchBlockStatementGroup(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitSwitchBlockStatementGroup(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitSwitchBlockStatementGroup(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -9706,13 +9272,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_switchLabels; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterSwitchLabels(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitSwitchLabels(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitSwitchLabels(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -9766,13 +9329,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_switchLabel; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterSwitchLabel(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitSwitchLabel(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitSwitchLabel(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -9827,13 +9387,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_enumConstantName; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterEnumConstantName(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitEnumConstantName(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitEnumConstantName(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -9873,13 +9430,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_whileStatement; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterWhileStatement(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitWhileStatement(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitWhileStatement(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -9923,13 +9477,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_whileStatementNoShortIf; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterWhileStatementNoShortIf(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitWhileStatementNoShortIf(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitWhileStatementNoShortIf(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -9975,13 +9526,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_doStatement; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterDoStatement(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitDoStatement(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitDoStatement(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -10024,13 +9572,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_forStatement; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterForStatement(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitForStatement(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitForStatement(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -10079,13 +9624,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_forStatementNoShortIf; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterForStatementNoShortIf(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitForStatementNoShortIf(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitForStatementNoShortIf(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -10147,13 +9689,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_basicForStatement; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterBasicForStatement(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitBasicForStatement(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitBasicForStatement(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -10236,13 +9775,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_basicForStatementNoShortIf; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterBasicForStatementNoShortIf(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitBasicForStatementNoShortIf(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitBasicForStatementNoShortIf(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -10312,13 +9848,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_forInit; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterForInit(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitForInit(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitForInit(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -10364,13 +9897,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_forUpdate; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterForUpdate(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitForUpdate(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitForUpdate(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -10411,13 +9941,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_statementExpressionList; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterStatementExpressionList(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitStatementExpressionList(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStatementExpressionList(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -10485,13 +10012,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_enhancedForStatement; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterEnhancedForStatement(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitEnhancedForStatement(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitEnhancedForStatement(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -10565,13 +10089,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_enhancedForStatementNoShortIf; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterEnhancedForStatementNoShortIf(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitEnhancedForStatementNoShortIf(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitEnhancedForStatementNoShortIf(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -10626,13 +10147,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_breakStatement; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterBreakStatement(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitBreakStatement(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitBreakStatement(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -10677,13 +10195,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_continueStatement; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterContinueStatement(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitContinueStatement(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitContinueStatement(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -10730,13 +10245,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_returnStatement; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterReturnStatement(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitReturnStatement(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitReturnStatement(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -10783,13 +10295,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_throwStatement; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterThrowStatement(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitThrowStatement(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitThrowStatement(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -10831,13 +10340,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_synchronizedStatement; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterSynchronizedStatement(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitSynchronizedStatement(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitSynchronizedStatement(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -10885,13 +10391,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_tryStatement; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterTryStatement(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitTryStatement(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitTryStatement(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -10960,13 +10463,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_catches; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterCatches(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitCatches(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitCatches(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -11020,13 +10520,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_catchClause; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterCatchClause(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitCatchClause(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitCatchClause(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -11073,13 +10570,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_catchFormalParameter; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterCatchFormalParameter(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitCatchFormalParameter(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitCatchFormalParameter(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -11138,13 +10632,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_catchType; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterCatchType(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitCatchType(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitCatchType(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -11194,13 +10685,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_finally_; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterFinally_(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitFinally_(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitFinally_(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -11245,13 +10733,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_tryWithResourcesStatement; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterTryWithResourcesStatement(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitTryWithResourcesStatement(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitTryWithResourcesStatement(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -11309,13 +10794,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_resourceSpecification; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterResourceSpecification(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitResourceSpecification(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitResourceSpecification(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -11368,13 +10850,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_resourceList; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterResourceList(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitResourceList(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitResourceList(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -11438,13 +10917,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_resource; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterResource(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitResource(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitResource(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -11504,13 +10980,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_primary; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterPrimary(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitPrimary(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitPrimary(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -11608,13 +11081,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_primaryNoNewArray; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterPrimaryNoNewArray(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitPrimaryNoNewArray(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitPrimaryNoNewArray(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -11734,13 +11204,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_primaryNoNewArray_lf_arrayAccess; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterPrimaryNoNewArray_lf_arrayAccess(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitPrimaryNoNewArray_lf_arrayAccess(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitPrimaryNoNewArray_lf_arrayAccess(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -11805,13 +11272,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_primaryNoNewArray_lfno_arrayAccess; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterPrimaryNoNewArray_lfno_arrayAccess(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitPrimaryNoNewArray_lfno_arrayAccess(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitPrimaryNoNewArray_lfno_arrayAccess(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -11940,13 +11404,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_primaryNoNewArray_lf_primary; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterPrimaryNoNewArray_lf_primary(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitPrimaryNoNewArray_lf_primary(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitPrimaryNoNewArray_lf_primary(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -12007,13 +11468,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_primaryNoNewArray_lf_primary_lf_arrayAccess_lf_primary; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterPrimaryNoNewArray_lf_primary_lf_arrayAccess_lf_primary(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitPrimaryNoNewArray_lf_primary_lf_arrayAccess_lf_primary(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitPrimaryNoNewArray_lf_primary_lf_arrayAccess_lf_primary(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -12055,13 +11513,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_primaryNoNewArray_lf_primary_lfno_arrayAccess_lf_primary; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterPrimaryNoNewArray_lf_primary_lfno_arrayAccess_lf_primary(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitPrimaryNoNewArray_lf_primary_lfno_arrayAccess_lf_primary(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitPrimaryNoNewArray_lf_primary_lfno_arrayAccess_lf_primary(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -12157,13 +11612,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_primaryNoNewArray_lfno_primary; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterPrimaryNoNewArray_lfno_primary(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitPrimaryNoNewArray_lfno_primary(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitPrimaryNoNewArray_lfno_primary(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -12305,13 +11757,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_primaryNoNewArray_lfno_primary_lf_arrayAccess_lfno_primary; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterPrimaryNoNewArray_lfno_primary_lf_arrayAccess_lfno_primary(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitPrimaryNoNewArray_lfno_primary_lf_arrayAccess_lfno_primary(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitPrimaryNoNewArray_lfno_primary_lf_arrayAccess_lfno_primary(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -12379,13 +11828,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_primaryNoNewArray_lfno_primary_lfno_arrayAccess_lfno_primary; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterPrimaryNoNewArray_lfno_primary_lfno_arrayAccess_lfno_primary(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitPrimaryNoNewArray_lfno_primary_lfno_arrayAccess_lfno_primary(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitPrimaryNoNewArray_lfno_primary_lfno_arrayAccess_lfno_primary(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -12556,13 +12002,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_classInstanceCreationExpression; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterClassInstanceCreationExpression(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitClassInstanceCreationExpression(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitClassInstanceCreationExpression(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -12822,13 +12265,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_classInstanceCreationExpression_lf_primary; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterClassInstanceCreationExpression_lf_primary(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitClassInstanceCreationExpression_lf_primary(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitClassInstanceCreationExpression_lf_primary(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -12945,13 +12385,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_classInstanceCreationExpression_lfno_primary; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterClassInstanceCreationExpression_lfno_primary(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitClassInstanceCreationExpression_lfno_primary(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitClassInstanceCreationExpression_lfno_primary(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -13135,13 +12572,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_typeArgumentsOrDiamond; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterTypeArgumentsOrDiamond(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitTypeArgumentsOrDiamond(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitTypeArgumentsOrDiamond(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -13197,13 +12631,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_fieldAccess; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterFieldAccess(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitFieldAccess(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitFieldAccess(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -13262,13 +12693,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_fieldAccess_lf_primary; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterFieldAccess_lf_primary(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitFieldAccess_lf_primary(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitFieldAccess_lf_primary(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -13309,13 +12737,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_fieldAccess_lfno_primary; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterFieldAccess_lfno_primary(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitFieldAccess_lfno_primary(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitFieldAccess_lfno_primary(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -13392,13 +12817,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_arrayAccess; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterArrayAccess(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitArrayAccess(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitArrayAccess(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -13488,13 +12910,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_arrayAccess_lf_primary; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterArrayAccess_lf_primary(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitArrayAccess_lf_primary(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitArrayAccess_lf_primary(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -13575,13 +12994,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_arrayAccess_lfno_primary; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterArrayAccess_lfno_primary(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitArrayAccess_lfno_primary(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitArrayAccess_lfno_primary(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -13676,13 +13092,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_methodInvocation; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterMethodInvocation(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitMethodInvocation(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitMethodInvocation(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -13883,13 +13296,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_methodInvocation_lf_primary; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterMethodInvocation_lf_primary(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitMethodInvocation_lf_primary(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitMethodInvocation_lf_primary(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -13965,13 +13375,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_methodInvocation_lfno_primary; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterMethodInvocation_lfno_primary(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitMethodInvocation_lfno_primary(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitMethodInvocation_lfno_primary(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -14144,13 +13551,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_argumentList; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterArgumentList(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitArgumentList(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitArgumentList(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -14222,13 +13626,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_methodReference; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterMethodReference(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitMethodReference(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitMethodReference(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -14377,13 +13778,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_methodReference_lf_primary; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterMethodReference_lf_primary(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitMethodReference_lf_primary(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitMethodReference_lf_primary(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -14448,13 +13846,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_methodReference_lfno_primary; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterMethodReference_lfno_primary(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitMethodReference_lfno_primary(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitMethodReference_lfno_primary(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -14597,13 +13992,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_arrayCreationExpression; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterArrayCreationExpression(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitArrayCreationExpression(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitArrayCreationExpression(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -14692,13 +14084,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_dimExprs; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterDimExprs(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitDimExprs(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitDimExprs(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -14756,13 +14145,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_dimExpr; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterDimExpr(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitDimExpr(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitDimExpr(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -14812,13 +14198,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_constantExpression; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterConstantExpression(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitConstantExpression(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitConstantExpression(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -14855,13 +14238,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_expression; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterExpression(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitExpression(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitExpression(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -14911,13 +14291,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_lambdaExpression; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterLambdaExpression(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitLambdaExpression(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitLambdaExpression(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -14959,13 +14336,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_lambdaParameters; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterLambdaParameters(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitLambdaParameters(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitLambdaParameters(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -15035,13 +14409,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_inferredFormalParameterList; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterInferredFormalParameterList(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitInferredFormalParameterList(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitInferredFormalParameterList(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -15093,13 +14464,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_lambdaBody; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterLambdaBody(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitLambdaBody(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitLambdaBody(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -15176,13 +14544,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_assignmentExpression; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterAssignmentExpression(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitAssignmentExpression(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitAssignmentExpression(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -15234,13 +14599,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_assignment; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterAssignment(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitAssignment(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitAssignment(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -15282,13 +14644,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_leftHandSide; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterLeftHandSide(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitLeftHandSide(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitLeftHandSide(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -15349,13 +14708,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_assignmentOperator; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterAssignmentOperator(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitAssignmentOperator(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitAssignmentOperator(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -15406,13 +14762,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_conditionalExpression; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterConditionalExpression(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitConditionalExpression(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitConditionalExpression(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -15466,13 +14819,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_conditionalOrExpression; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterConditionalOrExpression(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitConditionalOrExpression(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitConditionalOrExpression(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -15545,13 +14895,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_conditionalAndExpression; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterConditionalAndExpression(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitConditionalAndExpression(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitConditionalAndExpression(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -15624,13 +14971,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_inclusiveOrExpression; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterInclusiveOrExpression(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitInclusiveOrExpression(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitInclusiveOrExpression(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -15703,13 +15047,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_exclusiveOrExpression; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterExclusiveOrExpression(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitExclusiveOrExpression(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitExclusiveOrExpression(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -15782,13 +15123,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_andExpression; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterAndExpression(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitAndExpression(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitAndExpression(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -15862,13 +15200,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_equalityExpression; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterEqualityExpression(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitEqualityExpression(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitEqualityExpression(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -15964,13 +15299,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_relationalExpression; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterRelationalExpression(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitRelationalExpression(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitRelationalExpression(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -16096,13 +15428,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_shiftExpression; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterShiftExpression(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitShiftExpression(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitShiftExpression(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -16206,13 +15535,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_additiveExpression; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterAdditiveExpression(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitAdditiveExpression(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitAdditiveExpression(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -16303,13 +15629,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_multiplicativeExpression; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterMultiplicativeExpression(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitMultiplicativeExpression(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitMultiplicativeExpression(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -16415,13 +15738,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_unaryExpression; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterUnaryExpression(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitUnaryExpression(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitUnaryExpression(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -16512,13 +15832,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_preIncrementExpression; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterPreIncrementExpression(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitPreIncrementExpression(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitPreIncrementExpression(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -16554,13 +15871,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_preDecrementExpression; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterPreDecrementExpression(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitPreDecrementExpression(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitPreDecrementExpression(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -16603,13 +15917,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_unaryExpressionNotPlusMinus; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterUnaryExpressionNotPlusMinus(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitUnaryExpressionNotPlusMinus(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitUnaryExpressionNotPlusMinus(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -16684,13 +15995,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_postfixExpression; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterPostfixExpression(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitPostfixExpression(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitPostfixExpression(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -16767,13 +16075,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_postIncrementExpression; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterPostIncrementExpression(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitPostIncrementExpression(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitPostIncrementExpression(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -16806,13 +16111,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_postIncrementExpression_lf_postfixExpression; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterPostIncrementExpression_lf_postfixExpression(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitPostIncrementExpression_lf_postfixExpression(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitPostIncrementExpression_lf_postfixExpression(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -16847,13 +16149,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_postDecrementExpression; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterPostDecrementExpression(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitPostDecrementExpression(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitPostDecrementExpression(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -16886,13 +16185,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_postDecrementExpression_lf_postfixExpression; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterPostDecrementExpression_lf_postfixExpression(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitPostDecrementExpression_lf_postfixExpression(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitPostDecrementExpression_lf_postfixExpression(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -16946,13 +16242,10 @@ public partial class Java8Parser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_castExpression; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.EnterCastExpression(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IJava8ParserListener typedListener = listener as IJava8ParserListener;
-			if (typedListener != null) typedListener.ExitCastExpression(this);
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJava8ParserVisitor<TResult> typedVisitor = visitor as IJava8ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitCastExpression(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -19719,3 +19012,4 @@ public partial class Java8Parser : Parser {
 
 
 }
+} // namespace AntlrParser

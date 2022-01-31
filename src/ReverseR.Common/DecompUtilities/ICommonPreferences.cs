@@ -22,7 +22,7 @@ namespace ReverseR.Common.DecompUtilities
         public enum RunTypes
         {
             JVM,
-            Embedded
+            IKVM
         }
         public RunTypes RunType { get; set; }
         /// <summary>

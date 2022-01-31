@@ -27,7 +27,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <LangVersion>8.0</LangVersion>
-    <IntermediateOutputPath>C:\Users\g510\AppData\Local\Temp\vsB7EB.tmp\Debug\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\sunyu\AppData\Local\Temp\vs7F6A.tmp\Debug\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -38,7 +38,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <LangVersion>8.0</LangVersion>
-    <IntermediateOutputPath>C:\Users\g510\AppData\Local\Temp\vsB7EB.tmp\Release\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\sunyu\AppData\Local\Temp\vs7F6A.tmp\Release\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>

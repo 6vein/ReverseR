@@ -67,12 +67,12 @@ namespace ReverseR.Common
                     {
                         GlobalConfig.ConfigPrefix = AppDomain.CurrentDomain.BaseDirectory;
                     }
-                    if (!File.Exists(Environment.ExpandEnvironmentVariables(GlobalConfig.JavaPath)))
+                    if (string.IsNullOrEmpty(GlobalConfig.JavaPath)|| !File.Exists(Environment.ExpandEnvironmentVariables(GlobalConfig.JavaPath)))
                     {
                         if (Environment.GetEnvironmentVariable("JAVA_HOME") == null)
                         {
                             GlobalConfig.JavaPath = null;
-                            GlobalConfig.RunType = ICommonPreferences.RunTypes.Embedded;
+                            GlobalConfig.RunType = ICommonPreferences.RunTypes.IKVM;
                         }
                         else
                         {
@@ -92,20 +92,20 @@ namespace ReverseR.Common
             }
             if (GlobalConfig == null)
             {
+                GlobalConfig = new ConfigStorage();
+                GlobalConfig.ConfigPrefix = AppDomain.CurrentDomain.BaseDirectory;
                 if (Environment.GetEnvironmentVariable("JAVA_HOME") == null)
                 {
                     GlobalConfig.JavaPath = null;
                 }
                 else
                 {
-                    GlobalConfig = new ConfigStorage();
-                    GlobalConfig.ConfigPrefix = AppDomain.CurrentDomain.BaseDirectory;
                     GlobalConfig.JavaPath = Environment.ExpandEnvironmentVariables("%JAVA_HOME%\\bin\\java.exe");
-                    GlobalConfig.CachePath = Environment.ExpandEnvironmentVariables("%UserProfile%\\.ReverseR\\Cache");
-                    GlobalConfig.ModulePath = AppDomain.CurrentDomain.BaseDirectory + "Plugins\\";
-                    GlobalConfig.ModuleNames = new string[] { "BasicCodeCompletion", "DecompilerFernflower", "PluginSourceControl" };
-                    Directory.CreateDirectory(GlobalConfig.CachePath);
                 }
+                GlobalConfig.CachePath = Environment.ExpandEnvironmentVariables("%UserProfile%\\.ReverseR\\Cache");
+                GlobalConfig.ModulePath = AppDomain.CurrentDomain.BaseDirectory + "Plugins\\";
+                GlobalConfig.ModuleNames = new string[] { "BasicCodeCompletion", "DecompilerFernflower", "PluginSourceControl" };
+                Directory.CreateDirectory(GlobalConfig.CachePath);
             }
         }
         public static void Save<T>(T holder,Expression<Func<T,string>> prop)

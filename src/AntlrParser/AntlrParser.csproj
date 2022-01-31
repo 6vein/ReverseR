@@ -66,23 +66,31 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AntlrParser.cs" />
+    <Compile Include="AntlrParserModule.cs" />
     <Compile Include="Java8Lexer.cs" />
     <Compile Include="Java8Parser.cs" />
-    <Compile Include="Java8ParserBaseListener.cs" />
-    <Compile Include="Java8ParserListener.cs" />
+    <Compile Include="Java8ParserBaseVisitor.cs" />
+    <Compile Include="Java8ParserVisitor.cs" />
+    <Compile Include="JavaClassVisitor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Java8Lexer.g4" />
-    <None Include="Java8Lexer.interp" />
-    <None Include="Java8Lexer.tokens" />
     <None Include="Java8Parser.g4" />
-    <None Include="Java8Parser.interp" />
-    <None Include="Java8Parser.tokens" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="antlr-4.8-complete.jar" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ReverseR.Common\ReverseR.Common.csproj">
+      <Project>{2cc5437d-95a8-4fc8-bded-882ad381081d}</Project>
+      <Name>ReverseR.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy "$(TargetDir)$(TargetName).*" "$(SolutionDir)$(SolutionName)\$(OutDir)Plugins" /Y /E /I</PostBuildEvent>
+  </PropertyGroup>
 </Project>

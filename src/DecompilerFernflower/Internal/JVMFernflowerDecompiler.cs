@@ -43,11 +43,6 @@ namespace DecompilerFernflower.Decompile.Internal
             {
                 bool IsCancelled() => token.HasValue && token.Value.IsCancellationRequested == true;
                 process.StartInfo.FileName = executePath;
-#if DEBUG
-                process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
-#else
-                process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-#endif
                 process.StartInfo.ErrorDialog = true;
                 process.StartInfo.UseShellExecute = false;
                 System.Windows.Application.Current.Dispatcher.Invoke(() =>
@@ -58,6 +53,7 @@ namespace DecompilerFernflower.Decompile.Internal
                 process.StartInfo.RedirectStandardOutput = true;
                 process.StartInfo.RedirectStandardError = true;
                 process.StartInfo.Arguments = "-jar " + Options.GetDecompilerPath() + Options.GetArgumentsString(path, output, referlib);
+                process.StartInfo.CreateNoWindow = true;
                 process.OutputDataReceived += (s, e) =>
                 {
                     if (!IsCancelled()) 

@@ -8,7 +8,7 @@ namespace ReverseR.Common.DecompUtilities
 {
     public interface IDecompilerResolver
     {
-        void Register(string id, Type jvmDecompiler, Type embeddedDecompiler);
+        void Register(string id, Type jvmDecompiler, Type ikvmDecompiler);
         /// <summary>
         /// Resolve the decompiler with the given name
         /// </summary>
@@ -22,10 +22,10 @@ namespace ReverseR.Common.DecompUtilities
 
     public static class DecompilerResolverExtensions
     {
-        public static void Register<TJVMDecompiler, TEmbeddedDecompiler>(this IDecompilerResolver resolver,string id) 
-            where TEmbeddedDecompiler:CommonDecompiler where TJVMDecompiler:CommonDecompiler
+        public static void Register<TJVMDecompiler, TIKVMDecompiler>(this IDecompilerResolver resolver,string id) 
+            where TIKVMDecompiler:CommonDecompiler where TJVMDecompiler:CommonDecompiler
         {
-            resolver.Register(id, typeof(TJVMDecompiler), typeof(TEmbeddedDecompiler));
+            resolver.Register(id, typeof(TJVMDecompiler), typeof(TIKVMDecompiler));
         }
         public static T Resolve<T>(this IDecompilerResolver resolver, string id) where T : CommonDecompiler
         {
