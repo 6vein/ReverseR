@@ -15,6 +15,9 @@ using ReverseR.Common.Events;
 using ReverseR.Common.ViewUtilities;
 using System.Windows.Data;
 using Prism.Ioc;
+using Prism.Services.Dialogs;
+using ReverseR.Common.Services;
+using System.IO;
 
 namespace ReverseR
 {
@@ -175,7 +178,31 @@ namespace ReverseR
         /// <param name="region">The region.</param>
         void OnDocumentClosedEventArgs(object sender, DocumentClosedEventArgs e, IRegion region)
         {
-            region.Remove(e.Document.Content);
+            if(e.Document.Content is IDecompileViewModel viewModel)
+            {
+                bool closed = false;
+                if (!viewModel.Shutdown(false)) 
+                {
+                    IDialogResult result = null;
+                    Container.Resolve<IDialogService>()
+                        .PresentConfirmation($"File {Path.GetFileName(viewModel.FilePath)}"
+                        + "didn't seem to close in time.\nWould you force to close it?",
+                        r =>
+                        {
+                            result = r;
+                        });
+                    if (result?.Result == ButtonResult.Yes)
+                    {
+                        viewModel.Shutdown(true);
+                        closed = true;
+                    }
+                }
+                else
+                {
+                    closed = true;
+                }
+                if (closed) region.Remove(viewModel);
+            }
         }
 
         #endregion   

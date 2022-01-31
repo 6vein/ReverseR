@@ -21,6 +21,11 @@ namespace ReverseR.Common.ViewUtilities
         /// </summary>
         public void Initalize();
         /// <summary>
+        /// Close the view
+        /// </summary>
+        /// <returns></returns>
+        public bool Shutdown(bool ForceClose);
+        /// <summary>
         /// Open a document,Please use it with <see cref="System.ComponentModel.BackgroundWorker"/>
         /// </summary>
         /// <param name="path"></param>
@@ -28,10 +33,10 @@ namespace ReverseR.Common.ViewUtilities
         public IDocumentViewModel OpenDocument(JPath path);
         public void ActivateDocument(IDocumentViewModel documentViewModel);
         /// <summary>
-        /// Closes the document,will call <see cref="IDocumentViewModel.Cleanup"/>
+        /// Closes the document,will call <see cref="IDocumentViewModel.Close(bool)"/>
         /// </summary>
         /// <param name="documentViewModel"></param>
-        public void CloseDocument(IDocumentViewModel documentViewModel, bool ForceClose = false);
+        public bool CloseDocument(IDocumentViewModel documentViewModel, bool ForceClose = false);
         /// <summary>
         /// Directory where the cache storages
         /// </summary>

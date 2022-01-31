@@ -116,7 +116,7 @@ namespace PluginSourceControl.ViewModels
                     if (match.Success)
                     {
                         Regex engine = new Regex($@"{match.Result("$1")}\$\w+");
-                        node.Type = SourceTreeNode.NodeType.JavaClass;
+                        node.Type = SourceTreeNode.NodeType.CompilationUnit;
                         node.JPath = new JPath(Path.Combine(Path.GetDirectoryName(path), match.Result("$1") + Path.GetExtension(path)),
                             files.Where(s => engine.Match(Path.GetFileNameWithoutExtension(s)).Success));
                         node.Text = Path.GetFileNameWithoutExtension(node.JPath.Path);
@@ -126,7 +126,7 @@ namespace PluginSourceControl.ViewModels
                     }
                     else
                     {
-                        node.Type = SourceTreeNode.NodeType.JavaClass;
+                        node.Type = SourceTreeNode.NodeType.CompilationUnit;
                         node.JPath = path;
                         node.Text = Path.GetFileNameWithoutExtension(path);
                     }
@@ -179,7 +179,7 @@ namespace PluginSourceControl.ViewModels
             var directories = Directory.GetDirectories(contentRoot);
             foreach (var directory in directories)
             {
-                SourceTreeNode node = Container.Resolve<SourceTreeNode>();
+                SourceTreeNode node = new SourceTreeNode() { ParentViewModel = this };
                 node.Text = Path.GetFileName(directory);
                 node.Type = SourceTreeNode.NodeType.Directory;
                 node.JPath = new JPath(directory, directory.Replace(classRoot, JarName));
@@ -215,7 +215,7 @@ namespace PluginSourceControl.ViewModels
             var files = Directory.GetFiles(contentRoot).ToList();
             foreach (var path in files)
             {
-                SourceTreeNode node = Container.Resolve<SourceTreeNode>();
+                SourceTreeNode node = new SourceTreeNode() { ParentViewModel = this };
                 if (fileIgnore.Contains(path))
                 {
                     continue;
@@ -227,10 +227,10 @@ namespace PluginSourceControl.ViewModels
                     if (match.Success)
                     {
                         Regex engine = new Regex($@"{match.Result("$1")}\$\w+");
-                        node.Type = SourceTreeNode.NodeType.JavaClass;
+                        node.Type = SourceTreeNode.NodeType.CompilationUnit;
                         node.JPath = new JPath(Path.Combine(Path.GetDirectoryName(path), match.Result("$1") + Path.GetExtension(path)),
-                            path.Replace(classRoot,JarName)
-                            ,files.Where(s => engine.Match(Path.GetFileNameWithoutExtension(s)).Success));
+                            path.Replace(classRoot, JarName)
+                            , files.Where(s => engine.Match(Path.GetFileNameWithoutExtension(s)).Success));
                         node.Text = Path.GetFileNameWithoutExtension(node.JPath.Path);
                         //add to the ignore list to prevent from duplicating
                         fileIgnore.Add(node.JPath.Path);
@@ -238,7 +238,7 @@ namespace PluginSourceControl.ViewModels
                     }
                     else
                     {
-                        node.Type = SourceTreeNode.NodeType.JavaClass;
+                        node.Type = SourceTreeNode.NodeType.CompilationUnit;
                         node.JPath = new JPath(path, path.Replace(classRoot, JarName));
                         node.Text = Path.GetFileNameWithoutExtension(path);
                     }
@@ -279,11 +279,12 @@ namespace PluginSourceControl.ViewModels
             return lstRet;
         }
 
-        public DelegateCommand<MouseButtonEventArgs> ItemDoubleClickCommand => new DelegateCommand<MouseButtonEventArgs>(e =>
+        public DelegateCommand<MouseButtonEventArgs> ItemDblClickCommand => new DelegateCommand<MouseButtonEventArgs>(e =>
           {
               if (e.OriginalSource is FrameworkElement element)
               {
-                  //This statement check if the mouse is on the expander
+                  /*
+                   * //This statement check if the mouse is on the expander
                   if (e.OriginalSource is System.Windows.Shapes.Path)
                   {
                       //Clicked on the expand button
@@ -299,22 +300,21 @@ namespace PluginSourceControl.ViewModels
                           }
                       }
                   }
-
+                   */
                   var item = element.FindParent<TreeViewItem>();
-                  if (item != null) 
+                  if (item != null)
                   {
                       var node = (item.DataContext as SourceTreeNode);
-                      if (node.Type == SourceTreeNode.NodeType.JavaClass)
+                      if (node.Type == SourceTreeNode.NodeType.CompilationUnit)
                       {
-                          if (node.AssociatedDocument == null)
+                          if (node.AssociatedDocument == null||!Parent.Documents.Contains(node.AssociatedDocument))
                               node.AssociatedDocument = Parent.OpenDocument(node.JPath);
                           else
                               Parent.ActivateDocument(node.AssociatedDocument);
-                          //prevent from expanding/collapsing
-                          node.IsExpanded = !node.IsExpanded;
+
                       }
                   }
-
+                  //prevent from expanding/collapsing
                   e.Handled = true;
               }
           });

@@ -1,5 +1,6 @@
 ﻿using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.CodeCompletion;
+using ICSharpCode.AvalonEdit.Search;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
@@ -19,6 +20,7 @@ using System.Windows.Media;
 using System.Xml;
 using ReverseR.Common.Services;
 using ReverseR.Common.DecompUtilities;
+using ICSharpCode.AvalonEdit.Snippets;
 
 namespace ReverseR.DecompileView.Default.ViewModels
 {
@@ -28,8 +30,19 @@ namespace ReverseR.DecompileView.Default.ViewModels
         IBackgroundTask<IList<ICompletionData>> _previousCompletionTask;
         CancellationTokenSource _TokenSource = new CancellationTokenSource();
         CompletionWindow _completionWindow;
+        public override async Task<string> GetContentAsync()
+        {
+            if (LoadTask != null)
+                await LoadTask;
+            string content = null;
+            await Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                content = Editor.Document.Text;
+            });
+            return content;
+        }
         //We dont have abstractions for editor at present,so avalonedit must be used
-        [JsonObject(MemberSerialization.OptOut)]
+        [JsonObject(MemberSerialization.OptIn)]
         public class EditorViewModel : BindableBase
         {
             TextDocument _document = new TextDocument();
@@ -58,8 +71,10 @@ namespace ReverseR.DecompileView.Default.ViewModels
                 EditorControl.TextArea.TextEntered -= TextArea_TextEntered;
             };
             EditorControl.Unloaded += handler;
+            EditorControl.IsReadOnly = true;
             EditorControl.Options.EnableHyperlinks = true;
             EditorControl.Options.HighlightCurrentLine = true;
+            SearchPanel.Install(EditorControl);
         });
 
         private void TextArea_TextEntering(object sender, System.Windows.Input.TextCompositionEventArgs e)
@@ -117,7 +132,7 @@ namespace ReverseR.DecompileView.Default.ViewModels
         EditorViewModel _editor = new EditorViewModel();
         [JsonProperty]
         public EditorViewModel Editor { get => _editor; set => SetProperty(ref _editor, value); }
-        public override async Task LoadAsync(string path, JPath jPath)
+        public override async Task _InnerLoadAsync(string path, JPath jPath)
         {
             //Title = System.IO.Path.GetFileName(path);
             if (HighlightingManager.Instance.GetDefinition("Java-Dark") == null)
@@ -129,7 +144,7 @@ namespace ReverseR.DecompileView.Default.ViewModels
                 }
             }
             Editor.SyntaxHighlighting = HighlightingManager.Instance.GetDefinition("Java-Dark");
-            Path = jPath.ClassPath;
+            Path = JPath.ClassPath;
             using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read)) 
             {
                 using (StreamReader reader = new StreamReader(fs, Editor.Encoding ?? Encoding.UTF8)) 

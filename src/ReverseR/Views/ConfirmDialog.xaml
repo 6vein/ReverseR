@@ -1,0 +1,34 @@
+﻿<UserControl x:Class="ReverseR.Views.ConfirmDialog"
+             x:ClassModifier="internal"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:prism="http://prismlibrary.com/"             
+             prism:ViewModelLocator.AutoWireViewModel="True">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Dark.Cobalt.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/VS/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/VS/Colors.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Margin="20 0 20 0" Orientation="Horizontal" Name="PART_ContentPanel" HorizontalAlignment="Center">
+            <iconPacks:PackIconFontAwesome Margin="5" Height="50" Width="50" Kind="QuestionCircleRegular" Foreground="{DynamicResource MahApps.Brushes.Highlight}"/>
+            <TextBlock FontSize="15" Text="{Binding Message}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextWrapping="Wrap"/>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Margin="20 0 20 0" Orientation="Horizontal" Name="PART_ButtonsPanel" HorizontalAlignment="Center">
+            <Button Content="{Binding YesMessage,FallbackValue=Yes}" Padding="10 0 10 0" Margin="5 0 5 0" FontSize="15" Command="{Binding CloseDialogCommand}"/>
+            <Button Content="{Binding NoMessage,FallbackValue=No}" Padding="10 0 10 0" Margin="5 0 5 0" FontSize="15" Command="{Binding CloseDialogCommand}"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

@@ -41,7 +41,7 @@ namespace ReverseR.DecompileView.Default.ViewModels
         }
         public ViewDecompileViewModel()
         {
-            SetDecompiler(GlobalUtils.PreferredDecompiler.Id);
+            SetDecompiler((GlobalUtils.PreferredDecompiler??GlobalUtils.Decompilers[0]).Id);
             IsWholeLoaderOpen = false;
         }
         #region FileOperations
@@ -127,7 +127,14 @@ namespace ReverseR.DecompileView.Default.ViewModels
 #if DEBUG
                             Debug.Assert(files.Length == 1);
 #endif
-                            await viewModel.LoadAsync(files[0], path);
+                            string newFileName = files[0];
+                            if (EnableDecompiledFileCache)
+                            {
+                                newFileName = Path.Combine(basedir, Path.GetFileNameWithoutExtension(files[0]) + ".java");
+                                File.Copy(files[0], newFileName, true);
+                                MapSourceToMd5.Add(newFileName, APIHelper.GetMd5Of(newFileName));
+                            }
+                            await viewModel.LoadAsync(newFileName, path);
                             
                             Application.Current.Dispatcher.Invoke(() =>
                             {

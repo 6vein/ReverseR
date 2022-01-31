@@ -14,6 +14,11 @@ namespace AntlrParser
         public IEnumerable<IClassParser.ParseTreeNode> Parse(string content)
         {
             Java8Lexer lexer = new Java8Lexer(CharStreams.fromstring(content));
+            Java8Parser parser = new Java8Parser(new CommonTokenStream(lexer));
+
+            JavaClassVisitor visitor = new JavaClassVisitor();
+
+            return visitor.Visit(parser.compilationUnit()).Children;
         }
 
         public IEnumerable<IClassParser.ParseTreeNode> Parse(Stream stream)
@@ -22,8 +27,8 @@ namespace AntlrParser
             Java8Parser parser = new Java8Parser(new CommonTokenStream(lexer));
 
             JavaClassVisitor visitor = new JavaClassVisitor();
-
-            visitor.Visit(parser.compilationUnit())
+            parser.TrimParseTree = true;
+            return visitor.Visit(parser.compilationUnit()).Children;
         }
     }
 }

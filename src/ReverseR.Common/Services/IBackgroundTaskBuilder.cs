@@ -29,8 +29,12 @@ namespace ReverseR.Common.Services
         /// <returns></returns>
         IBackgroundTaskBuilder<TResult> WithTask<TResult>(Func<object, TResult> func, CancellationToken? token = null,
             TaskCreationOptions options = TaskCreationOptions.None);
+        [Obsolete]
         /// <summary>
-        /// Set the callback when the work ends,regardless of whether it's success or not
+        /// Set the callback when the work ends,regardless of whether it's success or not.
+        /// <para>
+        /// Warning: This method is obsolete, use <see cref="IBackgroundTask.IsCompletedTask"/> instead
+        /// </para>
         /// </summary>
         /// <param name="callback">Will be called whenever the execution completed</param>
         /// <returns></returns>

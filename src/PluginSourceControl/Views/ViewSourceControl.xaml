@@ -23,13 +23,14 @@
     </UserControl.Resources>
     <Grid>
         <TreeView ItemsSource="{Binding SourceTree}" Background="#252526">
-            <behaviors:Interaction.Triggers>
-                <behaviors:EventTrigger EventName="MouseDoubleClick">
-                    <behaviors:InvokeCommandAction Command="{Binding ItemDoubleClickCommand}" PassEventArgsToCommand="True"/>
+            <!--<behaviors:Interaction.Triggers>
+                <behaviors:EventTrigger EventName="MouseLeftButtonDown">
+                    <behaviors:InvokeCommandAction Command="{Binding ItemMouseLBDCommand}" PassEventArgsToCommand="True"/>
                 </behaviors:EventTrigger>
-            </behaviors:Interaction.Triggers>
+            </behaviors:Interaction.Triggers>-->
             <TreeView.ItemContainerStyle>
                 <Style TargetType="TreeViewItem" BasedOn="{StaticResource MahApps.Styles.TreeViewItem}">
+                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="TreeViewItem_PreviewMouseLeftButtonDown"/>
                     <Setter Property="IsExpanded" Value="{Binding IsExpanded,Mode=TwoWay}"/>
                     <Setter Property="IsSelected" Value="{Binding IsSelected,Mode=TwoWay}"/>
                     <Setter Property="Background" Value="#252526"/>
@@ -37,31 +38,48 @@
                     <Setter Property="Controls:ItemHelper.SelectedBackgroundBrush" Value="{DynamicResource MahApps.Brushes.Background.Normal}"/>
                     <Setter Property="Controls:ItemHelper.HoverSelectedBackgroundBrush" Value="{DynamicResource MahApps.Brushes.BackgroundSelected}"/>
                     <Setter Property="Controls:ItemHelper.HoverBackgroundBrush" Value="#252526"/>
+                    <Setter Property="Controls:TreeViewItemHelper.ToggleButtonStyle">
+                        <Setter.Value>
+                            <Style BasedOn="{StaticResource MahApps.Styles.ToggleButton.TreeViewItem.ExpandCollapse}" TargetType="ToggleButton">
+                                <Style.Resources>
+                                    <SolidColorBrush x:Key="MahApps.Brushes.Accent" Color="{DynamicResource MahApps.Colors.Accent2}"/>
+                                </Style.Resources>
+                            </Style>
+                        </Setter.Value>
+                    </Setter>
                 </Style>
             </TreeView.ItemContainerStyle>
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate DataType="{x:Type local:SourceTreeNode}" ItemsSource="{Binding Children}">
                     <StackPanel Orientation="Horizontal" Height="16">
-                        <ContentControl Width="16" Height="16">
+                        <Grid Width="16" Height="16">
                             <behaviors:Interaction.Triggers>
                                 <behaviors:PropertyChangedTrigger Binding="{Binding IsExpanded}">
-                                    <behaviors:CallMethodAction TargetObject="{Binding}" MethodName="UpdateChildren"/>
+                                    <behaviors:InvokeCommandAction Command="{Binding UpdateChildrenCommand}"/>
                                 </behaviors:PropertyChangedTrigger>
                             </behaviors:Interaction.Triggers>
-                            <ContentControl.Style>
-                                <Style TargetType="ContentControl">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsPending}" Value="True">
-                                            <Setter Property="Content">
-                                                <Setter.Value>
-                                                    <Controls:ProgressRing Width="16" Height="16" IsActive="True"/>
-                                                </Setter.Value>
-                                            </Setter>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </ContentControl.Style>
+                            <Controls:ProgressRing Width="16" Height="16" IsActive="True">
+                                <Controls:ProgressRing.Resources>
+                                    <SolidColorBrush x:Key="MahApps.Brushes.Accent" Color="{DynamicResource Theme.PrimaryAccentColor}"/>
+                                </Controls:ProgressRing.Resources>
+                                <behaviors:Interaction.Triggers>
+                                    <behaviors:DataTrigger Binding="{Binding IsPending}" Value="False">
+                                        <behaviors:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
+                                    </behaviors:DataTrigger>
+                                    <behaviors:DataTrigger Binding="{Binding IsPending}" Value="True">
+                                        <behaviors:ChangePropertyAction PropertyName="Visibility" Value="Visible"/>
+                                    </behaviors:DataTrigger>
+                                </behaviors:Interaction.Triggers>
+                            </Controls:ProgressRing>
                             <Image Width="16" Height="16">
+                                <behaviors:Interaction.Triggers>
+                                    <behaviors:DataTrigger Binding="{Binding IsPending}" Value="True">
+                                        <behaviors:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
+                                    </behaviors:DataTrigger>
+                                    <behaviors:DataTrigger Binding="{Binding IsPending}" Value="False">
+                                        <behaviors:ChangePropertyAction PropertyName="Visibility" Value="Visible"/>
+                                    </behaviors:DataTrigger>
+                                </behaviors:Interaction.Triggers>
                                 <Image.Style>
                                     <Style TargetType="Image">
                                         <Setter Property="Source" Value="{Binding Icon}"/>
@@ -73,7 +91,7 @@
                                     </Style>
                                 </Image.Style>
                             </Image>
-                        </ContentControl>
+                        </Grid>
                         <TextBlock Text="{Binding Text}"/>
                     </StackPanel>
                 </HierarchicalDataTemplate>

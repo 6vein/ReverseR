@@ -172,7 +172,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(TargetDir)$(TargetName).*" "$(SolutionDir)$(SolutionName)\$(OutDir)Plugins" /Y /E /I
-xcopy "$(ProjectDir)Assets\*.*" "$(SolutionDir)$(SolutionName)\$(OutDir)Plugins\$(TargetName)" /Y /E /I</PostBuildEvent>
+    <PostBuildEvent>xcopy "$(TargetDir)$(TargetName).*" "$(SolutionDir)src\$(SolutionName)\$(OutDir)Plugins" /Y /E /I
+xcopy "$(ProjectDir)Assets\*.*" "$(SolutionDir)src\$(SolutionName)\$(OutDir)Plugins\$(TargetName)" /Y /E /I</PostBuildEvent>
   </PropertyGroup>
 </Project>

@@ -27,7 +27,16 @@ namespace ReverseR.Common
             /// Determines where the cache stays.
             /// </summary>
             public string CachePath { get; set; }
-
+            /// <summary>
+            /// Enables storing decompiled files in the cache
+            /// </summary>
+            [DefaultValue(false)]
+            public bool CacheDecompiledFiles { get; set; } = false;
+            /// <summary>
+            /// Enables extracting jar files into cache
+            /// </summary>
+            [DefaultValue(true)]
+            public bool CacheExtractedFiles { get; set; } = true;
             /// <summary>
             /// Decompile the whole file whenever a class based on <see cref="DecompileViewModelBase"/> opened a file.
             /// </summary>
@@ -104,7 +113,7 @@ namespace ReverseR.Common
                 }
                 GlobalConfig.CachePath = Environment.ExpandEnvironmentVariables("%UserProfile%\\.ReverseR\\Cache");
                 GlobalConfig.ModulePath = AppDomain.CurrentDomain.BaseDirectory + "Plugins\\";
-                GlobalConfig.ModuleNames = new string[] { "BasicCodeCompletion", "DecompilerFernflower", "PluginSourceControl" };
+                GlobalConfig.ModuleNames = new string[] { "AntlrParser","BasicCodeCompletion", "DecompilerFernflower", "PluginSourceControl" };
                 Directory.CreateDirectory(GlobalConfig.CachePath);
             }
         }
@@ -139,7 +148,7 @@ namespace ReverseR.Common
         }
         public static List<DecompilerInfo> Decompilers { get; set; } = new List<DecompilerInfo>();
         public static List<DockablePluginInfo> DockablePlugins { get; set; } = new List<DockablePluginInfo>();
-        public static DecompilerInfo PreferredDecompiler { get; set; }
+        public static DecompilerInfo? PreferredDecompiler { get; set; }
         /// <summary>
         /// Register a decompiler
         /// <para>

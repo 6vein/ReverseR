@@ -27,6 +27,9 @@ namespace ReverseR.Common.ViewUtilities
     {
         public IDecompileViewModel Parent { get; set; }
         private string _path;
+        /// <summary>
+        /// Path shown on the title, can be used for recovering
+        /// </summary>
         [JsonProperty]
         public string Path { get => _path; set => SetProperty(ref _path, value); }
         protected IContainerProvider Container { get; set; }
@@ -53,12 +56,12 @@ namespace ReverseR.Common.ViewUtilities
             IsLoading = true;
             HasCancelled = true;
             LoaderText = "Cancelling...";
-            Cleanup();
+            //Cleanup();
             Parent.CloseDocument(this);
         });
         public DelegateCommand CloseCommand => new DelegateCommand(() =>
           {
-              Cleanup();
+              //Cleanup();
               Parent.CloseDocument(this);
           });
         public virtual void AttachDecompileTask(IBackgroundTask decompileTask)
@@ -67,11 +70,25 @@ namespace ReverseR.Common.ViewUtilities
             LoaderText = "Loading...";
             BackgroundTask = decompileTask;
         }
-
+        public virtual IBackgroundTask GetAttachedDecompileTask()
+        {
+            return BackgroundTask;
+        }
         #endregion
         #region FileOperations
+        public JPath JPath { get; protected set; }
+        public string InternalFilePath { get; protected set; }
         protected ICodeCompletion CompletionProvider { get; set; }
-        public abstract Task LoadAsync(string path, JPath classPath);
+        protected Task LoadTask { get; set; }
+        public abstract Task<string> GetContentAsync();
+        public virtual Task LoadAsync(string path, JPath classPath)
+        {
+            JPath = classPath;
+            InternalFilePath = path;
+            LoadTask = _InnerLoadAsync(path, classPath);
+            return LoadTask;
+        }
+        public abstract Task _InnerLoadAsync(string path, JPath classPath);
 
         /// <summary>
         /// Cancels the background task
@@ -106,9 +123,14 @@ namespace ReverseR.Common.ViewUtilities
             BackgroundTask.WaitUntilComplete(Thread.CurrentThread);
             BackgroundTask = null;
         }
-        public bool Closing()
+        public bool Close(bool forceClose)
         {
-            return (PreClosingCallback?.Invoke()) ?? true;
+            if (((PreClosingCallback?.Invoke()) ?? true) || forceClose)
+            {
+                Cleanup();
+                return true;
+            }
+            return false;
         }
         #endregion
         #region Threading

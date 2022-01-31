@@ -27,7 +27,7 @@
             <iconPacks:PackIconFontAwesome Margin="5" Height="50" Width="50" Kind="TimesCircleRegular" Foreground="Red"/>
             <TextBlock FontSize="15" Text="{Binding Message}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextWrapping="Wrap"/>
         </StackPanel>
-        <Expander Margin="0 5 0 5" FontSize="11" Header="Stack Trace" Grid.Row="1">
+        <Expander Margin="5" FontSize="11" Header="Stack Trace" Grid.Row="1">
             <Expander.Style>
                 <Style BasedOn="{StaticResource MahApps.Styles.Expander.VisualStudio}" TargetType="Expander">
                     <Style.Triggers>

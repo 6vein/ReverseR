@@ -47,6 +47,7 @@ namespace ReverseR
                 .RegisterSingleton<IDecompilerResolver, Internal.DecompUtilities.DefaultDecompilerResolver>();
 
             containerRegistry.Register<IBackgroundTaskBuilder, Internal.Services.DefaultBackgroundTaskBuilder>();
+            containerRegistry.Register(typeof(IBackgroundTaskBuilder<>), typeof(Internal.Services.DefaultBackgroundTaskBuilder<>));
         }
 
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)

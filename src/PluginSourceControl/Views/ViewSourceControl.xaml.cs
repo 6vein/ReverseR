@@ -24,5 +24,20 @@ namespace PluginSourceControl.Views
         {
             InitializeComponent();
         }
+
+        private void TreeViewItem_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if(sender is TreeViewItem item)
+            {
+                if (e.ClickCount % 2 == 0 && item.DataContext is ViewModels.SourceTreeNode node)
+                {
+                    if (node.Type == ViewModels.SourceTreeNode.NodeType.CompilationUnit)
+                    {
+                        node.ParentViewModel.ItemDblClickCommand.Execute(e);
+                        e.Handled = true;
+                    }
+                }
+            }
+        }
     }
 }

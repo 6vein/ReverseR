@@ -51,6 +51,8 @@ namespace ReverseR.Common.ViewUtilities
         //public TimeSpan LoaderWaitTime { get => _loaderWaitTime; set => SetProperty(ref _loaderWaitTime, value); }
         #endregion
         #region FileOperations
+        protected bool EnableExtractionCache { get; set; }
+        protected bool EnableDecompiledFileCache => GlobalUtils.GlobalConfig.CacheDecompiledFiles;
         public string FilePath { get => _filePath; set => SetProperty(ref _filePath, value); }
         public FileTypes FileType { get; set; }
         public string Md5 { get; set; }
@@ -69,11 +71,15 @@ namespace ReverseR.Common.ViewUtilities
             FilePath = tuple.Item1;
             FileType = tuple.Item2;
             Title = Path.GetFileName(FilePath) + $"[{DecompileViewName}]";
+            EnableExtractionCache = GlobalUtils.GlobalConfig.CacheExtractedFiles;
             //TitleTooltip = FilePath;
             try
             {
                 Md5 = APIHelper.GetMd5OfIncludingPath(FilePath);
-                BaseDirectory = GlobalUtils.GlobalConfig.CachePath + $"\\{Md5}";
+                if (EnableExtractionCache)
+                    BaseDirectory = GlobalUtils.GlobalConfig.CachePath + $"\\{Md5}";
+                else
+                    BaseDirectory = Path.GetTempPath();
                 ContentDirectory = BaseDirectory + "\\Content";
                 Directory.CreateDirectory(BaseDirectory);
                 Directory.CreateDirectory(ContentDirectory);
@@ -84,37 +90,8 @@ namespace ReverseR.Common.ViewUtilities
                     events.CompletedFile = (s, e) =>
                     {
                     };
-                    (new FastZip(events)).ExtractZip(BaseDirectory + "\\raw.jar", ContentDirectory, "");
-                    //need background worker
-                    /*using (var zipArchive = System.IO.Compression.ZipFile.OpenRead(BaseDirectory + "\\raw.jar"))
-                    {
-                        foreach(var entry in zipArchive.Entries)
-                        {
-                            string path = ContentDirectory + $"\\{entry.FullName.Replace('/', '\\')}";
-                            var stream = entry.Open();
-                            if(stream!=null)
-                            {
-                                stream.Close();
-                                if (MapPathToMd5.ContainsKey(path))
-                                {
-                                    if (GetMd5Of(path) != MapPathToMd5[path])
-                                    {
-                                        entry.ExtractToFile(path, true);
-                                    }
-                                }
-                                else
-                                {
-                                    entry.ExtractToFile(path, true);
-                                    MapPathToMd5.Add(path, GetMd5Of(path));
-                                }
-                            }
-                            else
-                            {
-                                Directory.CreateDirectory(path);
-                            }
-                        }
-                        File.WriteAllText(BaseDirectory + "\\Md5.json", JsonConvert.SerializeObject(MapPathToMd5, Formatting.Indented));
-                    }*/
+                    (new FastZip(events)).ExtractZip(BaseDirectory + "\\raw.jar", ContentDirectory,"");
+                    
                 }
                 else
                 {
@@ -217,15 +194,46 @@ namespace ReverseR.Common.ViewUtilities
             PublishMenuUpdate();
         }
 
-        public virtual void OnUnload()
+        public virtual bool Shutdown(bool forceClose)
         {
-            throw new NotImplementedException();
+            //clean up
+            if (!EnableExtractionCache)
+            {
+                Directory.Delete(BaseDirectory, true);
+            }
+            else if(EnableDecompiledFileCache)
+            {
+                //save states
+                string json = JsonConvert.SerializeObject(MapSourceToMd5);
+                File.WriteAllText(BaseDirectory + "\\sourceMap.json", json);
+            }
+            if (forceClose)
+            {
+                foreach(IDocumentViewModel document in Documents)
+                {
+                    CloseDocument(document, forceClose);
+                }
+                return true;
+            }
+            else
+            {
+                bool closed = true;
+                foreach(IDocumentViewModel document in Documents)
+                {
+                    closed &= CloseDocument(document, forceClose);
+                }
+                return closed;
+            }
         }
         public abstract void ActivateDocument(IDocumentViewModel documentViewModel);
-        public void CloseDocument(IDocumentViewModel documentViewModel, bool ForceClose = false)
+        public bool CloseDocument(IDocumentViewModel documentViewModel, bool ForceClose = false)
         {
-            if (documentViewModel.Closing()||ForceClose)
+            if (documentViewModel.Close(ForceClose)||ForceClose)
+            {
                 Documents.Remove(documentViewModel);
+                return true;
+            }
+            return false;
         }
         #endregion
         public DecompileViewModelBase()

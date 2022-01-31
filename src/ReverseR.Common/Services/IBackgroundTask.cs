@@ -20,6 +20,10 @@ namespace ReverseR.Common.Services
         public bool IsCompleted { get; }
         #endregion
         /// <summary>
+        /// Get the complete status of the task.ONLY USE THIS FOR SYNCHRONIZE
+        /// </summary>
+        public Task<bool> IsCompletedTask { get; }
+        /// <summary>
         /// Calling this method to wait for the task and its completion callback to complete.
         /// Mostly used after calling <see cref="CancellationTokenSource.Cancel"/>
         /// <para>Default behavior:</para>

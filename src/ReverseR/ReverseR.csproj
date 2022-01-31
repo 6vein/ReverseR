@@ -150,7 +150,7 @@
       <HintPath>..\packages\IKVM.8.1.5717.0\lib\IKVM.Runtime.JNI.dll</HintPath>
     </Reference>
     <Reference Include="MahApps.Metro, Version=2.0.0.0, Culture=neutral, PublicKeyToken=51482d6f650b2b3f, processorArchitecture=MSIL">
-      <HintPath>..\packages\MahApps.Metro.2.3.3\lib\net47\MahApps.Metro.dll</HintPath>
+      <HintPath>..\..\packages\MahApps.Metro.2.4.9\lib\net47\MahApps.Metro.dll</HintPath>
     </Reference>
     <Reference Include="MahApps.Metro.IconPacks, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0c0d510f9915137a, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.IconPacks.4.8.0\lib\net47\MahApps.Metro.IconPacks.dll</HintPath>
@@ -461,11 +461,15 @@
     <Compile Include="Internal\Services\DefaultBackgroundTask.cs" />
     <Compile Include="Internal\Services\DefaultBackgroundTaskBuilder.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="ViewModels\ConfirmDialogViewModel.cs" />
     <Compile Include="ViewModels\DefaultMenuItem.cs" />
     <Compile Include="ViewModels\ErrorDialogViewModel.cs" />
     <Compile Include="ViewModels\InputBindingBehavior.cs" />
     <Compile Include="ViewModels\MenuTemplateSelector.cs" />
     <Compile Include="ViewModels\RootMenuItemWrapper.cs" />
+    <Compile Include="Views\ConfirmDialog.xaml.cs">
+      <DependentUpon>ConfirmDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ErrorDialog.xaml.cs">
       <DependentUpon>ErrorDialog.xaml</DependentUpon>
     </Compile>
@@ -508,6 +512,10 @@
       <SubType>Designer</SubType>
       <Generator>XamlIntelliSenseFileGenerator</Generator>
     </ApplicationDefinition>
+    <Page Include="Views\ConfirmDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ErrorDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -522,11 +530,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PluginSourceControl\PluginSourceControl.csproj">
-      <Project>{91f0dd92-ebf2-432c-9009-fa2b1a391fbb}</Project>
-      <Name>PluginSourceControl</Name>
-      <Private>False</Private>
-    </ProjectReference>
     <ProjectReference Include="..\ReverseR.Common\ReverseR.Common.csproj">
       <Project>{2cc5437d-95a8-4fc8-bded-882ad381081d}</Project>
       <Name>ReverseR.Common</Name>

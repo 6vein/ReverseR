@@ -22,6 +22,14 @@ namespace ReverseR.Common.DecompUtilities
         /// </summary>
         public IEnumerable<string> InnerClassPaths { get; set; }
         public JPath() { }
+        public JPath(JPath other)
+        {
+            Path = other.Path;
+            ClassPath = other.ClassPath;
+            HasInnerClasses = other.HasInnerClasses;
+            if (other.InnerClassPaths != null)
+                InnerClassPaths = new List<string>(other.InnerClassPaths);
+        }
         public JPath(string path,string classPath) { Path = path; ClassPath =classPath.Replace('\\','/') ;HasInnerClasses = false; }
         public JPath(string path,string classPath , IEnumerable<string> inners = null)
         { 

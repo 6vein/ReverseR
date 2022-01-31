@@ -22,5 +22,14 @@ namespace ReverseR.Common.Services
                 dialogService.ShowDialog("ErrorDialog", parameters, callback);
             });
         }
+        public static void PresentConfirmation(this IDialogService dialogService,string message, Action<IDialogResult> callback)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                IDialogParameters parameters = new DialogParameters();
+                parameters.Add("message", message);
+                dialogService.ShowDialog("ErrorDialog", parameters, callback);
+            });
+        }
     }
 }

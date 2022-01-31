@@ -3,28 +3,32 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReverseR", "ReverseR\ReverseR.csproj", "{093C50F1-A3D7-4B51-9CEB-91AA410BA863}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReverseR", "src\ReverseR\ReverseR.csproj", "{093C50F1-A3D7-4B51-9CEB-91AA410BA863}"
 	ProjectSection(ProjectDependencies) = postProject
 		{F0716EFB-046D-4B59-ABD7-1234C5CEFA03} = {F0716EFB-046D-4B59-ABD7-1234C5CEFA03}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReverseR.Common", "ReverseR.Common\ReverseR.Common.csproj", "{2CC5437D-95A8-4FC8-BDED-882AD381081D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReverseR.Common", "src\ReverseR.Common\ReverseR.Common.csproj", "{2CC5437D-95A8-4FC8-BDED-882AD381081D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{6D9CBC94-53D4-4475-9BBE-573006D34B7B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AntlrParser", "AntlrParser\AntlrParser.csproj", "{74DE56CA-3E4F-4B5A-B47F-848790F5F507}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AntlrParser", "src\AntlrParser\AntlrParser.csproj", "{74DE56CA-3E4F-4B5A-B47F-848790F5F507}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginSourceControl", "PluginSourceControl\PluginSourceControl.csproj", "{91F0DD92-EBF2-432C-9009-FA2B1A391FBB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginSourceControl", "src\PluginSourceControl\PluginSourceControl.csproj", "{91F0DD92-EBF2-432C-9009-FA2B1A391FBB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xceed.Wpf.AvalonDock.Themes.VS2013", "Xceed.Wpf.AvalonDock.Themes.VS2013\Xceed.Wpf.AvalonDock.Themes.VS2013.csproj", "{89286EB4-B4A1-418C-839A-067B00F442D8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xceed.Wpf.AvalonDock.Themes.VS2013", "src\Xceed.Wpf.AvalonDock.Themes.VS2013\Xceed.Wpf.AvalonDock.Themes.VS2013.csproj", "{89286EB4-B4A1-418C-839A-067B00F442D8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{961CB3CA-9785-4B1E-B568-F60E44E60E88}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasicCodeCompletion", "BasicCodeCompletion\BasicCodeCompletion.csproj", "{09010DE7-25D2-46A2-B086-018CF98082CA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasicCodeCompletion", "src\BasicCodeCompletion\BasicCodeCompletion.csproj", "{09010DE7-25D2-46A2-B086-018CF98082CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReverseR.DecompileView.Default", "ReverseR.DecompileView.Default\ReverseR.DecompileView.Default.csproj", "{8EB186FF-C1E2-48CF-BA42-A84C63EBC6EC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReverseR.DecompileView.Default", "src\ReverseR.DecompileView.Default\ReverseR.DecompileView.Default.csproj", "{8EB186FF-C1E2-48CF-BA42-A84C63EBC6EC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DecompilerFernflower", "DecompilerFernflower\DecompilerFernflower.csproj", "{F0716EFB-046D-4B59-ABD7-1234C5CEFA03}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DecompilerFernflower", "src\DecompilerFernflower\DecompilerFernflower.csproj", "{F0716EFB-046D-4B59-ABD7-1234C5CEFA03}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AntlrTest", "tests\AntlrTest\AntlrTest.csproj", "{9CA0E710-4ACA-47BF-8287-C2739D8A6202}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{003AF02E-94D4-4379-ADB5-B2BAE7C23EFE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -132,6 +136,18 @@ Global
 		{F0716EFB-046D-4B59-ABD7-1234C5CEFA03}.Release|x64.Build.0 = Release|Any CPU
 		{F0716EFB-046D-4B59-ABD7-1234C5CEFA03}.Release|x86.ActiveCfg = Release|Any CPU
 		{F0716EFB-046D-4B59-ABD7-1234C5CEFA03}.Release|x86.Build.0 = Release|Any CPU
+		{9CA0E710-4ACA-47BF-8287-C2739D8A6202}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CA0E710-4ACA-47BF-8287-C2739D8A6202}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CA0E710-4ACA-47BF-8287-C2739D8A6202}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9CA0E710-4ACA-47BF-8287-C2739D8A6202}.Debug|x64.Build.0 = Debug|Any CPU
+		{9CA0E710-4ACA-47BF-8287-C2739D8A6202}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9CA0E710-4ACA-47BF-8287-C2739D8A6202}.Debug|x86.Build.0 = Debug|Any CPU
+		{9CA0E710-4ACA-47BF-8287-C2739D8A6202}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CA0E710-4ACA-47BF-8287-C2739D8A6202}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9CA0E710-4ACA-47BF-8287-C2739D8A6202}.Release|x64.ActiveCfg = Release|Any CPU
+		{9CA0E710-4ACA-47BF-8287-C2739D8A6202}.Release|x64.Build.0 = Release|Any CPU
+		{9CA0E710-4ACA-47BF-8287-C2739D8A6202}.Release|x86.ActiveCfg = Release|Any CPU
+		{9CA0E710-4ACA-47BF-8287-C2739D8A6202}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -142,6 +158,7 @@ Global
 		{89286EB4-B4A1-418C-839A-067B00F442D8} = {961CB3CA-9785-4B1E-B568-F60E44E60E88}
 		{09010DE7-25D2-46A2-B086-018CF98082CA} = {6D9CBC94-53D4-4475-9BBE-573006D34B7B}
 		{F0716EFB-046D-4B59-ABD7-1234C5CEFA03} = {6D9CBC94-53D4-4475-9BBE-573006D34B7B}
+		{9CA0E710-4ACA-47BF-8287-C2739D8A6202} = {003AF02E-94D4-4379-ADB5-B2BAE7C23EFE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {05232472-9B49-452E-9991-8536B92FC882}

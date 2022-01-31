@@ -26,6 +26,8 @@ namespace ReverseR.Internal.Services
         public string TaskDescription { get => _taskdescription; set => SetProperty(ref _taskdescription, value); }
         bool _isCompleted;
         public bool IsCompleted { get => _isCompleted;protected set => SetProperty(ref _isCompleted, value); }
+        protected TaskCompletionSource<bool> _taskCompletionSource = new TaskCompletionSource<bool>();
+        public Task<bool> IsCompletedTask => _taskCompletionSource.Task;
 
         protected Task completedCallbackTask;
 
@@ -91,11 +93,12 @@ namespace ReverseR.Internal.Services
             }
             else
             {
-                var wait = new SpinWait();
+                /*var wait = new SpinWait();
                 while (!Task.IsCompleted)
                 {
                     wait.SpinOnce();
-                }
+                }*/
+                IsCompletedTask.Wait();
             }
         }
         /// <summary>
@@ -108,11 +111,22 @@ namespace ReverseR.Internal.Services
                 throw new InvalidOperationException("The task of IBackgroundTask has not been created.");
             completedCallbackTask = Task.ContinueWith(task => 
             {
-                if (!(Token.HasValue && Token.Value.IsCancellationRequested)) 
-                    if(_oncompletedCallback is Action<Task> callback)
+                if (!(Token.HasValue && Token.Value.IsCancellationRequested)&&!task.IsFaulted)
+                {
+                    _taskCompletionSource.SetResult(true);
+                    if (_oncompletedCallback is Action<Task> callback)
                     {
                         callback?.Invoke(task);
                     }
+                }
+                else if (task.IsFaulted)
+                {
+                    _taskCompletionSource.SetException(task.Exception);
+                }
+                else
+                {
+                    _taskCompletionSource.SetCanceled();
+                }
                 IsCompleted = true;
                 this.GetIContainer().Resolve<IEventAggregator>().GetEvent<TaskCompletedEvent>().Publish(this);
                 
@@ -145,6 +159,8 @@ namespace ReverseR.Internal.Services
                     Task = null;
                     completedCallbackTask?.Dispose();
                     completedCallbackTask = null;
+                    _taskCompletionSource.TrySetResult(true);
+                    _taskCompletionSource = null;
                     Token = null;
                 }
 
@@ -212,16 +228,26 @@ namespace ReverseR.Internal.Services
                 throw new InvalidOperationException("The task of IBackgroundTask has not been created or is invalid.");
             completedCallbackTask = Task.ContinueWith(task =>
             {
-                if (!(Token.HasValue && Token.Value.IsCancellationRequested))
+                if (!(Token.HasValue && Token.Value.IsCancellationRequested) && !task.IsFaulted)
                 {
-                    if (task is Task<TResult> taskT)
+                    if(task is Task<TResult> taskT)
                     {
+                        _taskCompletionSource.SetResult(true);
                         if (_oncompletedCallback is Action<Task<TResult>> callback)
                         {
                             callback?.Invoke(taskT);
                         }
                     }
                 }
+                else if (task.IsFaulted)
+                {
+                    _taskCompletionSource.SetException(task.Exception);
+                }
+                else
+                {
+                    _taskCompletionSource.SetCanceled();
+                }
+                IsCompleted = true;
                 IsCompleted = true;
                 this.GetIContainer().Resolve<IEventAggregator>().GetEvent<TaskCompletedEvent>().Publish(this);
 
