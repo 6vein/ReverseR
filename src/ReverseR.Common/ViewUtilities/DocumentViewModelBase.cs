@@ -80,6 +80,7 @@ namespace ReverseR.Common.ViewUtilities
         public string InternalFilePath { get; protected set; }
         protected ICodeCompletion CompletionProvider { get; set; }
         protected Task LoadTask { get; set; }
+        public abstract Task SelectAsync(int start,int end);
         public abstract Task<string> GetContentAsync();
         public virtual Task LoadAsync(string path, JPath classPath)
         {

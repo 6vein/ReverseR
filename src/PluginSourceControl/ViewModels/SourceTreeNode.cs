@@ -40,8 +40,10 @@ namespace PluginSourceControl.ViewModels
             __InternalPlaceHolder=-1
         }
         public NodeType Type { get; set; }
-        public IClassParser.ModifierType ModifierType { get; set; }
-
+        public ModifierType ModifierType { get; set; }
+        public int Start { get; set; }
+        public int Stop { get; set; }
+        public SourceTreeNode CompilationUnitNode { get;private set; }
         internal static Dictionary<string, string> IconResource => new Dictionary<string, string>()
         {
             {".java","pack://application:,,,/PluginSourceControl;component/ImageResources/JavaFile_16x.xaml" },
@@ -210,34 +212,31 @@ namespace PluginSourceControl.ViewModels
                 case IClassParser.ItemType.EnumConstant: node.Type = NodeType.EnumConstant; break;
                 default:node.Type = NodeType.__InternalPlaceHolder; break;
             }
-            node.ModifierType = root.Modifiers.First();
+            node.ModifierType = root.Modifiers.Count() == 0 ? ModifierType.Public : root.Modifiers.First();
             node.JPath = new JPath(origPath);
             node.JPath.ClassPath = node.JPath.ClassPath.Remove(node.JPath.ClassPath.LastIndexOf('/')) + classPath;
             node.Text = root.Content;
+            node.Start = root.Start;
+            node.Stop = root.End;
+            node.CompilationUnitNode = this;
             //Visual Stuffs
             XmlDocument document = new XmlDocument();
             XmlNamespaceManager nsmgr = new XmlNamespaceManager(document.NameTable);
-            try
+            nsmgr.AddNamespace("wpf", "http://schemas.microsoft.com/winfx/2006/xaml/presentation");
+            var info = Application.GetResourceStream(new Uri(IconResource[node.Type.ToString() + node.ModifierType.ToString()]));
+            using (info.Stream)
             {
-                nsmgr.AddNamespace("wpf", "http://schemas.microsoft.com/winfx/2006/xaml/presentation");
-                var info = Application.GetResourceStream(new Uri(IconResource[node.Type.ToString() + node.ModifierType.ToString()]));
-                using (info.Stream)
-                {
-                    document.Load(info.Stream);
-                }
-                XmlNode xmlNode = document.SelectSingleNode("/wpf:Viewbox/wpf:Rectangle/wpf:Rectangle.Fill/wpf:DrawingBrush/wpf:DrawingBrush.Drawing", nsmgr);
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    DrawingImage drawingImage = new DrawingImage();
-                    drawingImage.Drawing = XamlReader.Parse(xmlNode.InnerXml) as DrawingGroup;
-                    node.ExpandedIcon = node.Icon = drawingImage;
-                    node.Children = new ObservableCollection<SourceTreeNode>(nodes);
-                });
+                document.Load(info.Stream);
             }
-            catch(Exception ex)
+            XmlNode xmlNode = document.SelectSingleNode("/wpf:Viewbox/wpf:Rectangle/wpf:Rectangle.Fill/wpf:DrawingBrush/wpf:DrawingBrush.Drawing", nsmgr);
+            Application.Current.Dispatcher.Invoke(() =>
             {
-
-            }
+                DrawingImage drawingImage = new DrawingImage();
+                drawingImage.Drawing = XamlReader.Parse(xmlNode.InnerXml) as DrawingGroup;
+                node.ExpandedIcon = node.Icon = drawingImage;
+                node.Children = new ObservableCollection<SourceTreeNode>(nodes);
+            });
+            
             return node;
         }
         #endregion

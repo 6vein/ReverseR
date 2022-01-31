@@ -467,6 +467,7 @@
     <Compile Include="ViewModels\InputBindingBehavior.cs" />
     <Compile Include="ViewModels\MenuTemplateSelector.cs" />
     <Compile Include="ViewModels\RootMenuItemWrapper.cs" />
+    <Compile Include="ViewModels\StatusTextConverter.cs" />
     <Compile Include="Views\ConfirmDialog.xaml.cs">
       <DependentUpon>ConfirmDialog.xaml</DependentUpon>
     </Compile>

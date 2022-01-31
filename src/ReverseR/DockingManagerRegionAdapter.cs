@@ -178,30 +178,28 @@ namespace ReverseR
         /// <param name="region">The region.</param>
         void OnDocumentClosedEventArgs(object sender, DocumentClosedEventArgs e, IRegion region)
         {
-            if(e.Document.Content is IDecompileViewModel viewModel)
+            if((e.Document.Content as FrameworkElement)?.DataContext is IDecompileViewModel viewModel)
             {
                 bool closed = false;
                 if (!viewModel.Shutdown(false)) 
                 {
-                    IDialogResult result = null;
                     Container.Resolve<IDialogService>()
                         .PresentConfirmation($"File {Path.GetFileName(viewModel.FilePath)}"
                         + "didn't seem to close in time.\nWould you force to close it?",
                         r =>
                         {
-                            result = r;
+                            if (r?.Result == ButtonResult.Yes)
+                            {
+                                viewModel.Shutdown(true);
+                                closed = true;
+                            }
                         });
-                    if (result?.Result == ButtonResult.Yes)
-                    {
-                        viewModel.Shutdown(true);
-                        closed = true;
-                    }
                 }
                 else
                 {
                     closed = true;
                 }
-                if (closed) region.Remove(viewModel);
+                if (closed) region.Remove(e.Document.Content);
             }
         }
 

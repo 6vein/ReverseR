@@ -50,7 +50,7 @@ namespace ReverseR.DecompileView.Default.ViewModels
         {
             if(GlobalUtils.GlobalConfig.DecompileWhole)
             {
-                Decompiler.Decompile(BaseDirectory + "\\raw.jar", (str) => { MessageWhole = str; });
+                Decompiler.Decompile(BaseDirectory + "\\raw.jar", (str) => { StatusMessage = str; });
                 
             }
             else
@@ -120,7 +120,7 @@ namespace ReverseR.DecompileView.Default.ViewModels
                     IDecompileResult result = null;
                     try
                     {
-                        result = Decompiler.Decompile(tempPath, r => MessageWhole = r, token, BaseDirectory + "\\raw.jar");
+                        result = Decompiler.Decompile(tempPath, r => StatusMessage = r, token, BaseDirectory + "\\raw.jar");
                         if (result.ResultCode == DecompileResultEnum.Success)
                         {
                             var files = Directory.GetFiles(result.OutputDir);
@@ -134,6 +134,7 @@ namespace ReverseR.DecompileView.Default.ViewModels
                                 File.Copy(files[0], newFileName, true);
                                 MapSourceToMd5.Add(newFileName, APIHelper.GetMd5Of(newFileName));
                             }
+                            StatusMessage = "Processing " + path.ClassPath;
                             await viewModel.LoadAsync(newFileName, path);
                             
                             Application.Current.Dispatcher.Invoke(() =>
@@ -169,6 +170,7 @@ namespace ReverseR.DecompileView.Default.ViewModels
                         token.Value.ThrowIfCancellationRequested();
                     }
                     Directory.Delete(tempPath, true);
+                    StatusMessage = null;
                 },viewModel.DecompTaskTokenSource.Token)
                 .WithName($"{Path.GetFileName(path.Path)}")
                 .WithDescription($"Decompiler {Decompiler.GetDecompilerInfo().FriendlyName}")
@@ -217,6 +219,14 @@ namespace ReverseR.DecompileView.Default.ViewModels
 
         protected override void InitializeSelf()
         {
+            Manager.DocumentClosing += (s, e) =>
+            {
+                e.Cancel = !CloseDocument(e.Document.Content as IDocumentViewModel);
+            };
+            Manager.DocumentClosed += (s, e) =>
+            {
+                Documents.Remove(e.Document.Content as IDocumentViewModel);
+            };
         }
 
         protected override ObservableCollection<IMenuViewModel> _InternalMenuUpdate()

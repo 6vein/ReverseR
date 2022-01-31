@@ -16,6 +16,7 @@ namespace ReverseR.Common.ViewUtilities
     /// </summary>
     public interface IDecompileViewModel:ITitleSupport
     {
+        public string StatusMessage { get; }
         /// <summary>
         /// Initalize the view and its plugins
         /// </summary>

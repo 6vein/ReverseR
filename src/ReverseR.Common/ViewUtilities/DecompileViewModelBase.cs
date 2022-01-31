@@ -41,11 +41,11 @@ namespace ReverseR.Common.ViewUtilities
             set { SetProperty(ref _isWholeLoaderOpen, value); }
         }
 
-        private string _messageWhole;
-        public string MessageWhole
+        private string _statusMessage;
+        public string StatusMessage
         {
-            get { return _messageWhole; }
-            set { SetProperty(ref _messageWhole, value); }
+            get { return _statusMessage; }
+            set { SetProperty(ref _statusMessage, value); }
         }
         //TimeSpan _loaderWaitTime;
         //public TimeSpan LoaderWaitTime { get => _loaderWaitTime; set => SetProperty(ref _loaderWaitTime, value); }
@@ -70,6 +70,7 @@ namespace ReverseR.Common.ViewUtilities
             IsWholeLoaderOpen = true;
             FilePath = tuple.Item1;
             FileType = tuple.Item2;
+            StatusMessage = "Opening " + FilePath;
             Title = Path.GetFileName(FilePath) + $"[{DecompileViewName}]";
             EnableExtractionCache = GlobalUtils.GlobalConfig.CacheExtractedFiles;
             //TitleTooltip = FilePath;
@@ -230,7 +231,6 @@ namespace ReverseR.Common.ViewUtilities
         {
             if (documentViewModel.Close(ForceClose)||ForceClose)
             {
-                Documents.Remove(documentViewModel);
                 return true;
             }
             return false;
@@ -239,7 +239,7 @@ namespace ReverseR.Common.ViewUtilities
         public DecompileViewModelBase()
         {
             //LoaderWaitTime = new TimeSpan(0, 0, 1);
-            MessageWhole = "Loading...";
+            StatusMessage = "Loading...";
             Container = this.GetIContainer();
             Container.Resolve<IEventAggregator>().GetEvent<OpenFileEvent>().Subscribe(OnOpenFile, ThreadOption.BackgroundThread,false,filter=>filter.Item3==Guid);
             Container.Resolve<IEventAggregator>().GetEvent<ViewActivatedEvent>().Subscribe(guid => OnActivated(), ThreadOption.UIThread, false, filter => filter == this.Guid);

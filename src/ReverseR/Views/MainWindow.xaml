@@ -428,13 +428,13 @@
                             </behaviors:EventTrigger>
                         </behaviors:Interaction.Triggers>
                         <Grid Background="Transparent">
-                            <Border Panel.ZIndex="-1" Margin="0 0 0 6" BorderThickness="1" Background="Transparent" BorderBrush="#3f3f46">
+                            <Border Panel.ZIndex="-1" Margin="0 0 0 6" BorderThickness="1" Background="{DynamicResource MahApps.Brushes.Background}" BorderBrush="#3f3f46">
                                 <ContentPresenter>
                                     <ContentPresenter.Style>
                                         <Style TargetType="ContentPresenter">
                                             <Setter Property="Content">
                                                 <Setter.Value>
-                                                    <ListBox ItemsSource="{Binding BackgroundTasks}">
+                                                    <ListBox ItemsSource="{Binding BackgroundTasks}" Background="{DynamicResource MahApps.Brushes.Background}">
                                                         <ListBox.ItemTemplate>
                                                             <DataTemplate>
                                                                 <StackPanel Orientation="Vertical" Margin="5">
@@ -679,7 +679,10 @@
                 </Button>
             </StatusBarItem>
             <StatusBarItem Margin="5 0 0 0" Padding="0" DockPanel.Dock="Left">
-                <TextBlock Text="{Binding StatusText}"/>
+                <StatusBarItem.Resources>
+                    <local:StatusTextConverter x:Key="StatusMessageConverter"/>
+                </StatusBarItem.Resources>
+                <TextBlock Text="{Binding ElementName=PART_LayoutRoot,Path=ActiveContent.DataContext.StatusMessage,Mode=OneWay,Converter={StaticResource StatusMessageConverter},FallbackValue=Ready}"/>
             </StatusBarItem>
         </StatusBar>
     </Grid>

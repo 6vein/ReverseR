@@ -311,7 +311,19 @@ namespace PluginSourceControl.ViewModels
                               node.AssociatedDocument = Parent.OpenDocument(node.JPath);
                           else
                               Parent.ActivateDocument(node.AssociatedDocument);
-
+                      }
+                      else if (node.Type != SourceTreeNode.NodeType.Directory && node.Type != SourceTreeNode.NodeType.__InternalPlaceHolder)
+                      {
+                          if (node.CompilationUnitNode.AssociatedDocument == null || !Parent.Documents.Contains(node.CompilationUnitNode.AssociatedDocument))
+                          {
+                              node.CompilationUnitNode.AssociatedDocument = Parent.OpenDocument(node.CompilationUnitNode.JPath);
+                          }
+                          else
+                              Parent.ActivateDocument(node.CompilationUnitNode.AssociatedDocument);
+                          Task.Run(async () =>
+                          {
+                              await node.CompilationUnitNode.AssociatedDocument.SelectAsync(node.Start, node.Stop);
+                          });
                       }
                   }
                   //prevent from expanding/collapsing

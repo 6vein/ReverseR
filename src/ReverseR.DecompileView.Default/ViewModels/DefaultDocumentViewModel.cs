@@ -21,6 +21,7 @@ using System.Xml;
 using ReverseR.Common.Services;
 using ReverseR.Common.DecompUtilities;
 using ICSharpCode.AvalonEdit.Snippets;
+using System.Diagnostics;
 
 namespace ReverseR.DecompileView.Default.ViewModels
 {
@@ -70,6 +71,7 @@ namespace ReverseR.DecompileView.Default.ViewModels
                 EditorControl.TextArea.TextEntering -= TextArea_TextEntering;
                 EditorControl.TextArea.TextEntered -= TextArea_TextEntered;
             };
+            EditorControl.ShowLineNumbers = true;
             EditorControl.Unloaded += handler;
             EditorControl.IsReadOnly = true;
             EditorControl.Options.EnableHyperlinks = true;
@@ -132,6 +134,19 @@ namespace ReverseR.DecompileView.Default.ViewModels
         EditorViewModel _editor = new EditorViewModel();
         [JsonProperty]
         public EditorViewModel Editor { get => _editor; set => SetProperty(ref _editor, value); }
+        public override async Task SelectAsync(int start,int end)
+        {
+            await BackgroundTask.IsCompletedTask;
+#if DEBUG
+            Debug.Assert(LoadTask != null);
+#endif
+            await LoadTask;
+            await Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                EditorControl.Select(start, end - start + 1);
+                EditorControl.ScrollToLine(Editor.Document.GetLineByOffset(start).LineNumber);
+            });
+        }
         public override async Task _InnerLoadAsync(string path, JPath jPath)
         {
             //Title = System.IO.Path.GetFileName(path);

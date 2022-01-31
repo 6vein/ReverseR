@@ -37,6 +37,7 @@ namespace ReverseR.Common.DecompUtilities
             ClassPath = classPath.Replace('\\', '/');
             if (inners != null) 
             {
+                ClassPath = ClassPath.Remove(ClassPath.LastIndexOf('$'));
                 InnerClassPaths = inners;
                 HasInnerClasses = true;
             }

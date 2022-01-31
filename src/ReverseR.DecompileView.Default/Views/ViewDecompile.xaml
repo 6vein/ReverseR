@@ -33,7 +33,7 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <TextBlock Grid.Row="1" Foreground="{DynamicResource MahApps.Brushes.Background.Normal}" Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl},Path=DataContext.MessageWhole}" HorizontalAlignment="Center"/>
+                        <TextBlock Grid.Row="1" Foreground="{DynamicResource MahApps.Brushes.Background.Normal}" Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl},Path=DataContext.StatusMessage}" HorizontalAlignment="Center"/>
                         <Controls:ProgressRing Foreground="{DynamicResource MahApps.Brushes.BackgroundHighlighted}" IsActive="True"/>
                     </Grid>
                 </DataTemplate>
