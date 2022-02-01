@@ -23,6 +23,7 @@ namespace ReverseR.Common.Extensibility
         public IDecompileViewModel ParentViewModel { get; }
 
         void InitalizePlugin(IDecompileViewModel parent);
+        void UnloadPlugin();
         ObservableCollection<IMenuViewModel> InsertPluginMenu();
     }
 }

@@ -16,7 +16,6 @@ namespace ReverseR.Common.ViewUtilities
     /// </summary>
     public interface IDecompileViewModel:ITitleSupport
     {
-        public string StatusMessage { get; }
         /// <summary>
         /// Initalize the view and its plugins
         /// </summary>
@@ -31,7 +30,7 @@ namespace ReverseR.Common.ViewUtilities
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        public IDocumentViewModel OpenDocument(JPath path);
+        public IDocumentViewModel OpenDocument(IJPath path);
         public void ActivateDocument(IDocumentViewModel documentViewModel);
         /// <summary>
         /// Closes the document,will call <see cref="IDocumentViewModel.Close(bool)"/>
@@ -46,14 +45,23 @@ namespace ReverseR.Common.ViewUtilities
         /// Publish the <see cref="Events.MenuUpdatedEvent"/> to notify the shell to update menu
         /// </summary>
         public void PublishMenuUpdate();
-
+        /// <summary>
+        /// Gets the parse tree,empty or null <paramref name="classPath"/> for the entry root.
+        /// Every opened decompile view has a entry, such as <see cref="DecompileViewModelBase.ASTEntry"/>
+        /// </summary>
+        /// <param name="classPath"></param>
+        /// <param name="parseCompilationUnit"></param>
+        /// <returns></returns>
+        public Task<Code.ParseTreeNode> GetParseTreeAsync(string classPath, bool parseCompilationUnit = false);
         public Guid Guid { get; }
         /// <summary>
         /// A list that manages the plugins(<see cref="IPlugin"/> and <see cref="IDockablePlugin"/>).
         /// The latter one has a <see cref="Xceed.Wpf.AvalonDock.Layout.LayoutAnchorable"/> to display content
         /// </summary>
         public List<IPlugin> Plugins { get; }
+        public IDocumentViewModel ActiveDocument { get; }
         public ObservableCollection<IDocumentViewModel> Documents { get; set; }
         public string FilePath { get; }
+        public string StatusMessage { get; }
     }
 }

@@ -30,12 +30,8 @@ namespace ReverseR.ViewModels
             get { return _title; }
             set { SetProperty(ref _title, value); }
         }
-        private string _statusText = "Ready";
-        public string StatusText
-        {
-            get { return _statusText; }
-            set { SetProperty(ref _statusText, value); }
-        }
+        public string StatusText => "Ready";
+        public IBackgroundTask LastBackgroundTask => BackgroundTasks.LastOrDefault();
         private int _notificationcount = 0;
         public int NotificationCount
         {
@@ -137,9 +133,15 @@ namespace ReverseR.ViewModels
         {
             regionManager = region;
             containerProvider = (App.Current as App).Container;
-            containerProvider.Resolve<IEventAggregator>().GetEvent<TaskStartedEvent>().Subscribe(payload => BackgroundTasks.Add(payload), ThreadOption.UIThread);
-            containerProvider.Resolve<IEventAggregator>().GetEvent<TaskCompletedEvent>().Subscribe(payload => BackgroundTasks.Remove(payload), ThreadOption.UIThread);
-            BackgroundTasks.CollectionChanged += (s, e) => { RaisePropertyChanged(nameof(IsInIdle)); };
+            containerProvider
+                .Resolve<IEventAggregator>()
+                .GetEvent<TaskStartedEvent>()
+                .Subscribe(payload => BackgroundTasks.Add(payload), ThreadOption.UIThread);
+            containerProvider
+                .Resolve<IEventAggregator>()
+                .GetEvent<TaskCompletedEvent>()
+                .Subscribe(payload => BackgroundTasks.Remove(payload), ThreadOption.UIThread);
+            BackgroundTasks.CollectionChanged += (s, e) => { RaisePropertyChanged(nameof(IsInIdle));RaisePropertyChanged(nameof(LastBackgroundTask)); };
             RestoreMenu();
         }
         #region Methods

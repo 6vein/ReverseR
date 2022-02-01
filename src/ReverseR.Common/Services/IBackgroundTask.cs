@@ -44,7 +44,7 @@ namespace ReverseR.Common.Services
 
     /// <inheritdoc/>
     /// <typeparam name="TResult">Type for the Task to return</typeparam>
-    public interface IBackgroundTask<TResult>:IBackgroundTask,IDisposable
+    public interface IBackgroundTask<TResult>:IBackgroundTask
     {
         /// <summary>
         /// Get the result of the task,blocking the thread if the execution is still running

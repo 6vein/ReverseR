@@ -12,8 +12,9 @@ namespace AntlrTest
         public void TestVisitor()
         {
             AntlrParser.AntlrParser parser = new AntlrParser.AntlrParser();
+            parser.SetBasePath(new ReverseR.Common.Code.ParseTreeNode());
             Stream stream = File.OpenRead("Program.java");
-            var nodes = parser.Parse(stream);
+            var nodes = parser.Parse((new StreamReader(stream)).ReadToEnd());
             stream.Close();
         }
     }

@@ -13,11 +13,11 @@ namespace ReverseR.Common.ViewUtilities
     public interface IDocumentViewModel:ITitleSupport
     {
         public string InternalFilePath { get; }
-        public JPath JPath { get; }
+        public IJPath JPath { get; }
         public Task<string> GetContentAsync();
         public Task SelectAsync(int start, int end);
         public IDecompileViewModel Parent { get; set; }
-        public Task LoadAsync(string path, JPath classpath);
+        public Task LoadAsync(string path, IJPath classpath);
         public void AttachDecompileTask(IBackgroundTask decompileTask);
         public IBackgroundTask GetAttachedDecompileTask();
         /// <summary>

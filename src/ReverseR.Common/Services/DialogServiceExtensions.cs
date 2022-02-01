@@ -28,7 +28,7 @@ namespace ReverseR.Common.Services
             {
                 IDialogParameters parameters = new DialogParameters();
                 parameters.Add("message", message);
-                dialogService.ShowDialog("ErrorDialog", parameters, callback);
+                dialogService.ShowDialog("ConfirmDialog", parameters, callback);
             });
         }
     }

@@ -59,7 +59,7 @@ namespace ReverseR.DecompileView.Default.ViewModels
             }
         }
 
-        protected override IDocumentViewModel _InnerOpenDocument(JPath path)
+        protected override IDocumentViewModel _InnerOpenDocument(IJPath path)
         {
             DecompileDocumentViewModel viewModel;
             viewModel = Container.Resolve<DecompileDocumentViewModel>();
@@ -94,7 +94,8 @@ namespace ReverseR.DecompileView.Default.ViewModels
               });
             viewModel.DecompileTask.Start();*/
             viewModel.DecompTaskTokenSource = new CancellationTokenSource();
-            viewModel.AttachDecompileTask(Container.Resolve<IBackgroundTaskBuilder>()
+            IBackgroundTask backgroundTask = null;
+            backgroundTask = Container.Resolve<IBackgroundTaskBuilder>()
                 .WithTask(async obj =>
                 {
                     var token = obj as CancellationToken?;
@@ -120,7 +121,9 @@ namespace ReverseR.DecompileView.Default.ViewModels
                     IDecompileResult result = null;
                     try
                     {
-                        result = Decompiler.Decompile(tempPath, r => StatusMessage = r, token, BaseDirectory + "\\raw.jar");
+                        result = Decompiler.Decompile(tempPath, 
+                            r => { if (backgroundTask != null) backgroundTask.TaskDescription = r; }, 
+                            token, BaseDirectory + "\\raw.jar");
                         if (result.ResultCode == DecompileResultEnum.Success)
                         {
                             var files = Directory.GetFiles(result.OutputDir);
@@ -130,13 +133,13 @@ namespace ReverseR.DecompileView.Default.ViewModels
                             string newFileName = files[0];
                             if (EnableDecompiledFileCache)
                             {
-                                newFileName = Path.Combine(basedir, Path.GetFileNameWithoutExtension(files[0]) + ".java");
+                                newFileName = Path.Combine(basedir+'\\', Path.GetFileNameWithoutExtension(files[0]) + ".java");
                                 File.Copy(files[0], newFileName, true);
                                 MapSourceToMd5.Add(newFileName, APIHelper.GetMd5Of(newFileName));
                             }
-                            StatusMessage = "Processing " + path.ClassPath;
+                            StatusMessage = backgroundTask.TaskDescription = "Processing " + path.ClassPath;
                             await viewModel.LoadAsync(newFileName, path);
-                            
+
                             Application.Current.Dispatcher.Invoke(() =>
                             {
                                 if (!(Manager.ActiveContent is IDocumentViewModel))
@@ -170,14 +173,16 @@ namespace ReverseR.DecompileView.Default.ViewModels
                         token.Value.ThrowIfCancellationRequested();
                     }
                     Directory.Delete(tempPath, true);
-                    StatusMessage = null;
-                },viewModel.DecompTaskTokenSource.Token)
-                .WithName($"{Path.GetFileName(path.Path)}")
-                .WithDescription($"Decompiler {Decompiler.GetDecompilerInfo().FriendlyName}")
-                .Build());
+                    StatusMessage = "Ready";
+                }, viewModel.DecompTaskTokenSource.Token)
+                .WithName($"{Decompiler.GetDecompilerInfo().FriendlyName}:{Path.GetFileName(path.Path)}")
+                .WithDescription($"Decompiler started")
+                .Build();
+            viewModel.AttachDecompileTask(backgroundTask);
             viewModel.BackgroundTask.Start();
             return viewModel;
         }
+        public override IDocumentViewModel ActiveDocument { get; protected set; }
         public override void ActivateDocument(IDocumentViewModel documentViewModel)
         {
             Manager.ActiveContent = documentViewModel;
@@ -216,19 +221,115 @@ namespace ReverseR.DecompileView.Default.ViewModels
                 }
             }
         }
-
+        protected override void UnloadPlugins()
+        {
+            foreach (IDockablePlugin plugin in Plugins)
+            {
+                //TODO:Save plugin states
+                BindingOperations.ClearBinding(MapPluginAnchor[plugin].Content as DependencyObject, ViewRegionControl.TitleProperty);
+                MapPluginAnchor[plugin].Hiding -= (s, e) =>
+                 {
+                     RaisePropertyChanged();
+                 };
+            }
+            foreach(IPlugin plugin in Plugins)
+            {
+                plugin.UnloadPlugin();
+            }
+        }
+        EventHandler ActiveContentChanged => (s, e) =>
+         {
+             if (Manager.ActiveContent is IDocumentViewModel vm)
+             {
+                 ActiveDocument = vm;
+             }
+         };
+        EventHandler<DocumentClosingEventArgs> DocumentClosing => (s, e) =>
+             {
+                 e.Cancel = !CloseDocument(e.Document.Content as IDocumentViewModel);
+             };
+        EventHandler<DocumentClosedEventArgs> DocumentClosed => (s, e) =>
+         {
+             Documents.Remove(e.Document.Content as IDocumentViewModel);
+         };
         protected override void InitializeSelf()
         {
-            Manager.DocumentClosing += (s, e) =>
-            {
-                e.Cancel = !CloseDocument(e.Document.Content as IDocumentViewModel);
-            };
-            Manager.DocumentClosed += (s, e) =>
-            {
-                Documents.Remove(e.Document.Content as IDocumentViewModel);
-            };
+            Manager.ActiveContentChanged += ActiveContentChanged;
+            Manager.DocumentClosing += DocumentClosing;
+            Manager.DocumentClosed += DocumentClosed;
         }
-
+        protected override void UnloadSelf()
+        {
+            Manager.ActiveContentChanged -= ActiveContentChanged;
+            Manager.DocumentClosing -= DocumentClosing;
+            Manager.DocumentClosed -= DocumentClosed;
+        }
+        protected override void HandleMenuCanExecuteEvent(CanExecuteRoutedEventArgs e)
+        {
+            if(ActiveDocument is DecompileDocumentViewModel viewModel)
+            {
+                if (!(viewModel.GetAttachedDecompileTask()?.IsCompleted==true) || (viewModel.IsLoading == true))
+                {
+                    e.CanExecute = false;
+                    e.Handled= true;
+                    return;
+                }
+                if (e.Command == ApplicationCommands.Undo)
+                {
+                    e.CanExecute = viewModel.EditorControl.CanUndo;
+                }
+                else if (e.Command == ApplicationCommands.Redo)
+                {
+                    e.CanExecute = viewModel.EditorControl.CanRedo;
+                }
+                else if (e.Command == ApplicationCommands.Cut || e.Command == ApplicationCommands.Copy || e.Command == ApplicationCommands.Paste) 
+                {
+                    e.CanExecute = true;
+                }
+                e.Handled = true;
+            }
+            else
+            {
+                e.CanExecute = false;
+                e.Handled = true;
+            }
+        }
+        protected override void HandleMenuExecuteEvent(ExecutedRoutedEventArgs e)
+        {
+            if (ActiveDocument is DecompileDocumentViewModel viewModel)
+            {
+                if (!(viewModel.GetAttachedDecompileTask()?.IsCompleted == true) || (viewModel.IsLoading == true))
+                {
+                    e.Handled = true;
+                    return;
+                }
+                if (e.Command == ApplicationCommands.Undo)
+                {
+                    viewModel.EditorControl.Undo();
+                }
+                else if (e.Command == ApplicationCommands.Redo)
+                {
+                    viewModel.EditorControl.Redo();
+                }
+                else if (e.Command == ApplicationCommands.Cut)
+                {
+                    viewModel.EditorControl.Cut();
+                }
+                else if(e.Command == ApplicationCommands.Copy)
+                {
+                    viewModel.EditorControl.Copy();
+                }
+                else if(e.Command != ApplicationCommands.Paste)
+                {
+                    viewModel.EditorControl.Paste();
+                }
+                e.Handled = true;
+            }
+            else
+            {
+                e.Handled = true;
+            }
+        }
         protected override ObservableCollection<IMenuViewModel> _InternalMenuUpdate()
         {
             return new ObservableCollection<IMenuViewModel>();

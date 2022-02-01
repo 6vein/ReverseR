@@ -8,7 +8,8 @@
                       xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
                       xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock"
                       xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-                      xmlns:local="clr-namespace:ReverseR.ViewModels"
+                      xmlns:local="clr-namespace:ReverseR.ViewModels" 
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                       prism:ViewModelLocator.AutoWireViewModel="True"
         Title="{Binding Title}" Height="450" Width="800" Language="En-Us" 
         NonActiveWindowTitleBrush="{Binding RelativeSource={RelativeSource Mode=Self},Path=WindowTitleBrush}"
@@ -434,7 +435,7 @@
                                         <Style TargetType="ContentPresenter">
                                             <Setter Property="Content">
                                                 <Setter.Value>
-                                                    <ListBox ItemsSource="{Binding BackgroundTasks}" Background="{DynamicResource MahApps.Brushes.Background}">
+                                                    <ListBox Name="PART_BkgTaskList" ItemsSource="{Binding BackgroundTasks}" Background="{DynamicResource MahApps.Brushes.Background}">
                                                         <ListBox.ItemTemplate>
                                                             <DataTemplate>
                                                                 <StackPanel Orientation="Vertical" Margin="5">
@@ -679,10 +680,16 @@
                 </Button>
             </StatusBarItem>
             <StatusBarItem Margin="5 0 0 0" Padding="0" DockPanel.Dock="Left">
-                <StatusBarItem.Resources>
-                    <local:StatusTextConverter x:Key="StatusMessageConverter"/>
-                </StatusBarItem.Resources>
-                <TextBlock Text="{Binding ElementName=PART_LayoutRoot,Path=ActiveContent.DataContext.StatusMessage,Mode=OneWay,Converter={StaticResource StatusMessageConverter},FallbackValue=Ready}"/>
+                <TextBlock>
+                    <behaviors:Interaction.Triggers>
+                        <behaviors:DataTrigger Binding="{Binding IsInIdle}" Value="False">
+                            <behaviors:ChangePropertyAction PropertyName="Text" Value="{Binding LastBackgroundTask.TaskDescription}"/>
+                        </behaviors:DataTrigger>
+                        <behaviors:DataTrigger Binding="{Binding IsInIdle}" Value="True">
+                            <behaviors:ChangePropertyAction PropertyName="Text" Value="{Binding StatusText}"/>
+                        </behaviors:DataTrigger>
+                    </behaviors:Interaction.Triggers>
+                </TextBlock>
             </StatusBarItem>
         </StatusBar>
     </Grid>

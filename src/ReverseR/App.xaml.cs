@@ -36,6 +36,7 @@ namespace ReverseR
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.RegisterDialog<ErrorDialog>();
+            containerRegistry.RegisterDialog<ConfirmDialog>();
             containerRegistry.RegisterDialogWindow<MetroDialogWindowHost>();
 
             containerRegistry

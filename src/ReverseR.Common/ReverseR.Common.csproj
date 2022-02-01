@@ -264,13 +264,12 @@
     <Compile Include="GlobalUtils.cs" />
     <Compile Include="DecompUtilities\IDecompileResult.cs" />
     <Compile Include="DecompUtilities\IDecompilerResolver.cs" />
-    <Compile Include="DecompUtilities\JPath.cs" />
+    <Compile Include="DecompUtilities\IJPath.cs" />
     <Compile Include="Events\ArchiveOpenedEvent.cs" />
     <Compile Include="Events\MenuCanExecuteEvent.cs" />
     <Compile Include="Events\MenuExecuteEvent.cs" />
     <Compile Include="Events\MenuUpdatedEvent.cs" />
     <Compile Include="Events\ViewActivatedEvent.cs" />
-    <Compile Include="Events\ViewUnloadedEvent.cs" />
     <Compile Include="Extensibility\IPlugin.cs" />
     <Compile Include="Modularity\DecompilerModuleBase.cs" />
     <Compile Include="Modularity\ModuleBase.cs" />

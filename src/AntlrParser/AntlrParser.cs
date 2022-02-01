@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Antlr4.Runtime;
 using ReverseR.Common.Code;
 using System.Text.RegularExpressions;
+using ReverseR.Common.DecompUtilities;
 
 namespace AntlrParser
 {
@@ -73,21 +74,21 @@ namespace AntlrParser
             }
             content = new string(str);
         }
-        public IEnumerable<IClassParser.ParseTreeNode> Parse(string content)
+        public IEnumerable<ParseTreeNode> Parse(string content)
         {
             PreParse(ref content);
             Java8Lexer lexer = new Java8Lexer(CharStreams.fromstring(content));
             Java8Parser parser = new Java8Parser(new CommonTokenStream(lexer));
 
-            JavaClassVisitor visitor = new JavaClassVisitor();
+            JavaClassVisitor visitor = new JavaClassVisitor() { baseClassPath=_basePath.ClassPath,filePath=_basePath.Path };
 
             return visitor.Visit(parser.compilationUnit()).Children;
         }
-
-        public IEnumerable<IClassParser.ParseTreeNode> Parse(Stream stream)
+        IJPath _basePath;
+        public IClassParser SetBasePath(IJPath basePath)
         {
-            string content = new StreamReader(stream).ReadToEnd();
-            return Parse(content);
+            _basePath = basePath;
+            return this;
         }
     }
 }

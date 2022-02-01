@@ -147,7 +147,7 @@ namespace ReverseR.DecompileView.Default.ViewModels
                 EditorControl.ScrollToLine(Editor.Document.GetLineByOffset(start).LineNumber);
             });
         }
-        public override async Task _InnerLoadAsync(string path, JPath jPath)
+        public override async Task _InnerLoadAsync(string path, IJPath jPath)
         {
             //Title = System.IO.Path.GetFileName(path);
             if (HighlightingManager.Instance.GetDefinition("Java-Dark") == null)

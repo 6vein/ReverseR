@@ -8,6 +8,7 @@
         xmlns:local="clr-namespace:ReverseR.Views"
         mc:Ignorable="d"
         SizeToContent="WidthAndHeight"
+        Style="{DynamicResource MahApps.Styles.MetroWindow.VisualStudio}"
         Title="{Binding Title}" Height="450" Width="800" WindowStartupLocation="CenterOwner" ShowMinButton="False" ShowMaxRestoreButton="False">
     <Controls:MetroWindow.WindowButtonCommands>
         <Controls:WindowButtonCommands Style="{DynamicResource MahApps.Styles.WindowButtonCommands.Win10}" />

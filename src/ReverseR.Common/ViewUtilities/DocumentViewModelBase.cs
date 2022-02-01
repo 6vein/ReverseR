@@ -76,20 +76,20 @@ namespace ReverseR.Common.ViewUtilities
         }
         #endregion
         #region FileOperations
-        public JPath JPath { get; protected set; }
+        public IJPath JPath { get; protected set; }
         public string InternalFilePath { get; protected set; }
         protected ICodeCompletion CompletionProvider { get; set; }
         protected Task LoadTask { get; set; }
         public abstract Task SelectAsync(int start,int end);
         public abstract Task<string> GetContentAsync();
-        public virtual Task LoadAsync(string path, JPath classPath)
+        public virtual Task LoadAsync(string path, IJPath classPath)
         {
             JPath = classPath;
             InternalFilePath = path;
             LoadTask = _InnerLoadAsync(path, classPath);
             return LoadTask;
         }
-        public abstract Task _InnerLoadAsync(string path, JPath classPath);
+        public abstract Task _InnerLoadAsync(string path, IJPath classPath);
 
         /// <summary>
         /// Cancels the background task

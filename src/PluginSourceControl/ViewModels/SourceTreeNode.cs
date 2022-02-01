@@ -18,6 +18,7 @@ using System.IO;
 using System.Xml;
 using System.Windows.Markup;
 using ModifierType = ReverseR.Common.Code.IClassParser.ModifierType;
+using NodeType = ReverseR.Common.Code.IClassParser.ItemType;
 using Prism.Commands;
 using Prism.Services.Dialogs;
 using System.ComponentModel;
@@ -29,20 +30,7 @@ namespace PluginSourceControl.ViewModels
     {
         public ViewSourceControlViewModel ParentViewModel { get; set; }
         public IDocumentViewModel AssociatedDocument { get; set; }
-        public JPath JPath { get; set; }
-        public enum NodeType
-        {
-            Directory,
-            CompilationUnit,
-            Class, Interface, Field, Constructor, Method, InterfaceMethod,
-             Enum, EnumConstant,
-            Others,
-            __InternalPlaceHolder=-1
-        }
-        public NodeType Type { get; set; }
-        public ModifierType ModifierType { get; set; }
-        public int Start { get; set; }
-        public int Stop { get; set; }
+        public ParseTreeNode ParseTreeNode { get; set; }
         public SourceTreeNode CompilationUnitNode { get;private set; }
         internal static Dictionary<string, string> IconResource => new Dictionary<string, string>()
         {
@@ -109,81 +97,17 @@ namespace PluginSourceControl.ViewModels
         });
         public async Task UpdateChildren()
         {
-            if (Type == NodeType.CompilationUnit && IsExpanded == true)
+            if (ParseTreeNode.ItemType == NodeType.CompilationUnit && IsExpanded == true)
             {
-                if (Children.Count == 1 && Children[0].Type == NodeType.__InternalPlaceHolder)
+                if (Children.Count == 1 && Children[0].ParseTreeNode.ItemType == NodeType.__InternalPlaceHolder)
                 {
                     Children.RemoveAt(0);
 
-                    var builder =
-                        this.GetIContainer()
-                        .Resolve<IBackgroundTaskBuilder<IEnumerable<IClassParser.ParseTreeNode>>>();
-                    IBackgroundTask<IEnumerable<IClassParser.ParseTreeNode>> parseTask=builder
-                        .WithTask(_ =>
-                        {
-                            IEnumerable<IClassParser.ParseTreeNode> ret = null;
-                            var basedir = Path.GetDirectoryName(JPath.Path);
-                            var tempPath = Path.GetTempFileName();
-                            File.Delete(tempPath);
-                            Directory.CreateDirectory(tempPath);
-                            File.Copy(JPath.Path, Path.Combine(tempPath, Path.GetFileName(JPath.Path)));
-                            if (JPath.InnerClassPaths != null)
-                            {
-                                foreach (var p in JPath.InnerClassPaths)
-                                {
-                                    File.Copy(p, Path.Combine(tempPath, Path.GetFileName(p)));
-                                }
-                            }
-                            IDecompileResult result = null;
-                            try
-                            {
-                                result = this.GetIContainer()
-                                    .Resolve<IDecompilerResolver>()
-                                    .Resolve<CommonDecompiler>((GlobalUtils.PreferredDecompiler??GlobalUtils.Decompilers[0]).Id)
-                                    .Decompile(tempPath, r => { }, null, ParentViewModel.Parent.BaseDirectory + "\\raw.jar");
-                                if (result.ResultCode == DecompileResultEnum.Success)
-                                {
-                                    var files = Directory.GetFiles(result.OutputDir);
-#if DEBUG
-                                    Debug.Assert(files.Length == 1);
-#endif
-                                    ret = this.GetIContainer()
-                                        .Resolve<IClassParser>()
-                                        .Parse(File.ReadAllText(files[0]));
-                                }
-                                else
-                                {
-                                    this.GetIContainer().Resolve<IDialogService>().ReportError(result.ResultCode.ToString(), __ => { });
-                                }
-                            }
-                            catch (Exception e)
-                            {
-                                string message = null;
-                                if (e is Win32Exception win32Exception)
-                                {
-                                    message = $"Unexpected exception:\n{win32Exception.Message}\nHRESULT is {System.Runtime.InteropServices.Marshal.GetHRForLastWin32Error().ToString("x")}";
-                                }
-                                else message = $"Unexpected exception:\n{e.Message}\n";
-                                this.GetIContainer().Resolve<IDialogService>().ReportError(message, r => { }, e.StackTrace);
-                            }
-                            /*if (token.HasValue)
-                            {
-                                token.Value.ThrowIfCancellationRequested();
-                            }*/
-                            Directory.Delete(tempPath, true);
-                            return ret;
-                        })
-                        .WithName("Background:Parsing")
-                        .WithDescription("Parsing" + JPath.ClassPath)
-                        .Build();
-                    parseTask.Start();
-
-                    await parseTask.IsCompletedTask;
-                    IEnumerable<IClassParser.ParseTreeNode> root = parseTask.Result;
-                    List<SourceTreeNode> nodes=new List<SourceTreeNode>();
-                    foreach(var child in root)
+                    var root = await ParentViewModel.Parent.GetParseTreeAsync(ParseTreeNode.ClassPath, true);
+                    List<SourceTreeNode> nodes = new List<SourceTreeNode>();
+                    foreach(var child in root.Children)
                     {
-                        nodes.Add(UpdateChildrenInternal(child, "/" + child.Id,JPath));
+                        nodes.Add(UpdateChildrenInternal(child));
                     }
                     Application.Current.Dispatcher.Invoke(() =>
                     {
@@ -192,38 +116,24 @@ namespace PluginSourceControl.ViewModels
                 }
             }
         }
-        internal SourceTreeNode UpdateChildrenInternal(IClassParser.ParseTreeNode root,string classPath,JPath origPath)
+        internal SourceTreeNode UpdateChildrenInternal(ParseTreeNode root)
         {
             SourceTreeNode node = new SourceTreeNode() { ParentViewModel = this.ParentViewModel };
             List<SourceTreeNode> nodes = new List<SourceTreeNode>();
             foreach(var child in root.Children)
             {
-                nodes.Add(UpdateChildrenInternal(child, classPath + "/" + child.Id,origPath));
+                nodes.Add(UpdateChildrenInternal(child));
             }
-            switch (root.ItemType)
-            {
-                case IClassParser.ItemType.Class:node.Type=NodeType.Class; break;
-                case IClassParser.ItemType.Interface: node.Type = NodeType.Interface; break;
-                case IClassParser.ItemType.Method: node.Type = NodeType.Method; break;
-                case IClassParser.ItemType.Field: node.Type = NodeType.Field; break;
-                case IClassParser.ItemType.InterfaceMethod: node.Type = NodeType.InterfaceMethod; break;
-                case IClassParser.ItemType.Constructor: node.Type = NodeType.Constructor; break;
-                case IClassParser.ItemType.Enum: node.Type = NodeType.Enum; break;
-                case IClassParser.ItemType.EnumConstant: node.Type = NodeType.EnumConstant; break;
-                default:node.Type = NodeType.__InternalPlaceHolder; break;
-            }
-            node.ModifierType = root.Modifiers.Count() == 0 ? ModifierType.Public : root.Modifiers.First();
-            node.JPath = new JPath(origPath);
-            node.JPath.ClassPath = node.JPath.ClassPath.Remove(node.JPath.ClassPath.LastIndexOf('/')) + classPath;
-            node.Text = root.Content;
-            node.Start = root.Start;
-            node.Stop = root.End;
+            node.Text = root.Id;
+            node.ParseTreeNode = root;
             node.CompilationUnitNode = this;
             //Visual Stuffs
             XmlDocument document = new XmlDocument();
             XmlNamespaceManager nsmgr = new XmlNamespaceManager(document.NameTable);
             nsmgr.AddNamespace("wpf", "http://schemas.microsoft.com/winfx/2006/xaml/presentation");
-            var info = Application.GetResourceStream(new Uri(IconResource[node.Type.ToString() + node.ModifierType.ToString()]));
+            var info = Application.GetResourceStream(
+                new Uri(IconResource[node.ParseTreeNode.ItemType.ToString() + node.ParseTreeNode.Modifiers.FirstOrDefault()
+                .ToString()]));
             using (info.Stream)
             {
                 document.Load(info.Stream);

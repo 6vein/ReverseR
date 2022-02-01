@@ -10,11 +10,17 @@ using ReverseR.Common.Code;
 
 namespace AntlrParser
 {
-    internal class JavaClassVisitor:Java8ParserBaseVisitor<IClassParser.ParseTreeNode>
+    internal class JavaClassVisitor:Java8ParserBaseVisitor<ParseTreeNode>
     {
-        public override IClassParser.ParseTreeNode VisitNormalClassDeclaration([NotNull] Java8Parser.NormalClassDeclarationContext context)
+        public string baseClassPath;
+        public string filePath;
+        public override ParseTreeNode VisitNormalClassDeclaration([NotNull] Java8Parser.NormalClassDeclarationContext context)
         {
-            var node = VisitChildren(context) ?? new IClassParser.ParseTreeNode();
+            string old = baseClassPath;
+            baseClassPath = baseClassPath + '/' + context.Identifier().GetText();
+            var node = VisitChildren(context) ?? new ParseTreeNode();
+            node.SetPaths(filePath, baseClassPath);
+            baseClassPath = old;
             node.ItemType = IClassParser.ItemType.Class;
             foreach(var modifier in context.classModifier())
             {
@@ -31,9 +37,13 @@ namespace AntlrParser
             node.End = context.Identifier().Symbol.StopIndex;
             return node;
         }
-        public override IClassParser.ParseTreeNode VisitNormalInterfaceDeclaration([NotNull] Java8Parser.NormalInterfaceDeclarationContext context)
+        public override ParseTreeNode VisitNormalInterfaceDeclaration([NotNull] Java8Parser.NormalInterfaceDeclarationContext context)
         {
-            var node = VisitChildren(context) ?? new IClassParser.ParseTreeNode();
+            string old = baseClassPath;
+            baseClassPath = baseClassPath + '/' + context.Identifier().GetText();
+            var node = VisitChildren(context) ?? new ParseTreeNode();
+            node.SetPaths(filePath, baseClassPath);
+            baseClassPath = old;
             node.ItemType = IClassParser.ItemType.Interface;
             foreach (var modifier in context.interfaceModifier())
             {
@@ -49,9 +59,13 @@ namespace AntlrParser
             node.End = context.Identifier().Symbol.StopIndex;
             return node;
         }
-        public override IClassParser.ParseTreeNode VisitEnumDeclaration([NotNull] Java8Parser.EnumDeclarationContext context)
+        public override ParseTreeNode VisitEnumDeclaration([NotNull] Java8Parser.EnumDeclarationContext context)
         {
-            var node = VisitChildren(context) ?? new IClassParser.ParseTreeNode();
+            string old = baseClassPath;
+            baseClassPath = baseClassPath + '/' + context.Identifier().GetText();
+            var node = VisitChildren(context) ?? new ParseTreeNode();
+            node.SetPaths(filePath, baseClassPath);
+            baseClassPath = old;
             node.ItemType = IClassParser.ItemType.Enum;
             foreach (var modifier in context.classModifier())
             {
@@ -68,9 +82,13 @@ namespace AntlrParser
             node.End = context.Identifier().Symbol.StopIndex;
             return node;
         }
-        public override IClassParser.ParseTreeNode VisitConstructorDeclaration([NotNull] Java8Parser.ConstructorDeclarationContext context)
+        public override ParseTreeNode VisitConstructorDeclaration([NotNull] Java8Parser.ConstructorDeclarationContext context)
         {
-            var node = VisitChildren(context) ?? new IClassParser.ParseTreeNode();
+            string old = baseClassPath;
+            baseClassPath = baseClassPath + '/' + context.constructorDeclarator().simpleTypeName().Identifier().GetText();
+            var node = VisitChildren(context) ?? new ParseTreeNode();
+            node.SetPaths(filePath, baseClassPath);
+            baseClassPath = old;
             node.ItemType = IClassParser.ItemType.Constructor;
             foreach (var modifier in context.constructorModifier())
             {
@@ -94,9 +112,9 @@ namespace AntlrParser
             node.End = context.constructorDeclarator().simpleTypeName().Identifier().Symbol.StopIndex;
             return node;
         }
-        public override IClassParser.ParseTreeNode VisitMethodDeclaration([NotNull] Java8Parser.MethodDeclarationContext context)
+        public override ParseTreeNode VisitMethodDeclaration([NotNull] Java8Parser.MethodDeclarationContext context)
         {
-            var node = VisitChildren(context) ?? new IClassParser.ParseTreeNode();
+            var node = VisitChildren(context) ?? new ParseTreeNode();
             node.ItemType = IClassParser.ItemType.Method;
             foreach (var modifier in context.methodModifier())
             {
@@ -112,6 +130,7 @@ namespace AntlrParser
             }
             var paraList = context.methodHeader().methodDeclarator().formalParameterList();
             node.Id = context.methodHeader().methodDeclarator().Identifier().GetText();
+            node.SetPaths(filePath, baseClassPath + '/' + node.Id);
             if (paraList != null)
             {
                 node.Content = context.methodHeader().methodDeclarator().Identifier().GetText()
@@ -128,9 +147,9 @@ namespace AntlrParser
             node.End = context.methodHeader().methodDeclarator().Identifier().Symbol.StopIndex;
             return node;
         }
-        public override IClassParser.ParseTreeNode VisitFieldDeclaration([NotNull] Java8Parser.FieldDeclarationContext context)
+        public override ParseTreeNode VisitFieldDeclaration([NotNull] Java8Parser.FieldDeclarationContext context)
         {
-            var node = VisitChildren(context) ?? new IClassParser.ParseTreeNode();
+            var node = VisitChildren(context) ?? new ParseTreeNode();
             node.ItemType = IClassParser.ItemType.Field;
             foreach (var modifier in context.fieldModifier())
             {
@@ -142,19 +161,20 @@ namespace AntlrParser
             }
             foreach(var defination in context.variableDeclaratorList().variableDeclarator())
             {
-                var subNode = (IClassParser.ParseTreeNode)node.Clone();
+                var subNode = (ParseTreeNode)node.Clone();
                 subNode.Id = defination.variableDeclaratorId().Identifier().GetText();
                 subNode.Content = defination.variableDeclaratorId().Identifier().GetText() + ":"
                     + context.unannType().GetText();
                 subNode.Start = defination.variableDeclaratorId().Identifier().Symbol.StartIndex;
                 subNode.End = defination.variableDeclaratorId().Identifier().Symbol.StopIndex;
+                subNode.SetPaths(filePath, baseClassPath + '/' + subNode.Id);
                 node.Children.Add(subNode);
             }
             return node;
         }
-        public override IClassParser.ParseTreeNode VisitInterfaceMethodDeclaration([NotNull] Java8Parser.InterfaceMethodDeclarationContext context)
+        public override ParseTreeNode VisitInterfaceMethodDeclaration([NotNull] Java8Parser.InterfaceMethodDeclarationContext context)
         {
-            var node = VisitChildren(context) ?? new IClassParser.ParseTreeNode();
+            var node = VisitChildren(context) ?? new ParseTreeNode();
             node.ItemType = IClassParser.ItemType.InterfaceMethod;
             foreach (var modifier in context.interfaceMethodModifier())
             {
@@ -166,6 +186,7 @@ namespace AntlrParser
             }
             var paraList = context.methodHeader().methodDeclarator().formalParameterList();
             node.Id = context.methodHeader().methodDeclarator().Identifier().GetText();
+            node.SetPaths(filePath, baseClassPath + '/' + node.Id);
             if (paraList != null)
             {
                 node.Content = context.methodHeader().methodDeclarator().Identifier().GetText()
@@ -182,23 +203,24 @@ namespace AntlrParser
             node.End = context.methodHeader().methodDeclarator().Identifier().Symbol.StopIndex;
             return node;
         }
-        public override IClassParser.ParseTreeNode VisitEnumConstantList([NotNull] Java8Parser.EnumConstantListContext context)
+        public override ParseTreeNode VisitEnumConstantList([NotNull] Java8Parser.EnumConstantListContext context)
         {
-            var node = VisitChildren(context) ?? new IClassParser.ParseTreeNode();
+            var node = VisitChildren(context) ?? new ParseTreeNode();
             node.ItemType = IClassParser.ItemType.EnumConstant;
             foreach (var defination in context.enumConstant())
             {
-                var subNode = (IClassParser.ParseTreeNode)node.Clone();
+                var subNode = (ParseTreeNode)node.Clone();
                 subNode.Id=subNode.Content = defination.Identifier().GetText();
+                subNode.SetPaths(filePath, baseClassPath + '/' + subNode.Id);
                 subNode.Start = defination.Identifier().Symbol.StartIndex;
                 subNode.End = defination.Identifier().Symbol.StopIndex;
                 node.Children.Add(subNode);
             }
             return node;
         }
-        public override IClassParser.ParseTreeNode VisitChildren(IRuleNode node)
+        public override ParseTreeNode VisitChildren(IRuleNode node)
         {
-            IClassParser.ParseTreeNode result = new IClassParser.ParseTreeNode();
+            ParseTreeNode result = new ParseTreeNode();
             /*if(node.RuleContext is Java8Parser.CompilationUnitContext
                 ||node.RuleContext is Java8Parser.NormalClassDeclarationContext
                 ||node.RuleContext is Java8Parser.FieldDeclarationContext
@@ -216,11 +238,11 @@ namespace AntlrParser
                     break;
                 }
                 IParseTree c = node.GetChild(i);
-                IClassParser.ParseTreeNode childResult = c.Accept(this);
+                ParseTreeNode childResult = c.Accept(this);
                 //result = AggregateResult(result, childResult);
                 if (childResult != null)
                 {
-                    if (childResult.ItemType == IClassParser.ItemType._PlaceHolder
+                    if (childResult.ItemType == IClassParser.ItemType.__InternalPlaceHolder
                         ||childResult.ItemType==IClassParser.ItemType.EnumConstant
                         || childResult.ItemType == IClassParser.ItemType.Field)//expand sub items
                     {

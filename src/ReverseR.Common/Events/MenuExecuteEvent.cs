@@ -8,7 +8,7 @@ using System.Windows.Input;
 
 namespace ReverseR.Common.Events
 {
-    public class MenuExecuteEvent:PubSubEvent<ExecutedRoutedEventArgs>
+    public class MenuExecuteEvent:PubSubEvent<(Guid, ExecutedRoutedEventArgs)>
     {
     }
 }

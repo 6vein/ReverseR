@@ -5,6 +5,7 @@ VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReverseR", "src\ReverseR\ReverseR.csproj", "{093C50F1-A3D7-4B51-9CEB-91AA410BA863}"
 	ProjectSection(ProjectDependencies) = postProject
+		{91F0DD92-EBF2-432C-9009-FA2B1A391FBB} = {91F0DD92-EBF2-432C-9009-FA2B1A391FBB}
 		{F0716EFB-046D-4B59-ABD7-1234C5CEFA03} = {F0716EFB-046D-4B59-ABD7-1234C5CEFA03}
 	EndProjectSection
 EndProject

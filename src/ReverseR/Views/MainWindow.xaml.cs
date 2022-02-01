@@ -30,7 +30,7 @@ namespace ReverseR.Views
             if(((DataContext as ViewModels.MainWindowViewModel).ActiveContent 
                 as FrameworkElement)?.DataContext is IDecompileViewModel viewModel)
             {
-                Container.Resolve<IEventAggregator>().GetEvent<MenuCanExecuteEvent>().Publish(e);
+                Container.Resolve<IEventAggregator>().GetEvent<MenuCanExecuteEvent>().Publish((viewModel.Guid,e));
             }
         }
 
@@ -45,7 +45,7 @@ namespace ReverseR.Views
             if (((DataContext as ViewModels.MainWindowViewModel).ActiveContent
                 as FrameworkElement).DataContext is IDecompileViewModel viewModel)
             {
-                Container.Resolve<IEventAggregator>().GetEvent<MenuExecuteEvent>().Publish(e);
+                Container.Resolve<IEventAggregator>().GetEvent<MenuExecuteEvent>().Publish((viewModel.Guid,e));
             }
         }
     }

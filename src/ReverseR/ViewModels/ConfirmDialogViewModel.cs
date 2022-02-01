@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using Prism.Commands;
 using Prism.Services.Dialogs;
 using ReverseR.Common;
 using ReverseR.Common.ViewUtilities;
@@ -57,7 +58,14 @@ namespace ReverseR.ViewModels
         }
         protected override void CloseDialog(string parameter)
         {
-            base.CloseDialog(parameter);
         }
+        public DelegateCommand YesCommand => new DelegateCommand(() =>
+          {
+              RaiseRequestClose(new DialogResult(ButtonResult.Yes));
+          });
+        public DelegateCommand NoCommand => new DelegateCommand(() =>
+        {
+            RaiseRequestClose(new DialogResult(ButtonResult.No));
+        });
     }
 }

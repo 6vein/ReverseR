@@ -36,6 +36,10 @@ namespace PluginSourceControl.Plugin
             View = view;
             Container.Resolve<IRegionManager>().AddToRegion(RegionName, View);
         }
+        public void UnloadPlugin()
+        {
+            Container.Resolve<IRegionManager>().Regions[RegionName].RemoveAll();
+        }
 
         void OnArchiveOpened((string baseDir,Guid guid) payload)
         {

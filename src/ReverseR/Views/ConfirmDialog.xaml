@@ -27,8 +27,8 @@
             <TextBlock FontSize="15" Text="{Binding Message}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextWrapping="Wrap"/>
         </StackPanel>
         <StackPanel Grid.Row="1" Margin="20 0 20 0" Orientation="Horizontal" Name="PART_ButtonsPanel" HorizontalAlignment="Center">
-            <Button Content="{Binding YesMessage,FallbackValue=Yes}" Padding="10 0 10 0" Margin="5 0 5 0" FontSize="15" Command="{Binding CloseDialogCommand}"/>
-            <Button Content="{Binding NoMessage,FallbackValue=No}" Padding="10 0 10 0" Margin="5 0 5 0" FontSize="15" Command="{Binding CloseDialogCommand}"/>
+            <Button Content="{Binding YesMessage,FallbackValue=Yes}" Padding="10 0 10 0" Margin="5 0 5 0" FontSize="15" Command="{Binding YesCommand}"/>
+            <Button Content="{Binding NoMessage,FallbackValue=No}" Padding="10 0 10 0" Margin="5 0 5 0" FontSize="15" Command="{Binding NoCommand}"/>
         </StackPanel>
     </Grid>
 </UserControl>
