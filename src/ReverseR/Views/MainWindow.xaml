@@ -334,6 +334,11 @@
             <xcad:DockingManager.Theme>
                 <xcad:Vs2013DarkTheme/>
             </xcad:DockingManager.Theme>
+            <xcad:DockingManager.DocumentPaneMenuItemHeaderTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Content.DataContext.Title}" ToolTip="{Binding Content.DataContext.FilePath,Mode=OneWay}"/>
+                </DataTemplate>
+            </xcad:DockingManager.DocumentPaneMenuItemHeaderTemplate>
             <xcad:DockingManager.DocumentHeaderTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Content.DataContext.Title}" ToolTip="{Binding Content.DataContext.FilePath,Mode=OneWay}"/>

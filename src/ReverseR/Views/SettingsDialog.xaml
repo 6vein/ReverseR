@@ -1,0 +1,79 @@
+﻿<UserControl x:Class="ReverseR.Views.SettingsDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:local="clr-namespace:ReverseR.ViewModels"
+             mc:Ignorable="d" 
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             Width="600" Height="450">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Dark.Cobalt.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/VS/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/VS/Colors.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <TreeView ItemsSource="{Binding TreeNodes}" Background="{DynamicResource MahApps.Brushes.Background}">
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="TreeViewItem" BasedOn="{StaticResource MahApps.Styles.TreeViewItem}">
+                    <Setter Property="IsExpanded" Value="{Binding IsExpanded,Mode=TwoWay}"/>
+                    <Setter Property="IsSelected" Value="{Binding IsSelected,Mode=TwoWay}"/>
+                    <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Background}"/>
+                    <Setter Property="Controls:ItemHelper.ActiveSelectionBackgroundBrush" Value="{DynamicResource MahApps.Brushes.BackgroundSelected}"/>
+                    <Setter Property="Controls:ItemHelper.SelectedBackgroundBrush" Value="{DynamicResource MahApps.Brushes.Background.Normal}"/>
+                    <Setter Property="Controls:ItemHelper.HoverSelectedBackgroundBrush" Value="{DynamicResource MahApps.Brushes.BackgroundSelected}"/>
+                    <Setter Property="Controls:ItemHelper.HoverBackgroundBrush" Value="{DynamicResource MahApps.Brushes.Background}"/>
+                    <Setter Property="Controls:TreeViewItemHelper.ToggleButtonStyle">
+                        <Setter.Value>
+                            <Style BasedOn="{StaticResource MahApps.Styles.ToggleButton.TreeViewItem.ExpandCollapse}" TargetType="ToggleButton">
+                                <Style.Resources>
+                                    <SolidColorBrush x:Key="MahApps.Brushes.Accent" Color="{DynamicResource MahApps.Colors.Accent2}"/>
+                                </Style.Resources>
+                            </Style>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </TreeView.ItemContainerStyle>
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate DataType="{x:Type local:SettingsTreeNode}" ItemsSource="{Binding Children}">
+                    <TextBlock Text="{Binding Text}"/>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+        <Controls:TransitioningContentControl Grid.Column="1" Margin="10 0 10 0">
+            <Controls:TransitioningContentControl.ContentTemplateSelector>
+                <local:SettingTemplateSelector>
+                    <local:SettingTemplateSelector.EnvironmentSettings>
+                        <DataTemplate>
+                            
+                        </DataTemplate>
+                    </local:SettingTemplateSelector.EnvironmentSettings>
+                </local:SettingTemplateSelector>
+            </Controls:TransitioningContentControl.ContentTemplateSelector>
+            
+        </Controls:TransitioningContentControl>
+        <StackPanel Grid.ColumnSpan="2" Margin="0 10 0 10" Grid.Row="1" HorizontalAlignment="Right" Orientation="Horizontal">
+            <Button Margin="10 5 10 5" VerticalAlignment="Stretch" Width="90" Content="OK"/>
+            <Button Margin="10 5 10 5" VerticalAlignment="Stretch" Width="90" Content="Cancel"/>
+            <Button Margin="10 5 10 5" VerticalAlignment="Stretch" Width="90" Content="Apply"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

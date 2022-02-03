@@ -9,7 +9,7 @@ namespace PluginSourceControl
 {
     public class PluginSourceControlModule : ModuleBase
     {
-        public override string DependencyPath => "PluginSourceControl";
+        public override string Id => $"6168218c.{nameof(PluginSourceControl)}";
         public override void Initialized(IContainerProvider containerProvider)
         {
  

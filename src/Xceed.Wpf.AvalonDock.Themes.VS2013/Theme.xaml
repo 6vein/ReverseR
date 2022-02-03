@@ -287,7 +287,7 @@
     <Style x:Key="AvalonDockThemeVs2013AnchorablePaneControlStyle" TargetType="{x:Type avalonDockControls:LayoutAnchorablePaneControl}">
         <Setter Property="TabStripPlacement" Value="Bottom" />
         <Setter Property="Padding" Value="0" />
-        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Foreground" Value="{Binding Model.Root.Manager.Foreground, RelativeSource={RelativeSource Self}}" />
         <Setter Property="Background" Value="{DynamicResource AvalonDockThemeVs2013TabBackground}" />
         <Setter Property="Template">

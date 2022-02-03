@@ -467,6 +467,8 @@
     <Compile Include="ViewModels\InputBindingBehavior.cs" />
     <Compile Include="ViewModels\MenuTemplateSelector.cs" />
     <Compile Include="ViewModels\RootMenuItemWrapper.cs" />
+    <Compile Include="ViewModels\SettingsDialogViewModel.cs" />
+    <Compile Include="ViewModels\SettingTemplateSelector.cs" />
     <Compile Include="Views\ConfirmDialog.xaml.cs">
       <DependentUpon>ConfirmDialog.xaml</DependentUpon>
     </Compile>
@@ -493,6 +495,9 @@
     </Compile>
     <Compile Include="Views\MetroDialogWindowHost.xaml.cs">
       <DependentUpon>MetroDialogWindowHost.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SettingsDialog.xaml.cs">
+      <DependentUpon>SettingsDialog.xaml</DependentUpon>
     </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -525,6 +530,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\MetroDialogWindowHost.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SettingsDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

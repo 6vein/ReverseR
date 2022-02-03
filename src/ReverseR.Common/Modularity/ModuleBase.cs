@@ -25,10 +25,17 @@ namespace ReverseR.Common.Modularity
     public abstract class ModuleBase : IModule
     {
         protected IContainerProvider _container;
+        [Obsolete]
         public virtual string DependencyPath { get; }
+        public abstract string Id { get; }
+        public virtual string Description => "";
 
         public void OnInitialized(IContainerProvider containerProvider)
         {
+            string fullname = GetType().FullName;
+            GlobalUtils.Modules.Where(info => info.Id == Id).First().Name = 
+                fullname.Substring(fullname.LastIndexOf('.'));
+            GlobalUtils.Modules.Where(info => info.Id == Id).First().Description = Description;
             Initialized(containerProvider);
         }
 
@@ -41,7 +48,7 @@ namespace ReverseR.Common.Modularity
 #pragma warning disable 0618
 #pragma warning disable 0612
             _container = APIHelper.GetIContainer();
-            /*var moduleManager = _container.Resolve<IModuleManager>();
+            var moduleManager = _container.Resolve<IModuleManager>();
             IModuleInfo thisModuleInfo = moduleManager.Modules.
                 FirstOrDefault(mi => mi.ModuleType == GetType().AssemblyQualifiedName);
             string catalogModuleName = thisModuleInfo.ModuleName.EndsWith("Module")
@@ -49,7 +56,7 @@ namespace ReverseR.Common.Modularity
             string modulePath = string.IsNullOrEmpty(DependencyPath) ? catalogModuleName : DependencyPath;
             //We need to modify it runtime
             AppDomain.CurrentDomain.
-                AppendPrivatePath($"Plugins\\{modulePath}");*/
+                AppendPrivatePath($"Plugins\\{modulePath}");
 #pragma warning restore 0612
 #pragma warning restore 0618
         }

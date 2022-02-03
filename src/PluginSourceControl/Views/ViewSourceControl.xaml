@@ -22,7 +22,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <TreeView ItemsSource="{Binding SourceTree}" Background="#252526">
+        <TreeView ItemsSource="{Binding SourceTree}" Background="{DynamicResource MahApps.Brushes.Background}">
             <!--<behaviors:Interaction.Triggers>
                 <behaviors:EventTrigger EventName="MouseLeftButtonDown">
                     <behaviors:InvokeCommandAction Command="{Binding ItemMouseLBDCommand}" PassEventArgsToCommand="True"/>
@@ -33,11 +33,11 @@
                     <EventSetter Event="PreviewMouseLeftButtonDown" Handler="TreeViewItem_PreviewMouseLeftButtonDown"/>
                     <Setter Property="IsExpanded" Value="{Binding IsExpanded,Mode=TwoWay}"/>
                     <Setter Property="IsSelected" Value="{Binding IsSelected,Mode=TwoWay}"/>
-                    <Setter Property="Background" Value="#252526"/>
+                    <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Background}"/>
                     <Setter Property="Controls:ItemHelper.ActiveSelectionBackgroundBrush" Value="{DynamicResource MahApps.Brushes.BackgroundSelected}"/>
                     <Setter Property="Controls:ItemHelper.SelectedBackgroundBrush" Value="{DynamicResource MahApps.Brushes.Background.Normal}"/>
                     <Setter Property="Controls:ItemHelper.HoverSelectedBackgroundBrush" Value="{DynamicResource MahApps.Brushes.BackgroundSelected}"/>
-                    <Setter Property="Controls:ItemHelper.HoverBackgroundBrush" Value="#252526"/>
+                    <Setter Property="Controls:ItemHelper.HoverBackgroundBrush" Value="{DynamicResource MahApps.Brushes.Background}"/>
                     <Setter Property="Controls:TreeViewItemHelper.ToggleButtonStyle">
                         <Setter.Value>
                             <Style BasedOn="{StaticResource MahApps.Styles.ToggleButton.TreeViewItem.ExpandCollapse}" TargetType="ToggleButton">
@@ -60,7 +60,7 @@
                             </behaviors:Interaction.Triggers>
                             <Controls:ProgressRing Width="16" Height="16" IsActive="True">
                                 <Controls:ProgressRing.Resources>
-                                    <SolidColorBrush x:Key="MahApps.Brushes.Accent" Color="{DynamicResource Theme.PrimaryAccentColor}"/>
+                                    <SolidColorBrush x:Key="MahApps.Brushes.Accent" Color="{DynamicResource MahApps.Colors.AccentBase}"/>
                                 </Controls:ProgressRing.Resources>
                                 <behaviors:Interaction.Triggers>
                                     <behaviors:DataTrigger Binding="{Binding IsPending}" Value="False">

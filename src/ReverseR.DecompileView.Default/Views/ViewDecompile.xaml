@@ -103,7 +103,7 @@
                                                 <Setter Property="Opacity" Value="0.3"/>
                                             </Style>
                                         </xctk:BusyIndicator.OverlayStyle>
-                                        <avalonEdit:TextEditor FontFamily="Consolas" FontSize="10pt" Foreground="White" SyntaxHighlighting="{Binding Editor.SyntaxHighlighting}" 
+                                        <avalonEdit:TextEditor FontFamily="Consolas" FontSize="10pt" Foreground="White" Background="{DynamicResource MahApps.Brushes.Background}" SyntaxHighlighting="{Binding Editor.SyntaxHighlighting}" 
                                                        Document="{Binding Editor.Document}"
                                                        IsReadOnly="{Binding Editor.IsReadOnly}" IsModified="{Binding Editor.IsModified}"
                                                        ShowLineNumbers="{Binding Editor.ShowLineNumbers}" Encoding="{Binding Editor.Encoding}">
@@ -134,6 +134,11 @@
                         <TextBlock Text="{Binding Content.Title}"/>
                     </DataTemplate>
                 </xcad:DockingManager.AnchorableTitleTemplate>
+                <xcad:DockingManager.DocumentPaneMenuItemHeaderTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Content.Title}" ToolTip="{Binding Content.Path}"/>
+                    </DataTemplate>
+                </xcad:DockingManager.DocumentPaneMenuItemHeaderTemplate>
                 <xcad:DockingManager.DocumentHeaderTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Content.Title}" ToolTip="{Binding Content.Path}"/>

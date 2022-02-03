@@ -19,7 +19,8 @@ namespace DecompilerFernflower
     {
         public override string DependencyPath => "DecompilerFernflower";
         protected override string FriendlyName => "Fernflower";
-        protected override string Id => typeof(FernflowerDecompiler).FullName;
+        public override string Id => $"6168218c.{nameof(DecompilerFernflower)}";
+        protected override string DecompilerId => typeof(FernflowerDecompiler).FullName;
 
         protected override (Type jvmDecompiler, Type embeddedDecompiler) Decompilers
             => (typeof(JVMFernflowerDecompiler), typeof(IKVMFernflowerDecompiler));

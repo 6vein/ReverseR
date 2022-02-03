@@ -12,7 +12,7 @@ namespace BasicCodeCompletion
 {
     public class BasicCodeCompletionModule : ModuleBase
     {
-        public override string DependencyPath => "BasicCodeCompletion";
+        public override string Id => $"6168218c.{nameof(BasicCodeCompletion)}";
         public override void Initialized(IContainerProvider containerProvider)
         {
         }

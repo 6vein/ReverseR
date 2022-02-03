@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
+using Prism.Ioc;
 using Prism.Modularity;
 using ReverseR.Common;
 using ReverseR.Properties;
@@ -19,25 +20,43 @@ namespace ReverseR.Internal.Modularity
         /// <summary>
         /// Directory containing modules to search for.
         /// </summary>
-        internal string ModulePath { get; set; }
-        internal string[] ModuleNames { get; set; }
+        internal List<string> ModulePaths { get; set; }
 
         /// <summary>
         /// Drives the main logic of building the child domain and searching for the assemblies.
         /// </summary>
         protected override void InnerLoad()
         {
-            ModulePath = GlobalUtils.GlobalConfig.ModulePath;
-            ModuleNames = GlobalUtils.GlobalConfig.ModuleNames;
+            ModulePaths= new List<string>();
+            foreach (var modulePath in GlobalUtils.GlobalConfig.ModuleInfos
+                .Where(info=>info.Enabled)
+                .Select(info=>info.Path))
+            {
+                if (!File.Exists(modulePath))
+                {
+                    //when relative path
+                    string name = Path.Combine(GlobalUtils.GlobalConfig.ModuleDirectory, modulePath);
+                    if (File.Exists(name))
+                    {
+                        ModulePaths.Add(name);
+                    }
+                    else
+                    {
+                        //when no extension name
+                        name = Path.Combine(GlobalUtils.GlobalConfig.ModuleDirectory, modulePath + ".dll");
+                        if (File.Exists(name))
+                        {
+                            ModulePaths.Add(name);
+                        }
+                    }
+                }
+                else
+                {
+                    ModulePaths.Add(modulePath);
+                }
+            }
 
-            if (string.IsNullOrEmpty(this.ModulePath))
-                throw new InvalidOperationException("Module path cannot be null or empty");
-
-            if (!Directory.Exists(this.ModulePath))
-                throw new InvalidOperationException(
-                    string.Format(CultureInfo.CurrentCulture, "Directory Not Found", this.ModulePath));
-
-            AppDomain childDomain = this.BuildChildDomain(AppDomain.CurrentDomain);
+            AppDomain childDomain = BuildChildDomain(AppDomain.CurrentDomain);
 
             try
             {
@@ -63,7 +82,7 @@ namespace ReverseR.Internal.Modularity
                         (InnerModuleInfoLoader)
                         childDomain.CreateInstanceFrom(loaderType.Assembly.Location, loaderType.FullName).Unwrap();
                     loader.LoadAssemblies(loadedAssemblies);
-                    this.Items.AddRange(loader.GetModuleInfos(this.ModulePath,ModuleNames));
+                    this.Items.AddRange(loader.GetModuleInfos(ModulePaths.ToArray()));
                 }
             }
             finally
@@ -88,7 +107,7 @@ namespace ReverseR.Internal.Modularity
         /// need to be Full Trust for Prism applications.
         /// </remarks>
         /// <exception cref="ArgumentNullException">An <see cref="ArgumentNullException"/> is thrown if <paramref name="parentDomain"/> is null.</exception>
-        protected virtual AppDomain BuildChildDomain(AppDomain parentDomain)
+        internal static AppDomain BuildChildDomain(AppDomain parentDomain)
         {
             if (parentDomain == null)
                 throw new ArgumentNullException(nameof(parentDomain));
@@ -98,57 +117,54 @@ namespace ReverseR.Internal.Modularity
             return AppDomain.CreateDomain("DiscoveryRegion", evidence, setup);
         }
 
-        private class InnerModuleInfoLoader : MarshalByRefObject
+        internal class InnerModuleInfoLoader : MarshalByRefObject
         {
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
-            internal ModuleInfo[] GetModuleInfos(string path,string[] names)
+            internal ModuleInfo[] GetModuleInfos(string[] paths)
             {
-                DirectoryInfo directory = new DirectoryInfo(path);
+                var array = new List<ModuleInfo>();
+                foreach(string path in paths)
+                {
+                    DirectoryInfo directory = new DirectoryInfo(path);
 
-                ResolveEventHandler resolveEventHandler =
-                    delegate (object sender, ResolveEventArgs args) { return OnReflectionOnlyResolve(args, directory); };
+                    ResolveEventHandler resolveEventHandler =
+                        delegate (object sender, ResolveEventArgs args) { return OnReflectionOnlyResolve(args, directory); };
 
-                AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += resolveEventHandler;
+                    AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += resolveEventHandler;
 
-                Assembly moduleReflectionOnlyAssembly =
-                    AppDomain.CurrentDomain.ReflectionOnlyGetAssemblies().First(
-                        asm => asm.FullName == typeof(IModule).Assembly.FullName);
-                Type IModuleType = moduleReflectionOnlyAssembly.GetType(typeof(IModule).FullName);
+                    Assembly moduleReflectionOnlyAssembly =
+                        AppDomain.CurrentDomain.ReflectionOnlyGetAssemblies().First(
+                            asm => asm.FullName == typeof(IModule).Assembly.FullName);
+                    Type IModuleType = moduleReflectionOnlyAssembly.GetType(typeof(IModule).FullName);
 
-                IEnumerable<ModuleInfo> modules = GetNotAlreadyLoadedModuleInfos(directory,names, IModuleType);
+                    IEnumerable<ModuleInfo> modules = GetNotAlreadyLoadedModuleInfos(path, IModuleType);
 
-                var array = modules.ToArray();
-                AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve -= resolveEventHandler;
-                return array;
+                    array.AddRange(modules);
+                    AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve -= resolveEventHandler;
+                }
+                return array.ToArray();
             }
 
-            private static IEnumerable<ModuleInfo> GetNotAlreadyLoadedModuleInfos(DirectoryInfo directory,string[] names, Type IModuleType)
+            private static IEnumerable<ModuleInfo> GetNotAlreadyLoadedModuleInfos(string path, Type IModuleType)
             {
                 List<FileInfo> validAssemblies = new List<FileInfo>();
                 Assembly[] alreadyLoadedAssemblies = AppDomain.CurrentDomain.ReflectionOnlyGetAssemblies();
 
-                var fileInfos = directory.GetFiles("*.dll")
-                    .Where(file => alreadyLoadedAssemblies
-                                       .FirstOrDefault(
-                                       assembly =>
-                                       String.Compare(Path.GetFileName(assembly.Location), file.Name,
-                                                      StringComparison.OrdinalIgnoreCase) == 0) == null);
-
-                foreach (FileInfo fileInfo in fileInfos)
+                if(path.EndsWith(".dll",StringComparison.OrdinalIgnoreCase)&&!alreadyLoadedAssemblies
+                    .Any(assembly=>string.Compare(Path.GetFileName(assembly.Location)
+                    , path, StringComparison.OrdinalIgnoreCase) == 0))
                 {
                     try
                     {
-                        if(names.Contains(fileInfo.Name.Replace(fileInfo.Extension, "")))
-                        {
-                            Assembly.ReflectionOnlyLoadFrom(fileInfo.FullName);
-                            validAssemblies.Add(fileInfo);
-                        }
+                        Assembly.ReflectionOnlyLoadFrom(path);
+                        validAssemblies.Add(new FileInfo(path));
                     }
                     catch (BadImageFormatException)
                     {
                         // skip non-.NET Dlls
                     }
                 }
+
 
                 return validAssemblies.SelectMany(file => Assembly.ReflectionOnlyLoadFrom(file.FullName)
                                             .GetExportedTypes()
@@ -241,6 +257,18 @@ namespace ReverseR.Internal.Modularity
                 };
                 moduleInfo.DependsOn.AddRange(dependsOn);
                 return moduleInfo;
+            }
+            public string GetModuleId(ModuleInfo moduleInfo)
+            {
+                if (Type.GetType(moduleInfo.ModuleType) != null)
+                {
+                    IModule module = Activator.CreateInstance(Type.GetType(moduleInfo.ModuleType)) as IModule;
+                    if (module is ReverseR.Common.Modularity.ModuleBase baseModule)
+                    {
+                        return baseModule.Id;
+                    }
+                }
+                return null;
             }
         }
     }

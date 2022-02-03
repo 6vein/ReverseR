@@ -11,6 +11,7 @@ namespace AntlrParser
 {
     public class AntlrParserModule:ModuleBase
     {
+        public override string Id => $"6168218c.{nameof(AntlrParser)}";
         public override void Initialized(IContainerProvider containerProvider)
         {
         }

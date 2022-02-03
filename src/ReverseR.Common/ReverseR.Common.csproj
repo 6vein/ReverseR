@@ -273,7 +273,7 @@
     <Compile Include="Extensibility\IPlugin.cs" />
     <Compile Include="Modularity\DecompilerModuleBase.cs" />
     <Compile Include="Modularity\ModuleBase.cs" />
-    <Compile Include="Serialization\IParticalSerializable.cs" />
+    <Compile Include="Serialization\IPartialSerializable.cs" />
     <Compile Include="Services\DialogServiceExtensions.cs" />
     <Compile Include="Services\IBackgroundTask.cs" />
     <Compile Include="Services\IBackgroundTaskBuilder.cs" />

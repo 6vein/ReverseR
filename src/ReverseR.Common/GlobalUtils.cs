@@ -21,12 +21,12 @@ namespace ReverseR.Common
             /// <summary>
             /// Determines the base directory of the config files
             /// </summary>
-            public string ConfigPrefix { get; set; }
+            public string ConfigPrefix { get; set; } = "";
 
             /// <summary>
             /// Determines where the cache stays.
             /// </summary>
-            public string CachePath { get; set; }
+            public string CachePath { get; set; } = "";
             /// <summary>
             /// Enables storing decompiled files in the cache
             /// </summary>
@@ -44,20 +44,25 @@ namespace ReverseR.Common
             /// <summary>
             /// Path of java.exe to run jars
             /// </summary>
-            public string JavaPath { get; set; }
+            public string JavaPath { get; set; } = "";
             /// <summary>
             /// Path of modules
             /// </summary>
-            public string ModulePath { get; set; }
+            public string ModuleDirectory { get; set; } = "";
             /// <summary>
             /// Names of modules to load
             /// </summary>
-            public string[] ModuleNames { get; set; }
+            public ModuleInfo[] ModuleInfos { get; set; }
             public ICommonPreferences.RunTypes RunType { get; set; }
         }
         public static ConfigStorage GlobalConfig { get; set; }
         public static string SaveToString()
         {
+            foreach(var decompiler in Decompilers)
+            {
+                File.WriteAllText(Path.Combine(GlobalConfig.ConfigPrefix, decompiler.JsonConfigPath),
+                    decompiler.Options.SerializePart());
+            }
             return JsonConvert.SerializeObject(GlobalConfig);
         }
         public static void LoadFromString(string data)
@@ -93,9 +98,14 @@ namespace ReverseR.Common
                         GlobalConfig.CachePath = Environment.ExpandEnvironmentVariables("%UserProfile%\\.ReverseR\\Cache");
                         Directory.CreateDirectory(GlobalConfig.CachePath);
                     }
-                    if (!File.Exists(Environment.ExpandEnvironmentVariables(GlobalConfig.ModulePath)))
+                    if (!File.Exists(Environment.ExpandEnvironmentVariables(GlobalConfig.ModuleDirectory)))
                     {
-                        GlobalConfig.ModulePath = AppDomain.CurrentDomain.BaseDirectory + "Plugins\\";
+                        GlobalConfig.ModuleDirectory = AppDomain.CurrentDomain.BaseDirectory + "Plugins\\";
+                    }
+                    if (GlobalConfig.ModuleInfos == null || GlobalConfig.ModuleInfos.Length == 0)
+                    {
+                        GlobalConfig.ModuleInfos = new string[] { "AntlrParser", "BasicCodeCompletion", "DecompilerFernflower", "PluginSourceControl" }
+                        .Select(path => new ModuleInfo() { Id = $"6168218c.{path}", Path = path, Enabled = true }).ToArray();
                     }
                 }
             }
@@ -112,8 +122,9 @@ namespace ReverseR.Common
                     GlobalConfig.JavaPath = Environment.ExpandEnvironmentVariables("%JAVA_HOME%\\bin\\java.exe");
                 }
                 GlobalConfig.CachePath = Environment.ExpandEnvironmentVariables("%UserProfile%\\.ReverseR\\Cache");
-                GlobalConfig.ModulePath = AppDomain.CurrentDomain.BaseDirectory + "Plugins\\";
-                GlobalConfig.ModuleNames = new string[] { "AntlrParser","BasicCodeCompletion", "DecompilerFernflower", "PluginSourceControl" };
+                GlobalConfig.ModuleDirectory = AppDomain.CurrentDomain.BaseDirectory + "Plugins\\";
+                GlobalConfig.ModuleInfos = new string[] { "AntlrParser", "BasicCodeCompletion", "DecompilerFernflower", "PluginSourceControl" }
+                .Select(path => new ModuleInfo() { Id=$"6168218c.{path}", Path = path, Enabled = true }).ToArray();
                 Directory.CreateDirectory(GlobalConfig.CachePath);
             }
         }
@@ -134,10 +145,33 @@ namespace ReverseR.Common
 #endif
             LoadFromString(property?.GetValue(holder) as string);
         }
+        public class ModuleInfo
+        {
+            public string Id { get; set; }
+            [JsonIgnore]
+            public string Name { get; set; }
+            [JsonIgnore]
+            public string Description { get; set; }
+            public string Path { get; set; }
+            public bool Enabled { get; set; }
+            public ModuleInfo() { }
+            public ModuleInfo(ModuleInfo other)
+            {
+                Id = other.Id;
+                Name = other.Name;
+                Description = other.Description;
+                Path = other.Path;
+                Enabled = other.Enabled;
+            }
+        }
         public struct DecompilerInfo
         {
             public string Id { get; set; }
             public string FriendlyName { get; set; }
+            /// <summary>
+            /// Relative path of the json config file
+            /// </summary>
+            public string JsonConfigPath { get; set; }
             public Type ViewType { get; set; }
             public (Type jvmDecompiler, Type embeddedDecompiler) DecompilerTypes { get; set; }
             public ICommonPreferences Options { get; set; }
@@ -146,6 +180,7 @@ namespace ReverseR.Common
         {
             public Type PluginType { get; set; }
         }
+        public static List<ModuleInfo> Modules { get; set; } = new List<ModuleInfo>();
         public static List<DecompilerInfo> Decompilers { get; set; } = new List<DecompilerInfo>();
         public static List<DockablePluginInfo> DockablePlugins { get; set; } = new List<DockablePluginInfo>();
         public static DecompilerInfo? PreferredDecompiler { get; set; }
