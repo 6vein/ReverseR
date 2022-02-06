@@ -181,7 +181,9 @@ namespace PluginSourceControl.ViewModels
                           else
                               Parent.ActivateDocument(node.AssociatedDocument);
                       }
-                      else if (node.ParseTreeNode.ItemType != IClassParser.ItemType.Directory && node.ParseTreeNode.ItemType != IClassParser.ItemType.__InternalPlaceHolder)
+                      else if (node.ParseTreeNode.ItemType != IClassParser.ItemType.Directory 
+                      && node.ParseTreeNode.ItemType != IClassParser.ItemType.__InternalPlaceHolder
+                      && node.ParseTreeNode.ItemType != IClassParser.ItemType.Others)
                       {
                           if (node.CompilationUnitNode.AssociatedDocument == null || !Parent.Documents.Contains(node.CompilationUnitNode.AssociatedDocument))
                           {

@@ -202,10 +202,17 @@ namespace ReverseR.ViewModels
         public bool DecompileWhole { get => _DecompileWhole; set => SetProperty(ref _DecompileWhole, value); }
         private string _JavaPath;
         public string JavaPath { get => _JavaPath; set => SetProperty(ref _JavaPath, value); }
+        private int _runtypeIndex = 0;
+        public int RunTypeIndex { get => _runtypeIndex; set => SetProperty(ref _runtypeIndex, value); }
         private ICommonPreferences.RunTypes _RunType;
         public ICommonPreferences.RunTypes RunType { get => _RunType; set => SetProperty(ref _RunType, value); }
-        private string _preferredDecompilerId;
-        public string PreferredDecompilerId { get => _preferredDecompilerId;set=>SetProperty(ref _preferredDecompilerId, value); }
+        public string[] RunTypes = new string[]
+        { ICommonPreferences.RunTypes.JVM.ToString(),ICommonPreferences.RunTypes.IKVM.ToString() };
+
+        private int _preferredDecompilerIndex = 0;
+        public int PreferredDecompilerIndex { get => _preferredDecompilerIndex; set=>SetProperty(ref _preferredDecompilerIndex, value); }
+        public string PreferredDecompilerId => Decompilers[_preferredDecompilerIndex].Id;
+        public List<GlobalUtils.DecompilerInfo> Decompilers => GlobalUtils.Decompilers;
         public override string VerifyData()
         {
 
@@ -221,7 +228,8 @@ namespace ReverseR.ViewModels
         public DecompileGeneralViewModel()
         {
             RunType = GlobalUtils.GlobalConfig.RunType;
-            PreferredDecompilerId = GlobalUtils.GlobalConfig.PreferredDecompilerId;
+            PreferredDecompilerIndex = GlobalUtils.Decompilers
+                .FindIndex(info => info.Id == GlobalUtils.GlobalConfig.PreferredDecompilerId);
             JavaPath = GlobalUtils.GlobalConfig.JavaPath;
             DecompileWhole = GlobalUtils.GlobalConfig.DecompileWhole;
         }
@@ -294,6 +302,18 @@ namespace ReverseR.ViewModels
                     {
                         Text="General",
                         Content=new EnvironmentSettingsViewModel()
+                    }
+                }
+            });
+            TreeNodes.Add(new SettingsTreeNode()
+            {
+                Text = "Decompile",
+                Children = new ObservableCollection<SettingsTreeNode>()
+                {
+                    new SettingsTreeNode()
+                    {
+                        Text="General",
+                        Content=new DecompileGeneralViewModel()
                     }
                 }
             });

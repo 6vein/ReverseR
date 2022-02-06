@@ -13,13 +13,17 @@ namespace ReverseR.ViewModels
         public DataTemplate EnvironmentSettings { get; set; }
         public DataTemplate AppearenceSettings { get; set; }
         public DataTemplate ModularitySettings { get; set; }
-        public DataTemplate DecompilerGeneralSettings { get; set; }
+        public DataTemplate DecompileGeneralSettings { get; set; }
         public DataTemplate DecompilerSettings { get; set; }
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
             if(item is EnvironmentSettingsViewModel)
             {
                 return EnvironmentSettings;
+            }
+            else if(item is DecompileGeneralViewModel)
+            {
+                return DecompileGeneralSettings;
             }
             return null;
         }

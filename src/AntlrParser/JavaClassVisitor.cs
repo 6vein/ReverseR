@@ -101,12 +101,12 @@ namespace AntlrParser
             if(paraList != null)
             {
                 node.Content = context.constructorDeclarator().simpleTypeName().Identifier().GetText()
-                + "(" + paraList.Start.InputStream.GetText(new Interval(paraList.Start.StartIndex, paraList.Stop.StopIndex)) + "):Constructor";
+                + "(" + paraList.Start.InputStream.GetText(new Interval(paraList.Start.StartIndex, paraList.Stop.StopIndex)) + ") : Constructor";
             }
             else
             {
                 node.Content = context.constructorDeclarator().simpleTypeName().Identifier().GetText()
-                + "():Constructor";
+                + "() : Constructor";
             }
             node.Start = context.constructorDeclarator().simpleTypeName().Identifier().Symbol.StartIndex;
             node.End = context.constructorDeclarator().simpleTypeName().Identifier().Symbol.StopIndex;
@@ -134,13 +134,13 @@ namespace AntlrParser
             if (paraList != null)
             {
                 node.Content = context.methodHeader().methodDeclarator().Identifier().GetText()
-                + "(" + paraList.Start.InputStream.GetText(new Interval(paraList.Start.StartIndex, paraList.Stop.StopIndex)) + "):"
+                + "(" + paraList.Start.InputStream.GetText(new Interval(paraList.Start.StartIndex, paraList.Stop.StopIndex)) + ") : "
                 + context.methodHeader().result().GetText();
             }
             else
             {
                 node.Content = context.methodHeader().methodDeclarator().Identifier().GetText()
-                + "():"
+                + "() : "
                 + context.methodHeader().result().GetText();
             }
             node.Start = context.methodHeader().methodDeclarator().Identifier().Symbol.StartIndex;
@@ -163,7 +163,7 @@ namespace AntlrParser
             {
                 var subNode = (ParseTreeNode)node.Clone();
                 subNode.Id = defination.variableDeclaratorId().Identifier().GetText();
-                subNode.Content = defination.variableDeclaratorId().Identifier().GetText() + ":"
+                subNode.Content = defination.variableDeclaratorId().Identifier().GetText() + " : "
                     + context.unannType().GetText();
                 subNode.Start = defination.variableDeclaratorId().Identifier().Symbol.StartIndex;
                 subNode.End = defination.variableDeclaratorId().Identifier().Symbol.StopIndex;
@@ -190,13 +190,13 @@ namespace AntlrParser
             if (paraList != null)
             {
                 node.Content = context.methodHeader().methodDeclarator().Identifier().GetText()
-                + "(" + paraList.Start.InputStream.GetText(new Interval(paraList.Start.StartIndex, paraList.Stop.StopIndex)) + "):"
+                + "(" + paraList.Start.InputStream.GetText(new Interval(paraList.Start.StartIndex, paraList.Stop.StopIndex)) + ") : "
                 + context.methodHeader().result().GetText();
             }
             else
             {
                 node.Content = context.methodHeader().methodDeclarator().Identifier().GetText()
-                + "():"
+                + "() : "
                 + context.methodHeader().result().GetText();
             }
             node.Start = context.methodHeader().methodDeclarator().Identifier().Symbol.StartIndex;
