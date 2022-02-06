@@ -37,6 +37,7 @@ namespace ReverseR
         {
             containerRegistry.RegisterDialog<ErrorDialog>();
             containerRegistry.RegisterDialog<ConfirmDialog>();
+            containerRegistry.RegisterDialog<SettingsDialog>();
             containerRegistry.RegisterDialogWindow<MetroDialogWindowHost>();
 
             containerRegistry

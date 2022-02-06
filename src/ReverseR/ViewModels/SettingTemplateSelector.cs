@@ -17,7 +17,11 @@ namespace ReverseR.ViewModels
         public DataTemplate DecompilerSettings { get; set; }
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
-            return base.SelectTemplate(item, container);
+            if(item is EnvironmentSettingsViewModel)
+            {
+                return EnvironmentSettings;
+            }
+            return null;
         }
     }
 }

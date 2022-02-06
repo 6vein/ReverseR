@@ -2,6 +2,7 @@
 using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Prism.Ioc;
@@ -28,13 +29,12 @@ namespace ReverseR.Common.Modularity
         [Obsolete]
         public virtual string DependencyPath { get; }
         public abstract string Id { get; }
+        public virtual string Name => GetType().Namespace.Substring(GetType().Namespace.LastIndexOf('.') + 1);
         public virtual string Description => "";
 
         public void OnInitialized(IContainerProvider containerProvider)
         {
-            string fullname = GetType().FullName;
-            GlobalUtils.Modules.Where(info => info.Id == Id).First().Name = 
-                fullname.Substring(fullname.LastIndexOf('.'));
+            GlobalUtils.Modules.Where(info => info.Id == Id).First().Name = Name;
             GlobalUtils.Modules.Where(info => info.Id == Id).First().Description = Description;
             Initialized(containerProvider);
         }

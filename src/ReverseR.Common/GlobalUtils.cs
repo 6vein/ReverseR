@@ -18,6 +18,7 @@ namespace ReverseR.Common
         [Serializable]
         public class ConfigStorage
         {
+            public string PreferredDecompilerId { get; set; } = "";
             /// <summary>
             /// Determines the base directory of the config files
             /// </summary>
@@ -79,7 +80,7 @@ namespace ReverseR.Common
                 {
                     if (!File.Exists(Environment.ExpandEnvironmentVariables(GlobalConfig.ConfigPrefix)))
                     {
-                        GlobalConfig.ConfigPrefix = AppDomain.CurrentDomain.BaseDirectory;
+                        GlobalConfig.ConfigPrefix = Environment.ExpandEnvironmentVariables("%UserProfile%\\.ReverseR");
                     }
                     if (string.IsNullOrEmpty(GlobalConfig.JavaPath)|| !File.Exists(Environment.ExpandEnvironmentVariables(GlobalConfig.JavaPath)))
                     {
@@ -112,7 +113,7 @@ namespace ReverseR.Common
             if (GlobalConfig == null)
             {
                 GlobalConfig = new ConfigStorage();
-                GlobalConfig.ConfigPrefix = AppDomain.CurrentDomain.BaseDirectory;
+                GlobalConfig.ConfigPrefix = Environment.ExpandEnvironmentVariables("%UserProfile%\\.ReverseR");
                 if (Environment.GetEnvironmentVariable("JAVA_HOME") == null)
                 {
                     GlobalConfig.JavaPath = null;
@@ -180,10 +181,34 @@ namespace ReverseR.Common
         {
             public Type PluginType { get; set; }
         }
-        public static List<ModuleInfo> Modules { get; set; } = new List<ModuleInfo>();
-        public static List<DecompilerInfo> Decompilers { get; set; } = new List<DecompilerInfo>();
+        public static IEnumerable<ModuleInfo> Modules => GlobalConfig.ModuleInfos;
+        public static List<DecompilerInfo> Decompilers { get; private set; } = new List<DecompilerInfo>();
         public static List<DockablePluginInfo> DockablePlugins { get; set; } = new List<DockablePluginInfo>();
-        public static DecompilerInfo? PreferredDecompiler { get; set; }
+        public static DecompilerInfo? PreferredDecompiler
+        {
+            get
+            {
+                if(string.IsNullOrEmpty(GlobalConfig.PreferredDecompilerId)) return null;
+                var query = Decompilers.Where(info => info.Id == GlobalConfig.PreferredDecompilerId);
+                if (query.Any()) return query.First();
+                else return null;
+            }
+            set
+            {
+                if (!value.HasValue)
+                {
+                    GlobalConfig.PreferredDecompilerId = null;
+                }
+                if (Decompilers.Contains(value.Value))
+                {
+                    GlobalConfig.PreferredDecompilerId = value.Value.Id;
+                }
+                else
+                {
+                    throw new InvalidOperationException("Illegal Decompiler info!");
+                }
+            }
+        }
         /// <summary>
         /// Register a decompiler
         /// <para>

@@ -29,7 +29,7 @@
         <CommandBinding Command="{x:Static ApplicationCommands.SelectAll}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
         <CommandBinding Command="{x:Static ApplicationCommands.Replace}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
         <CommandBinding Command="{x:Static ApplicationCommands.Find}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
-        
+
         <CommandBinding Command="{x:Static ApplicationCommands.Open}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
         <CommandBinding Command="{x:Static ApplicationCommands.Save}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
         <CommandBinding Command="{x:Static ApplicationCommands.SaveAs}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
@@ -46,7 +46,7 @@
                             <behaviors:ChangePropertyAction TargetObject="{Binding ElementName=ReverseR_Shell}" PropertyName="TitleBarHeight" Value="{Binding ElementName=TitlebarWrapper,Path=ActualHeight,Converter={StaticResource TitlebarConverter}}"/>
                         </behaviors:PropertyChangedTrigger>
                     </behaviors:Interaction.Triggers>
-                    <Menu Name="MainMenu" ItemsSource="{Binding RootMenus}" DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window},Path=DataContext}" VerticalContentAlignment="Center" VerticalAlignment="Center">
+                    <Menu Name="MainMenu" IsMainMenu="True" ItemsSource="{Binding RootMenus}" DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window},Path=DataContext}" VerticalContentAlignment="Center" VerticalAlignment="Center">
                         <Menu.CommandBindings>
                             <!---->
                         </Menu.CommandBindings>
@@ -79,53 +79,53 @@
                                                         <ColumnDefinition x:Name="Col3" Width="16" />
                                                     </Grid.ColumnDefinitions>
                                                     <Grid x:Name="CheckMarkPanel"
-                                  Grid.Column="0"
-                                  Width="18"
-                                  Height="18"
-                                  Margin="2 0"
-                                  Background="{DynamicResource MahApps.Brushes.Menu.Checkmark.Background}"
-                                  Visibility="Collapsed">
+                                                          Grid.Column="0"
+                                                          Width="18"
+                                                          Height="18"
+                                                          Margin="2 0"
+                                                          Background="{DynamicResource MahApps.Brushes.Menu.Checkmark.Background}"
+                                                          Visibility="Collapsed">
                                                         <Path x:Name="CheckMarkPath"
-                                      Width="16"
-                                      Height="16"
-                                      Margin="1 1 0 0"
-                                      Data="{StaticResource Checkmark}"
-                                      Fill="{DynamicResource MahApps.Brushes.Menu.Checkmark.Fill}"
-                                      FlowDirection="LeftToRight" />
+                                                                Width="16"
+                                                                Height="16"
+                                                                Margin="1 1 0 0"
+                                                                Data="{StaticResource Checkmark}"
+                                                                Fill="{DynamicResource MahApps.Brushes.Menu.Checkmark.Fill}"
+                                                                FlowDirection="LeftToRight" />
                                                     </Grid>
                                                     <ContentPresenter x:Name="Icon"
-                                              Grid.Column="0"
-                                              VerticalAlignment="Center"
-                                              ContentSource="Icon" />
-                                                    <ContentPresenter x:Name="HeaderHost"
-                                              Grid.Column="1"
-                                              Margin="{TemplateBinding Padding}"
-                                              VerticalAlignment="Center"
-                                              HorizontalAlignment="Stretch"
-                                              ContentSource="Header"
-                                              RecognizesAccessKey="True" />
-                                                    <ContentPresenter x:Name="IGTHost"
-                                              Grid.Column="2"
-                                              Margin="8 1 8 1"
-                                              VerticalAlignment="Center"
-                                              ContentSource="InputGestureText" />
+                                                                      Grid.Column="0"
+                                                                      VerticalAlignment="Center"
+                                                                      ContentSource="Icon" />
+                                                                            <ContentPresenter x:Name="HeaderHost"
+                                                                      Grid.Column="1"
+                                                                      Margin="{TemplateBinding Padding}"
+                                                                      VerticalAlignment="Center"
+                                                                      HorizontalAlignment="Stretch"
+                                                                      ContentSource="Header"
+                                                                      RecognizesAccessKey="True" />
+                                                                            <ContentPresenter x:Name="IGTHost"
+                                                                      Grid.Column="2"
+                                                                      Margin="8 1 8 1"
+                                                                      VerticalAlignment="Center"
+                                                                      ContentSource="InputGestureText" />
                                                     <Grid x:Name="ArrowPanel"
-                                  Grid.Column="3"
-                                  Margin="4 0 6 0"
-                                  VerticalAlignment="Center">
+                                                          Grid.Column="3"
+                                                          Margin="4 0 6 0"
+                                                          VerticalAlignment="Center">
                                                         <Path x:Name="ArrowPanelPath"
-                                      HorizontalAlignment="Right"
-                                      VerticalAlignment="Center"
-                                      Data="M0,0 L0,8 L4,4 z"
-                                      Fill="{TemplateBinding Foreground}" />
+                                                              HorizontalAlignment="Right"
+                                                              VerticalAlignment="Center"
+                                                              Data="M0,0 L0,8 L4,4 z"
+                                                              Fill="{TemplateBinding Foreground}" />
                                                     </Grid>
                                                     <Popup x:Name="SubMenuPopup"
-                                   AllowsTransparency="True"
-                                   Focusable="false"
-                                   HorizontalOffset="-1"
-                                   IsOpen="{Binding Path=IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}"
-                                   Placement="Right"
-                                   PopupAnimation="{DynamicResource {x:Static SystemParameters.MenuPopupAnimationKey}}">
+                                                           AllowsTransparency="True"
+                                                           Focusable="false"
+                                                           HorizontalOffset="-1"
+                                                           IsOpen="{Binding Path=IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}"
+                                                           Placement="Right"
+                                                           PopupAnimation="{DynamicResource {x:Static SystemParameters.MenuPopupAnimationKey}}">
                                                         <Grid Margin="0 0 5 5">
                                                             <Border x:Name="SubMenuBorder"
                                             Background="{DynamicResource MahApps.Brushes.SubmenuItem.Background}"
@@ -260,9 +260,14 @@
                         </Menu.Resources>
                         <Menu.ItemTemplateSelector>
                             <local:MenuTemplateSelector>
-                                <local:MenuTemplateSelector.MenuTemplate>
+                                <local:MenuTemplateSelector.RootMenuTemplate>
                                     <HierarchicalDataTemplate ItemsSource="{Binding Children}">
                                         <AccessText Text="{Binding Text}" TextAlignment="{Binding Alignment,FallbackValue=Left}" HorizontalAlignment="Center"/>
+                                    </HierarchicalDataTemplate>
+                                </local:MenuTemplateSelector.RootMenuTemplate>
+                                <local:MenuTemplateSelector.MenuTemplate>
+                                    <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                                        <AccessText Text="{Binding Text}" TextAlignment="{Binding Alignment,FallbackValue=Left}" HorizontalAlignment="Left"/>
                                     </HierarchicalDataTemplate>
                                 </local:MenuTemplateSelector.MenuTemplate>
                                 <local:MenuTemplateSelector.SeparatorTemplate>
@@ -277,7 +282,7 @@
                                 <Setter Property="Command" Value="{Binding Command}"/>
                                 <Setter Property="InputGestureText" Value="{Binding GestureText}"/>
                                 <Setter Property="Icon" Value="{Binding Icon}"/>
-                                <Setter Property="Width" Value="{Binding Width}"/>
+                                <Setter Property="MinWidth" Value="{Binding Width,FallbackValue=0}"/>
                                 <Setter Property="ToolTip" Value="{Binding Tooltip}"/>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsSeparator}" Value="True">

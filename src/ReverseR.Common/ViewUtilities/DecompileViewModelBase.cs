@@ -340,7 +340,7 @@ namespace ReverseR.Common.ViewUtilities
                     return ret;
                 })
                 .WithName("Background:Parsing")
-                .WithDescription("Parsing" + jPath.ClassPath)
+                .WithDescription("Parsing " + jPath.ClassPath)
                 .Build();
             parseTask.Start();
 

@@ -16,6 +16,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Reflection;
 using System.Collections.Generic;
+using Prism.Services.Dialogs;
 
 namespace ReverseR.ViewModels
 {
@@ -121,6 +122,15 @@ namespace ReverseR.ViewModels
                 }
             }
         });
+        public DelegateCommand SettingsCommand => new DelegateCommand(() =>
+          {
+              this.GetIContainer()
+                .Resolve<IDialogService>()
+                .ShowDialog("SettingsDialog", result =>
+                {
+
+                });
+          });
         ObservableCollection<RootMenuItemWrapper> _rootMenus;
         public ObservableCollection<RootMenuItemWrapper> RootMenus { get => _rootMenus; set => SetProperty(ref _rootMenus, value); }
         public ObservableCollection<IBackgroundTask> BackgroundTasks { get; set; } = new ObservableCollection<IBackgroundTask>();
@@ -158,6 +168,8 @@ namespace ReverseR.ViewModels
             file.Text = "_File";
             file.Children = new ObservableCollection<IMenuViewModel>();
             file.Children.Add(this.CreateMenu("_Open", ApplicationCommands.Open, "Ctrl+O", null, "Open a new file"));
+            file.Children.Add(this.CreateMenuSeparator());
+            file.Children.Add(this.CreateMenu("_Preferences", SettingsCommand, "", null, "Change the settings"));
             RootMenus.Add(file);
 
             RootMenuItemWrapper Edit = new RootMenuItemWrapper()
@@ -170,7 +182,6 @@ namespace ReverseR.ViewModels
             Edit.Children.Add(this.CreateMenu("Cu_t",ApplicationCommands.Cut,"Ctrl+X"));
             Edit.Children.Add(this.CreateMenu("_Copy",ApplicationCommands.Copy,"Ctrl+C"));
             Edit.Children.Add(this.CreateMenu("_Paste", ApplicationCommands.Copy, "Ctrl+V"));
-
             RootMenus.Add(Edit);
 
             return 2;

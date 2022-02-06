@@ -14,6 +14,7 @@ namespace ReverseR.ViewModels
 {
     class MenuTemplateSelector:DataTemplateSelector
     {
+        public DataTemplate RootMenuTemplate { get; set; }
         public DataTemplate MenuTemplate { get; set; }
         public DataTemplate SeparatorTemplate { get; set; }
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
@@ -27,6 +28,7 @@ namespace ReverseR.ViewModels
                 }
                 else
                 {
+                    if (item is RootMenuItemWrapper) return RootMenuTemplate;
                     return MenuTemplate;
                 }
             }

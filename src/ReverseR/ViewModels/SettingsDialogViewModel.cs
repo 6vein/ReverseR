@@ -5,10 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Prism.Mvvm;
+using Prism.Ioc;
 using Prism.Commands;
 using Prism.Services.Dialogs;
 using ReverseR.Common;
 using ReverseR.Common.ViewUtilities;
+using ReverseR.Common.Services;
 using System.Collections.ObjectModel;
 using ReverseR.Common.DecompUtilities;
 using System.IO;
@@ -16,12 +18,56 @@ using System.Reflection;
 
 namespace ReverseR.ViewModels
 {
-    internal interface ISettingsViewModel
+    internal abstract class SettingsViewModelBase:BindableBase
     {
-        public bool VerifyData();
-        public void Save();
+        /// <summary>
+        /// Verifies the data,return null or empty to indicate success.
+        /// </summary>
+        /// <returns></returns>
+        public abstract string VerifyData();
+        public abstract void Save();
+        public DelegateCommand<System.Windows.Controls.TextBox> BrowseFolderCommand =>
+            new DelegateCommand<System.Windows.Controls.TextBox>(text =>
+            {
+                using (System.Windows.Forms.FolderBrowserDialog dialog
+                = new System.Windows.Forms.FolderBrowserDialog())
+                {
+                    if(Directory.Exists(text.Text))
+                        dialog.SelectedPath = text.Text;
+                    dialog.ShowNewFolderButton = true;
+                    dialog.ShowDialog();
+                    if (CheckFolderWriteAccess(dialog.SelectedPath))
+                        text.Text = dialog.SelectedPath;
+                    else
+                    {
+                        this.GetIContainer()
+                            .Resolve<IDialogService>()
+                            .ReportError($"The Path {dialog.SelectedPath} is not accessible!", _ => { });
+                    }
+                }
+            });
+        public virtual DelegateCommand BrowseFileCommand => new DelegateCommand(() =>
+          {
+
+          });
+        protected bool CheckFolderWriteAccess(string dir)
+        {
+            try
+            {
+                using(FileStream fs = File.Create(
+                    Path.Combine(dir, Path.GetRandomFileName()), 1, FileOptions.DeleteOnClose))
+                {
+                    fs.WriteByte(1);
+                }
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
     }
-    internal class ModularitySettingsViewModel: BindableBase, ISettingsViewModel
+    internal class ModularitySettingsViewModel: SettingsViewModelBase
     {
         public class ModuleEnableInfo:BindableBase
         {
@@ -92,11 +138,11 @@ namespace ReverseR.ViewModels
                 throw new ArgumentException($"{path} is not a valid path!");
             }
         }
-        public bool VerifyData()
+        public override string VerifyData()
         {
-            return false;
+            return null;//normally it will be processed when adding modules to the catalog.
         }
-        public void Save()
+        public override void Save()
         {
             GlobalUtils.GlobalConfig.ModuleDirectory = ModuleDirectory;
             GlobalUtils.GlobalConfig.ModuleInfos = ModuleInfos.Select(info => info.ModuleInfo).ToArray();
@@ -111,7 +157,7 @@ namespace ReverseR.ViewModels
             }));
         }
     }
-    internal class EnvironmentSettingsViewModel : BindableBase,ISettingsViewModel
+    internal class EnvironmentSettingsViewModel : SettingsViewModelBase
     {
         private string _configPrefix;
         public string ConfigPrefix { get=>_configPrefix; set=>SetProperty(ref _configPrefix,value); }
@@ -121,39 +167,66 @@ namespace ReverseR.ViewModels
         public bool CacheDecompiledFiles { get=>_CacheDecompiledFiles; set=>SetProperty(ref _CacheDecompiledFiles,value); }
         private bool _CacheExtractedFiles; 
         public bool CacheExtractedFiles { get=>_CacheExtractedFiles; set=>SetProperty(ref _CacheExtractedFiles,value); }
-        private bool _DecompileWhole; 
-        public bool DecompileWhole { get=>_DecompileWhole; set=>SetProperty(ref _DecompileWhole,value); }
-        private string _JavaPath; 
-        public string JavaPath { get=>_JavaPath; set=>SetProperty(ref _JavaPath,value); }
-        private ICommonPreferences.RunTypes _RunType; 
-        public ICommonPreferences.RunTypes RunType { get=>_RunType; set=>SetProperty(ref _RunType,value); }
-        public bool VerifyData()
-        {
 
-            return true;
-        }
-        public void Save()
+        public override string VerifyData()
         {
-            GlobalUtils.GlobalConfig.RunType = RunType;
+            string errorReport = "";
+            if (!File.Exists(Environment.ExpandEnvironmentVariables(ConfigPrefix)))
+            {
+                errorReport += "Config directory is not a valid path!\n";
+            }
+            if (!File.Exists(Environment.ExpandEnvironmentVariables(CachePath)))
+            {
+                errorReport += "Config directory is not a valid path!\n";
+            }
+            return errorReport;
+        }
+        public override void Save()
+        {
             GlobalUtils.GlobalConfig.ConfigPrefix = ConfigPrefix;
             GlobalUtils.GlobalConfig.CachePath = CachePath;
-            GlobalUtils.GlobalConfig.JavaPath = JavaPath;
             GlobalUtils.GlobalConfig.CacheDecompiledFiles = CacheDecompiledFiles;
             GlobalUtils.GlobalConfig.CacheExtractedFiles = CacheExtractedFiles;
-            GlobalUtils.GlobalConfig.DecompileWhole = DecompileWhole;
         }
         public EnvironmentSettingsViewModel()
         {
-            RunType = GlobalUtils.GlobalConfig.RunType;
             ConfigPrefix = GlobalUtils.GlobalConfig.ConfigPrefix;
             CachePath = GlobalUtils.GlobalConfig.CachePath;
-            JavaPath= GlobalUtils.GlobalConfig.JavaPath;
             CacheDecompiledFiles = GlobalUtils.GlobalConfig.CacheDecompiledFiles;
             CacheExtractedFiles = GlobalUtils.GlobalConfig.CacheExtractedFiles;
-            DecompileWhole=GlobalUtils.GlobalConfig.DecompileWhole;
         }
     }
-    internal class DecompilerSettingsViewModel : BindableBase, ISettingsViewModel
+    internal class DecompileGeneralViewModel : SettingsViewModelBase
+    {
+        private bool _DecompileWhole;
+        public bool DecompileWhole { get => _DecompileWhole; set => SetProperty(ref _DecompileWhole, value); }
+        private string _JavaPath;
+        public string JavaPath { get => _JavaPath; set => SetProperty(ref _JavaPath, value); }
+        private ICommonPreferences.RunTypes _RunType;
+        public ICommonPreferences.RunTypes RunType { get => _RunType; set => SetProperty(ref _RunType, value); }
+        private string _preferredDecompilerId;
+        public string PreferredDecompilerId { get => _preferredDecompilerId;set=>SetProperty(ref _preferredDecompilerId, value); }
+        public override string VerifyData()
+        {
+
+            return null;
+        }
+        public override void Save()
+        {
+            GlobalUtils.GlobalConfig.RunType = RunType;
+            GlobalUtils.GlobalConfig.PreferredDecompilerId = PreferredDecompilerId;
+            GlobalUtils.GlobalConfig.JavaPath = JavaPath;
+            GlobalUtils.GlobalConfig.DecompileWhole = DecompileWhole;
+        }
+        public DecompileGeneralViewModel()
+        {
+            RunType = GlobalUtils.GlobalConfig.RunType;
+            PreferredDecompilerId = GlobalUtils.GlobalConfig.PreferredDecompilerId;
+            JavaPath = GlobalUtils.GlobalConfig.JavaPath;
+            DecompileWhole = GlobalUtils.GlobalConfig.DecompileWhole;
+        }
+    }
+    internal class DecompilerSettingsViewModel : SettingsViewModelBase
     {
         int decompilerInfoIndex;
         public string Name => GlobalUtils.Decompilers[decompilerInfoIndex].FriendlyName;
@@ -171,15 +244,18 @@ namespace ReverseR.ViewModels
             private int _valueIndex;
             public int ValueIndex { get=> _valueIndex;set=>SetProperty(ref _valueIndex,value); }
         }
-        
-        public void Save()
+        public DecompilerSettingsViewModel(int index)
+        {
+            decompilerInfoIndex = index;
+        }
+        public override void Save()
         {
             
         }
 
-        public bool VerifyData()
+        public override string VerifyData()
         {
-            return false;
+            return null;
         }
     }
     internal class SettingsTreeNode : BindableBase
@@ -194,14 +270,14 @@ namespace ReverseR.ViewModels
         bool _isExpanded;
         public bool IsExpanded { get => _isExpanded; set => SetProperty(ref _isExpanded, value); }
         #endregion
-        ISettingsViewModel _content;
-        public ISettingsViewModel Content { get => _content; set => SetProperty(ref _content, value); }
+        SettingsViewModelBase _content;
+        public SettingsViewModelBase Content { get => _content; set => SetProperty(ref _content, value); }
     }
     internal class SettingsDialogViewModel: DialogViewModelBase
     {
         ObservableCollection<SettingsTreeNode> _treeNodes;
         public ObservableCollection<SettingsTreeNode> TreeNodes 
-        { get => TreeNodes; set => SetProperty(ref _treeNodes, value); }
+        { get => _treeNodes; set => SetProperty(ref _treeNodes, value); }
         SettingsTreeNode _activeNode;
         public SettingsTreeNode ActiveNode { get => _activeNode; set => SetProperty(ref _activeNode, value); }
         public SettingsDialogViewModel()
@@ -221,6 +297,8 @@ namespace ReverseR.ViewModels
                     }
                 }
             });
+            TreeNodes[0].IsSelected = true;
+            SetActiveNode(TreeNodes[0]);
         }
         public override void OnDialogOpened(IDialogParameters parameters)
         {
@@ -229,22 +307,54 @@ namespace ReverseR.ViewModels
         protected override void CloseDialog(string parameter)
         {
         }
+        public DelegateCommand<RoutedPropertyChangedEventArgs<object>> SelectChangedCommand 
+            => new DelegateCommand<RoutedPropertyChangedEventArgs<object>>(e =>
+          {
+              SetActiveNode(e.NewValue as SettingsTreeNode);
+          });
+        protected void SetActiveNode(SettingsTreeNode node)
+        {
+            ActiveNode = node;
+            if (ActiveNode.Children != null && ActiveNode.Children.Count > 0)
+            {
+                ActiveNode.IsExpanded = true;
+                ActiveNode = ActiveNode.Children[0];
+            }
+        }
         public DelegateCommand OKCommand => new DelegateCommand(() =>
         {
-            ApplyChanges();
-            RaiseRequestClose(new DialogResult(ButtonResult.OK));
+            if (ApplyChanges())
+                RaiseRequestClose(new DialogResult(ButtonResult.OK));
         });
         public DelegateCommand CancelCommand => new DelegateCommand(() =>
         {
             RaiseRequestClose(new DialogResult(ButtonResult.Cancel));
         });
-        public DelegateCommand ApplyCommand => new DelegateCommand(ApplyChanges);
-        protected void ApplyChanges()
+        protected bool ApplyChanges()
         {
-            if (ActiveNode.Content.VerifyData())
+            Queue<SettingsTreeNode> nodes = new Queue<SettingsTreeNode>(TreeNodes);
+            while(nodes.Count > 0)
             {
-                ActiveNode.Content.Save();
+                var node = nodes.Dequeue();
+                if(node.Children!=null&&node.Children.Count > 0)
+                {
+                    foreach (var child in node.Children)
+                        nodes.Enqueue(child);
+                    continue;
+                }
+                string str = node.Content.VerifyData();
+                if (string.IsNullOrEmpty(str))
+                {
+                    node.Content.Save();
+                }
+                else
+                {
+                    this.GetIContainer().Resolve<IDialogService>()
+                        .ReportError($"Error saving settings:\n{str}", _ => { });
+                    return false;
+                }
             }
+            return true;
         }
     }
 }
