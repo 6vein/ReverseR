@@ -149,13 +149,20 @@ namespace ReverseR.DecompileView.Default.ViewModels
                         else
                         {
                             Container.Resolve<IDialogService>().ReportError(result.ResultCode.ToString(), _ => { });
+                            Application.Current.Dispatcher.Invoke(() =>
+                            {
+                                Documents.Remove(viewModel);
+                            });
                         }
                     }
                     catch (Exception e)
                     {
                         if (e is OperationCanceledException)
                         {
-                            Documents.Remove(viewModel);
+                            Application.Current.Dispatcher.Invoke(() =>
+                            {
+                                Documents.Remove(viewModel);
+                            });
                         }
                         else
                         {
@@ -166,6 +173,10 @@ namespace ReverseR.DecompileView.Default.ViewModels
                             }
                             else message = $"Unexpected exception:\n{e.Message}\n";
                             Container.Resolve<IDialogService>().ReportError(message, r => { }, e.StackTrace);
+                            Application.Current.Dispatcher.Invoke(() =>
+                            {
+                                Documents.Remove(viewModel);
+                            });
                         }
                     }
                     if (token.HasValue)

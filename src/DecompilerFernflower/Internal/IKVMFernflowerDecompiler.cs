@@ -69,13 +69,13 @@ namespace DecompilerFernflower.Decompile.Internal
                 };
                 process.ErrorDataReceived += (s, e) =>
                 {
-                    if (e.Data != null)
+                    if (!string.IsNullOrWhiteSpace(e.Data))
                     {
                         result.HasError = true;
                     }
                     if (!IsCancelled())
                     {
-                        if (e.Data != null)
+                        if (!string.IsNullOrWhiteSpace(e.Data))
                             msgSetter.Invoke(e.Data);
                     }
                     else
@@ -88,7 +88,11 @@ namespace DecompilerFernflower.Decompile.Internal
                 {
                     if (!IsCancelled())
                     {
-                        process.ProcessorAffinity = (IntPtr)1;
+                        try
+                        {
+                            process.ProcessorAffinity = (IntPtr)1;
+                        }
+                        catch (Exception) { }
                         process.BeginOutputReadLine();
                         process.BeginErrorReadLine();
                         process.WaitForExit();

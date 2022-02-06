@@ -31,9 +31,9 @@ namespace PluginSourceControl.Views
             {
                 if (e.ClickCount % 2 == 0 && item.DataContext is ViewModels.SourceTreeNode node)
                 {
+                    node.ParentViewModel.ItemDblClickCommand.Execute(e);
                     if (node.ParseTreeNode.ItemType == ReverseR.Common.Code.IClassParser.ItemType.CompilationUnit)
                     {
-                        node.ParentViewModel.ItemDblClickCommand.Execute(e);
                         e.Handled = true;
                     }
                 }

@@ -446,6 +446,11 @@
                                             <Setter Property="Content">
                                                 <Setter.Value>
                                                     <ListBox Name="PART_BkgTaskList" ItemsSource="{Binding BackgroundTasks}" Background="{DynamicResource MahApps.Brushes.Background}">
+                                                        <ListBox.ItemContainerStyle>
+                                                            <Style BasedOn="{StaticResource MahApps.Styles.ListBoxItem.VisualStudio}" TargetType="ListBoxItem">
+                                                                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Background}"/>
+                                                            </Style>
+                                                        </ListBox.ItemContainerStyle>
                                                         <ListBox.ItemTemplate>
                                                             <DataTemplate>
                                                                 <StackPanel Orientation="Vertical" Margin="5">

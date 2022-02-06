@@ -104,15 +104,18 @@ namespace PluginSourceControl.ViewModels
                     Children.RemoveAt(0);
 
                     var root = await ParentViewModel.Parent.GetParseTreeAsync(ParseTreeNode.ClassPath, true);
-                    List<SourceTreeNode> nodes = new List<SourceTreeNode>();
-                    foreach(var child in root.Children)
+                    if (root != null && root.Children != null)
                     {
-                        nodes.Add(UpdateChildrenInternal(child));
+                        List<SourceTreeNode> nodes = new List<SourceTreeNode>();
+                        foreach (var child in root.Children)
+                        {
+                            nodes.Add(UpdateChildrenInternal(child));
+                        }
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            this.Children = new ObservableCollection<SourceTreeNode>(nodes);
+                        });
                     }
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        this.Children = new ObservableCollection<SourceTreeNode>(nodes);
-                    });
                 }
             }
         }
@@ -124,7 +127,7 @@ namespace PluginSourceControl.ViewModels
             {
                 nodes.Add(UpdateChildrenInternal(child));
             }
-            node.Text = root.Id;
+            node.Text = root.Content;
             node.ParseTreeNode = root;
             node.CompilationUnitNode = this;
             //Visual Stuffs

@@ -194,6 +194,11 @@ namespace PluginSourceControl.ViewModels
                               await node.CompilationUnitNode.AssociatedDocument.SelectAsync(node.ParseTreeNode.Start, node.ParseTreeNode.End);
                           });
                       }
+                      else if (node.ParseTreeNode.ItemType == IClassParser.ItemType.Others)
+                      {
+                          using (System.Diagnostics.Process.Start(node.ParseTreeNode.Path))
+                          { }
+                      }
                   }
                   //prevent from expanding/collapsing
                   e.Handled = true;

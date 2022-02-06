@@ -29,7 +29,7 @@ namespace DecompilerFernflower.Decompile
                 }
                 else
                 {
-                    return "-" + Name + '=' + AvailableValues[0] + ' ';
+                    return "-" + Name + "=\"" + AvailableValues[0] + "\" ";
                 }
             }
             return "-" + Name + '=' + AvailableValues[ValueIndex] + ' ';
@@ -77,7 +77,7 @@ namespace DecompilerFernflower.Decompile
             var arguments = new List<ICommonPreferences.IArgument>();
             arguments.Add(new FernflowerArguments("rbr", "Hide bridge methods", new string[] { "False", "True" }, 1));
             arguments.Add(new FernflowerArguments("rsy", "Hide synthetic class members", new string[] { "False", "True" }, 0));
-            arguments.Add(new FernflowerArguments("din ", "Decompile inner classes", new string[] { "False", "True" }, 1));
+            arguments.Add(new FernflowerArguments("din", "Decompile inner classes", new string[] { "False", "True" }, 1));
             arguments.Add(new FernflowerArguments("dc4", "Collapse 1.4 class references", new string[] { "False", "True" }, 1));
             arguments.Add(new FernflowerArguments("das", "Decompile assertions", new string[] { "False", "True" }, 1));
             arguments.Add(new FernflowerArguments("hes", "Hide empty super invocation", new string[] { "False", "True" }, 1));
@@ -138,12 +138,13 @@ namespace DecompilerFernflower.Decompile
                     throw new ArgumentException($"Error:\"{path}\" is not a valid path!");
                 }
             }
-            string arg = $" \"{path}\" ";
-            foreach(var argument in Arguments)
+            string arg = " ";
+            foreach (var argument in Arguments)
             {
                 arg += argument.GetArgument();
             }
-            foreach(string item in referlib)
+            arg += $" \"{path}\" ";
+            foreach (string item in referlib)
             {
                 arg += $"\"-e={item}\" ";
             }
