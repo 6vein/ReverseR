@@ -15,7 +15,7 @@ namespace DecompilerFernflower.Decompile
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public string[] AvailableValues { get; set; }
+        public string[] AvailableValues { get; private set; }
         public int ValueIndex { get; set; }
         public string GetArgument()
         {
@@ -105,13 +105,23 @@ namespace DecompilerFernflower.Decompile
             arguments.Add(new FernflowerArguments("log", "A logging level, possible values are TRACE, INFO, WARN, ERROR", new string[] { "TRACE", "INFO", "WARN", "ERROR" }, 1));
             return arguments.ToArray();
         }
-        public ICommonPreferences.IArgument[] GetArguments()
+        public IEnumerable<ICommonPreferences.IArgument> GetArguments()
         {
             if (Arguments == null || Arguments.Length == 0)
             {
                 Arguments = GetDefaultArguments();
             }
             return Arguments;
+        }
+        public bool SetArguments(IEnumerable<ICommonPreferences.IArgument> arguments)
+        {
+            if (arguments.Count() == Arguments.Count())
+            {
+                Arguments = arguments.Select(it => new FernflowerArguments(it.Name, it.Description, it.AvailableValues, it.ValueIndex))
+                    .ToArray();
+                return true;
+            }
+            return false;
         }
         public string GetArgumentsString(string path, string output = null, params string[] referlib)
         {

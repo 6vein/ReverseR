@@ -190,14 +190,18 @@ namespace ReverseR.Common
             {
                 if(string.IsNullOrEmpty(GlobalConfig.PreferredDecompilerId)) return null;
                 var query = Decompilers.Where(info => info.Id == GlobalConfig.PreferredDecompilerId);
-                if (query.Any()) return query.First();
+                if (query.Any())
+                {
+                    GlobalConfig.PreferredDecompilerId = Decompilers.First().Id;
+                    return query.First();
+                }
                 else return null;
             }
             set
             {
                 if (!value.HasValue)
                 {
-                    GlobalConfig.PreferredDecompilerId = null;
+                    GlobalConfig.PreferredDecompilerId = GlobalConfig.PreferredDecompilerId = Decompilers.First().Id; ;
                 }
                 if (Decompilers.Contains(value.Value))
                 {

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using ReverseR.Common.DecompUtilities;
 
 namespace ReverseR.ViewModels
 {
@@ -24,6 +25,30 @@ namespace ReverseR.ViewModels
             else if(item is DecompileGeneralViewModel)
             {
                 return DecompileGeneralSettings;
+            }
+            else if(item is DecompilerSettingsViewModel)
+            {
+                return DecompilerSettings;
+            }
+            return null;
+        }
+    }
+    internal class DecompileComboBoxTemplateSelector: DataTemplateSelector
+    {
+        public DataTemplate StringItemTemplate { get; set; }
+        public DataTemplate ComboItemTemplate { get; set; }
+        public override DataTemplate SelectTemplate(object item, DependencyObject container)
+        {
+            if (item is ICommonPreferences.IArgument argument)
+            {
+                if (argument.ValueIndex == -1 && argument.AvailableValues.Count() == 1)
+                {
+                    return StringItemTemplate;
+                }
+                else
+                {
+                    return ComboItemTemplate;
+                }
             }
             return null;
         }

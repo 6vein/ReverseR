@@ -128,6 +128,7 @@
                                                 VerticalContentAlignment="Center" 
                                                 HorizontalContentAlignment="Center" 
                                                 Command="{Binding BrowseFileCommand}"
+                                                CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=TextBox}}"
                                                 Content="..."
                                                 ToolTip="Browse"/>
                                 </Grid>
@@ -167,11 +168,67 @@
                         <DataTemplate>
                             <StackPanel>
                                 <StackPanel Margin="10 5 10 5">
-                                    
+                                    <TextBlock Text="VM Type" HorizontalAlignment="Left"/>
+                                    <ComboBox Margin="0 5 0 5" ItemsSource="{Binding RunTypes}" SelectedIndex="{Binding RunType}"/>
+                                    <TextBlock Text="JVM Path" HorizontalAlignment="Left"/>
+                                    <TextBox Text="{Binding JavaPath}">
+                                        <TextBox.Style>
+                                            <Style TargetType="TextBox" BasedOn="{StaticResource ReverseR.FilePicker}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding RunType}" Value="1">
+                                                        <Setter Property="IsEnabled" Value="False"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBox.Style>
+                                    </TextBox>
+                                </StackPanel>
+                                <StackPanel Margin="10 5 10 5">
+                                    <CheckBox Margin="0 5 0 5" Content="Decompile the entire jar file" IsChecked="{Binding DecompileWhole}"/>
+                                </StackPanel>
+                                <StackPanel Margin="10 5 10 5">
+                                    <TextBlock Text="Preferred Decompiler" HorizontalAlignment="Left"/>
+                                    <ComboBox Margin="0 5 0 5" ItemsSource="{Binding DecompilerIds}" SelectedIndex="{Binding PreferredDecompilerIndex}"/>
                                 </StackPanel>
                             </StackPanel>
                         </DataTemplate>
                     </local:SettingTemplateSelector.DecompileGeneralSettings>
+                    <local:SettingTemplateSelector.DecompilerSettings>
+                        <DataTemplate>
+                            <Grid Margin="10 5 10 5">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Border Margin="1 5 1 5" Grid.Row="1" BorderThickness="2">
+                                    <xctk:TrimmedTextBlock  Margin="1 5 1 5" Padding="5"
+                                         ToolTip="{Binding ElementName=PART_DataList,Path=SelectedItem.Description}"
+                                         Text="{Binding ElementName=PART_DataList,Path=SelectedItem.Description}"/>
+                                </Border>
+                                <DataGrid Name="PART_DataList" VerticalScrollBarVisibility="Visible" ItemsSource="{Binding Arguments}" AutoGenerateColumns="False" SelectedIndex="0">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Name" Width="Auto" Binding="{Binding Name}"/>
+                                        <DataGridTemplateColumn Header="Value" Width="*">
+                                            <DataGridTemplateColumn.CellTemplateSelector>
+                                                <local:DecompileComboBoxTemplateSelector>
+                                                    <local:DecompileComboBoxTemplateSelector.ComboItemTemplate>
+                                                        <DataTemplate>
+                                                            <ComboBox ItemsSource="{Binding AvailableValues}" SelectedIndex="{Binding ValueIndex}"/>
+                                                        </DataTemplate>
+                                                    </local:DecompileComboBoxTemplateSelector.ComboItemTemplate>
+                                                    <local:DecompileComboBoxTemplateSelector.StringItemTemplate>
+                                                        <DataTemplate>
+                                                            <TextBox Text="{Binding Content}"/>
+                                                        </DataTemplate>
+                                                    </local:DecompileComboBoxTemplateSelector.StringItemTemplate>
+                                                </local:DecompileComboBoxTemplateSelector>
+                                            </DataGridTemplateColumn.CellTemplateSelector>
+                                        </DataGridTemplateColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </Grid>
+                        </DataTemplate>
+                    </local:SettingTemplateSelector.DecompilerSettings>
                 </local:SettingTemplateSelector>
             </Controls:TransitioningContentControl.ContentTemplateSelector>
         </Controls:TransitioningContentControl>

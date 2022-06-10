@@ -24,7 +24,7 @@ namespace ReverseR.ViewModels
         /// Verifies the data,return null or empty to indicate success.
         /// </summary>
         /// <returns></returns>
-        public abstract string VerifyData();
+        public abstract string GetVerifyState();
         public abstract void Save();
         public DelegateCommand<System.Windows.Controls.TextBox> BrowseFolderCommand =>
             new DelegateCommand<System.Windows.Controls.TextBox>(text =>
@@ -46,7 +46,7 @@ namespace ReverseR.ViewModels
                     }
                 }
             });
-        public virtual DelegateCommand BrowseFileCommand => new DelegateCommand(() =>
+        public virtual DelegateCommand<System.Windows.Controls.TextBox> BrowseFileCommand => new DelegateCommand<System.Windows.Controls.TextBox>(text =>
           {
 
           });
@@ -138,7 +138,7 @@ namespace ReverseR.ViewModels
                 throw new ArgumentException($"{path} is not a valid path!");
             }
         }
-        public override string VerifyData()
+        public override string GetVerifyState()
         {
             return null;//normally it will be processed when adding modules to the catalog.
         }
@@ -168,14 +168,14 @@ namespace ReverseR.ViewModels
         private bool _CacheExtractedFiles; 
         public bool CacheExtractedFiles { get=>_CacheExtractedFiles; set=>SetProperty(ref _CacheExtractedFiles,value); }
 
-        public override string VerifyData()
+        public override string GetVerifyState()
         {
             string errorReport = "";
-            if (!File.Exists(Environment.ExpandEnvironmentVariables(ConfigPrefix)))
+            if (!Directory.Exists(Environment.ExpandEnvironmentVariables(ConfigPrefix)))
             {
                 errorReport += "Config directory is not a valid path!\n";
             }
-            if (!File.Exists(Environment.ExpandEnvironmentVariables(CachePath)))
+            if (!Directory.Exists(Environment.ExpandEnvironmentVariables(CachePath)))
             {
                 errorReport += "Config directory is not a valid path!\n";
             }
@@ -204,30 +204,53 @@ namespace ReverseR.ViewModels
         public string JavaPath { get => _JavaPath; set => SetProperty(ref _JavaPath, value); }
         private int _runtypeIndex = 0;
         public int RunTypeIndex { get => _runtypeIndex; set => SetProperty(ref _runtypeIndex, value); }
-        private ICommonPreferences.RunTypes _RunType;
-        public ICommonPreferences.RunTypes RunType { get => _RunType; set => SetProperty(ref _RunType, value); }
-        public string[] RunTypes = new string[]
+        private int _RunTypeIndex;
+        public int RunType { get => _RunTypeIndex; set => SetProperty(ref _RunTypeIndex, value); }
+        public string[] RunTypes { get; } = new string[]
         { ICommonPreferences.RunTypes.JVM.ToString(),ICommonPreferences.RunTypes.IKVM.ToString() };
 
         private int _preferredDecompilerIndex = 0;
         public int PreferredDecompilerIndex { get => _preferredDecompilerIndex; set=>SetProperty(ref _preferredDecompilerIndex, value); }
-        public string PreferredDecompilerId => Decompilers[_preferredDecompilerIndex].Id;
-        public List<GlobalUtils.DecompilerInfo> Decompilers => GlobalUtils.Decompilers;
-        public override string VerifyData()
+        public string PreferredDecompilerId => DecompilerIds[_preferredDecompilerIndex];
+        public string[] DecompilerIds { get; } = GlobalUtils.Decompilers.Select(it => it.Id).ToArray();
+        public override string GetVerifyState()
         {
-
             return null;
         }
+        public override DelegateCommand<System.Windows.Controls.TextBox> BrowseFileCommand => new DelegateCommand<System.Windows.Controls.TextBox>(text =>
+        {
+            using (System.Windows.Forms.OpenFileDialog dialog
+                = new System.Windows.Forms.OpenFileDialog())
+            {
+                if (File.Exists(text.Text))
+                    dialog.InitialDirectory = Directory.GetDirectoryRoot(text.Text);
+                dialog.CheckFileExists = true;
+                dialog.CheckPathExists = true;
+                dialog.AutoUpgradeEnabled = true;
+                dialog.Filter = "Java.exe|java.exe";
+                if(dialog.ShowDialog()==System.Windows.Forms.DialogResult.OK)
+                {
+                    if (File.Exists(dialog.FileName))
+                        text.Text = dialog.FileName;
+                    else
+                    {
+                        this.GetIContainer()
+                            .Resolve<IDialogService>()
+                            .ReportError($"The file {dialog.FileName} is not accessible!", _ => { });
+                    }
+                }
+            }
+        });
         public override void Save()
         {
-            GlobalUtils.GlobalConfig.RunType = RunType;
+            GlobalUtils.GlobalConfig.RunType = RunType == 0 ? ICommonPreferences.RunTypes.JVM : ICommonPreferences.RunTypes.IKVM;
             GlobalUtils.GlobalConfig.PreferredDecompilerId = PreferredDecompilerId;
             GlobalUtils.GlobalConfig.JavaPath = JavaPath;
             GlobalUtils.GlobalConfig.DecompileWhole = DecompileWhole;
         }
         public DecompileGeneralViewModel()
         {
-            RunType = GlobalUtils.GlobalConfig.RunType;
+            RunType = (int)GlobalUtils.GlobalConfig.RunType;
             PreferredDecompilerIndex = GlobalUtils.Decompilers
                 .FindIndex(info => info.Id == GlobalUtils.GlobalConfig.PreferredDecompilerId);
             JavaPath = GlobalUtils.GlobalConfig.JavaPath;
@@ -239,7 +262,7 @@ namespace ReverseR.ViewModels
         int decompilerInfoIndex;
         public string Name => GlobalUtils.Decompilers[decompilerInfoIndex].FriendlyName;
         public ICommonPreferences Preferences => GlobalUtils.Decompilers[decompilerInfoIndex].Options;
-        internal class ObservableArgument : BindableBase
+        internal class ObservableArgument : BindableBase,ICommonPreferences.IArgument
         {
             public string Name { get; set; }
             public string Description { get; set; }
@@ -251,19 +274,43 @@ namespace ReverseR.ViewModels
             public string[] AvailableValues { get; }
             private int _valueIndex;
             public int ValueIndex { get=> _valueIndex;set=>SetProperty(ref _valueIndex,value); }
+            public string Content { get => AvailableValues[0]; set => SetProperty(ref AvailableValues[0], value); }
+            public ObservableArgument(ICommonPreferences.IArgument argument)
+            {
+                Name = argument.Name;
+                Description = argument.Description;
+                AvailableValues = argument.AvailableValues.ToArray();
+                ValueIndex = argument.ValueIndex;
+            }
+
+            public string GetArgument()
+            {
+                throw new NotImplementedException();
+            }
         }
+        ObservableCollection<ObservableArgument> _arguments;
+        public ObservableCollection<ObservableArgument> Arguments { get => _arguments; set => SetProperty(ref _arguments,value); }
         public DecompilerSettingsViewModel(int index)
         {
             decompilerInfoIndex = index;
+            Arguments = new ObservableCollection<ObservableArgument>(Preferences.GetArguments().Select(it => new ObservableArgument(it)));
         }
         public override void Save()
         {
-            
+            Preferences.SetArguments(Arguments);
         }
 
-        public override string VerifyData()
+        public override string GetVerifyState()
         {
-            return null;
+            var invalids = Preferences.GetInvalidArguments(Arguments);
+            if (invalids.Count() == 0)
+            {
+                return null;
+            }
+            else
+            {
+                return string.Join(",", invalids.Select(it => it.Name)) + " not valid!";
+            }
         }
     }
     internal class SettingsTreeNode : BindableBase
@@ -308,14 +355,19 @@ namespace ReverseR.ViewModels
             TreeNodes.Add(new SettingsTreeNode()
             {
                 Text = "Decompile",
-                Children = new ObservableCollection<SettingsTreeNode>()
-                {
-                    new SettingsTreeNode()
+                Children = new ObservableCollection<SettingsTreeNode>(
+                    new List<SettingsTreeNode>()
                     {
-                        Text="General",
-                        Content=new DecompileGeneralViewModel()
-                    }
-                }
+                        new SettingsTreeNode()
+                        {
+                            Text="General",
+                            Content=new DecompileGeneralViewModel()
+                        }
+                    }.Concat(GlobalUtils.Decompilers.Select((it,i)=>new SettingsTreeNode()
+                    {
+                        Text=it.FriendlyName,
+                        Content=new DecompilerSettingsViewModel(i)
+                    })))
             });
             TreeNodes[0].IsSelected = true;
             SetActiveNode(TreeNodes[0]);
@@ -362,7 +414,7 @@ namespace ReverseR.ViewModels
                         nodes.Enqueue(child);
                     continue;
                 }
-                string str = node.Content.VerifyData();
+                string str = node.Content.GetVerifyState();
                 if (string.IsNullOrEmpty(str))
                 {
                     node.Content.Save();
@@ -370,7 +422,7 @@ namespace ReverseR.ViewModels
                 else
                 {
                     this.GetIContainer().Resolve<IDialogService>()
-                        .ReportError($"Error saving settings:\n{str}", _ => { });
+                        .ReportError($"Error in {node.Text} \n {str}", _ => { });
                     return false;
                 }
             }

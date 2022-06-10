@@ -18,8 +18,8 @@ namespace ReverseR.Common.DecompUtilities
             public string Description { get; set; }
             /// <summary>
             /// List of available values, if <see cref="ValueIndex"/> == -1,
-            /// then the first element of the item is the selected value,
-            /// which also indicates the argument is of type 'string'
+            /// then the argument is of type 'string',
+            /// which also indicates the first element of the item is the selected value
             /// </summary>
             public string[] AvailableValues { get; }
             public int ValueIndex { get; set; }
@@ -40,10 +40,38 @@ namespace ReverseR.Common.DecompUtilities
         /// <param name="referlib"></param>
         /// <returns></returns>
         string GetArgumentsString(string path, string outpath = null, params string[] referlib);
+        IEnumerable<IArgument> GetArguments();
+        bool SetArguments(IEnumerable<IArgument> arguments);
         /// <summary>
         /// Get path of the executable jar file for decompiling,but can also return null or throw <see cref="NotImplementedException"/>
         /// </summary>
         /// <returns></returns>
         string GetDecompilerPath();
+    }
+    public static class PreferenceHelper
+    {
+        internal class ArgumentValidComparer : IEqualityComparer<ICommonPreferences.IArgument>
+        {
+            public bool Equals(ICommonPreferences.IArgument x, ICommonPreferences.IArgument y)
+            {
+                if (x.AvailableValues.Count() == 0 && y.AvailableValues.Count() == 0)
+                {
+                    return x.ValueIndex == -1 && y.ValueIndex == -1;
+                }
+                else
+                {
+                    return x.AvailableValues.SequenceEqual(y.AvailableValues);
+                }
+            }
+
+            public int GetHashCode(ICommonPreferences.IArgument obj)
+            {
+                return obj.AvailableValues.GetHashCode();
+            }
+        }
+        public static IEnumerable<ICommonPreferences.IArgument> GetInvalidArguments(this ICommonPreferences preferences,IEnumerable<ICommonPreferences.IArgument> arguments)
+        {
+            return arguments.Except(preferences.GetArguments(), new ArgumentValidComparer());
+        }
     }
 }
