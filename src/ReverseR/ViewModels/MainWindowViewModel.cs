@@ -68,6 +68,7 @@ namespace ReverseR.ViewModels
                 {
                     comboBox.Items.Add(new Microsoft.WindowsAPICodePack.Dialogs.Controls.CommonFileDialogComboBoxItem(info.FriendlyName));
                 }
+                comboBox.SelectedIndex = GlobalUtils.Decompilers.FindIndex(it => it.Id == GlobalUtils.PreferredDecompiler.Value.Id);
                 group.IsProminent = true;
                 group.Items.Add(comboBox);
                 comboBox.SelectedIndex = 0;
@@ -103,7 +104,7 @@ namespace ReverseR.ViewModels
                             .Where(item => {
                                 if ((item as System.Windows.FrameworkElement)?.DataContext is IDecompileViewModel vm)
                                 {
-                                    if (vm.FilePath == path) return true;
+                                    if (vm.FilePath == path&&vm.Decompiler.Id==GlobalUtils.Decompilers[index].Id) return true;
                                 }
                                 return false;
                             });

@@ -61,6 +61,7 @@ namespace ReverseR.Common.ViewUtilities
         public List<IPlugin> Plugins { get; }
         public IDocumentViewModel ActiveDocument { get; }
         public ObservableCollection<IDocumentViewModel> Documents { get; set; }
+        public CommonDecompiler Decompiler { get; }
         public string FilePath { get; }
         public string StatusMessage { get; }
     }

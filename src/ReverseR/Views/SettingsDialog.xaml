@@ -216,9 +216,14 @@
                                                             <ComboBox ItemsSource="{Binding AvailableValues}" SelectedIndex="{Binding ValueIndex}"/>
                                                         </DataTemplate>
                                                     </local:DecompileComboBoxTemplateSelector.ComboItemTemplate>
+                                                    <local:DecompileComboBoxTemplateSelector.NumericItemTemplate>
+                                                        <DataTemplate>
+                                                            <Controls:NumericUpDown Value="{Binding ValueIndex}"/>
+                                                        </DataTemplate>
+                                                    </local:DecompileComboBoxTemplateSelector.NumericItemTemplate>
                                                     <local:DecompileComboBoxTemplateSelector.StringItemTemplate>
                                                         <DataTemplate>
-                                                            <TextBox Text="{Binding Content}"/>
+                                                            <TextBox Style="{StaticResource MahApps.Styles.TextBox.ComboBox.Editable}" Text="{Binding Content}"/>
                                                         </DataTemplate>
                                                     </local:DecompileComboBoxTemplateSelector.StringItemTemplate>
                                                 </local:DecompileComboBoxTemplateSelector>

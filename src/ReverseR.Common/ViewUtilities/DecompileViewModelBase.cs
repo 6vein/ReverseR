@@ -58,6 +58,7 @@ namespace ReverseR.Common.ViewUtilities
         protected bool EnableExtractionCache { get; set; }
         protected bool EnableDecompiledFileCache => GlobalUtils.GlobalConfig.CacheDecompiledFiles;
         public string FilePath { get => _filePath; set => SetProperty(ref _filePath, value); }
+        public abstract CommonDecompiler Decompiler { get; protected set; }
         public FileTypes FileType { get; set; }
         public string Md5 { get; set; }
         /// <summary>

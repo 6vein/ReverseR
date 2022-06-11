@@ -19,7 +19,11 @@ namespace DecompilerFernflower.Decompile
         public int ValueIndex { get; set; }
         public string GetArgument()
         {
-            if (ValueIndex == -1)
+            if (AvailableValues.Count() == 0)
+            {
+                return "-" + Name + "=" + ValueIndex + " ";
+            }
+            else if (ValueIndex == -1)
             {
                 if (AvailableValues == null 
                     || AvailableValues.Length == 0 

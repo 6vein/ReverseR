@@ -18,7 +18,7 @@ namespace DecompilerFernflower.Decompile.Internal
     internal class IKVMFernflowerDecompiler:FernflowerDecompiler
     {
         public IKVMFernflowerDecompiler(IContainerProvider containerProvider) : base(containerProvider) { }
-        protected override IDecompileResult RunDecompiler(string path, Action<string> msgSetter, CancellationToken? token, params string[] referlib)
+        protected override IDecompileResult RunDecompiler(string path, Action<string> msgSetter, CancellationToken? token = null, params string[] referlib)
         {
             string output = null;
             IDecompileResult result = Container.Resolve<IDecompileResult>();

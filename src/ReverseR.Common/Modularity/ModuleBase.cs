@@ -34,8 +34,10 @@ namespace ReverseR.Common.Modularity
 
         public void OnInitialized(IContainerProvider containerProvider)
         {
-            GlobalUtils.Modules.Where(info => info.Id == Id).First().Name = Name;
-            GlobalUtils.Modules.Where(info => info.Id == Id).First().Description = Description;
+            GlobalUtils.ModuleInfo moduleInfo = GlobalUtils.Modules.Where(info => info.Id == Id).First();
+            moduleInfo.Name = Name;
+            moduleInfo.Description = Description;
+            moduleInfo.Loaded = true;
             Initialized(containerProvider);
         }
 

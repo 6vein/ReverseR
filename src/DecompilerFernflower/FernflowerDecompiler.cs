@@ -19,7 +19,7 @@ namespace DecompilerFernflower.Decompile
     public abstract class FernflowerDecompiler : CommonDecompiler
     {
         protected IContainerProvider Container { get; set; }
-        public override string Id => $"6168218c.{nameof(FernflowerDecompiler)}";
+        public override string Id => $"org.jetbrains.fernflower";
         public FernflowerDecompiler(IContainerProvider containerProvider)
         {
             Container = containerProvider;

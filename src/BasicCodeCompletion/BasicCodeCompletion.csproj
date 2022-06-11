@@ -40,7 +40,8 @@
       <HintPath>..\..\packages\DryIoc.dll.4.7.7\lib\net45\DryIoc.dll</HintPath>
     </Reference>
     <Reference Include="F23.StringSimilarity, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\F23.StringSimilarity.4.1.0\lib\net45\F23.StringSimilarity.dll</HintPath>
+      <HintPath>..\..\packages\F23.StringSimilarity.5.0.0\lib\netstandard2.0\F23.StringSimilarity.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="ICSharpCode.AvalonEdit, Version=6.1.3.50, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
       <HintPath>..\..\packages\AvalonEdit.6.1.3.50\lib\net45\ICSharpCode.AvalonEdit.dll</HintPath>

@@ -58,6 +58,8 @@ namespace PluginSourceControl.Plugin
                 .Subscribe(OnArchiveOpened, ThreadOption.BackgroundThread, false,
                 payload => payload.Item2 == ParentViewModel?.Guid
                 );
+            //TODO
+            Side = AnchorableShowStrategy.Left;
         }
     }
 }

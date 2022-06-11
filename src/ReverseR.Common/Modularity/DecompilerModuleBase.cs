@@ -24,12 +24,12 @@ namespace ReverseR.Common.Modularity
         public override void Initialized(IContainerProvider containerProvider)
         {
         }
-        protected void RegisterDecompilerHelper<TPreference>(string jsonConfigPath) where TPreference : ICommonPreferences
+        protected void RegisterDecompilerHelper<TPreference>(string jsonConfigFileName) where TPreference : ICommonPreferences
         {
             ICommonPreferences preferences = _container.Resolve<TPreference>();
-            if (File.Exists(Path.Combine(GlobalUtils.GlobalConfig.ConfigPrefix, jsonConfigPath)))
+            if (File.Exists(Path.Combine(GlobalUtils.GlobalConfig.ConfigPrefix, jsonConfigFileName)))
             {
-                preferences.DeserializePart(File.ReadAllText(Path.Combine(GlobalUtils.GlobalConfig.ConfigPrefix, jsonConfigPath)));
+                preferences.DeserializePart(File.ReadAllText(Path.Combine(GlobalUtils.GlobalConfig.ConfigPrefix, jsonConfigFileName)));
             }
             GlobalUtils.RegisterDecompiler(DecompilerId, FriendlyName, preferences, Decompilers);
             _container.Resolve<IDecompilerResolver>()

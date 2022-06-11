@@ -105,7 +105,7 @@ namespace ReverseR.Common
                     }
                     if (GlobalConfig.ModuleInfos == null || GlobalConfig.ModuleInfos.Length == 0)
                     {
-                        GlobalConfig.ModuleInfos = new string[] { "AntlrParser", "BasicCodeCompletion", "DecompilerFernflower", "PluginSourceControl" }
+                        GlobalConfig.ModuleInfos = new string[] { "AntlrParser", "BasicCodeCompletion", "DecompilerCFR" ,"DecompilerFernflower", "PluginSourceControl" }
                         .Select(path => new ModuleInfo() { Id = $"6168218c.{path}", Path = path, Enabled = true }).ToArray();
                     }
                 }
@@ -124,7 +124,7 @@ namespace ReverseR.Common
                 }
                 GlobalConfig.CachePath = Environment.ExpandEnvironmentVariables("%UserProfile%\\.ReverseR\\Cache");
                 GlobalConfig.ModuleDirectory = AppDomain.CurrentDomain.BaseDirectory + "Plugins\\";
-                GlobalConfig.ModuleInfos = new string[] { "AntlrParser", "BasicCodeCompletion", "DecompilerFernflower", "PluginSourceControl" }
+                GlobalConfig.ModuleInfos = new string[] { "AntlrParser", "BasicCodeCompletion","DecompilerCFR", "DecompilerFernflower", "PluginSourceControl" }
                 .Select(path => new ModuleInfo() { Id=$"6168218c.{path}", Path = path, Enabled = true }).ToArray();
                 Directory.CreateDirectory(GlobalConfig.CachePath);
             }
@@ -153,6 +153,8 @@ namespace ReverseR.Common
             public string Name { get; set; }
             [JsonIgnore]
             public string Description { get; set; }
+            [JsonIgnore]
+            public bool Loaded { get; set; }
             public string Path { get; set; }
             public bool Enabled { get; set; }
             public ModuleInfo() { }
@@ -188,14 +190,18 @@ namespace ReverseR.Common
         {
             get
             {
-                if(string.IsNullOrEmpty(GlobalConfig.PreferredDecompilerId)) return null;
+                if(string.IsNullOrEmpty(GlobalConfig.PreferredDecompilerId))
+                {
+                    GlobalConfig.PreferredDecompilerId = Decompilers.First().Id;
+                    return Decompilers.First();
+                }
                 var query = Decompilers.Where(info => info.Id == GlobalConfig.PreferredDecompilerId);
                 if (query.Any())
                 {
                     GlobalConfig.PreferredDecompilerId = Decompilers.First().Id;
                     return query.First();
                 }
-                else return null;
+                else throw new InvalidOperationException();
             }
             set
             {

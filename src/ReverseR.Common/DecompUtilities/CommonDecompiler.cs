@@ -13,13 +13,13 @@ namespace ReverseR.Common.DecompUtilities
     {
         public abstract string Id { get; }
         public ICommonPreferences Options { get; protected set; }
-        public Action PreDecompileCallback { get; set; }
-        public Action AfterDecompileCallback { get; set; }
+        public Action<string> PreDecompileCallback { get; set; }
+        public Action<string> AfterDecompileCallback { get; set; }
         public IDecompileResult Decompile(string path, Action<string> msgSetter, CancellationToken? token = null, params string[] referlib)
         {
-            PreDecompileCallback?.Invoke();
+            PreDecompileCallback?.Invoke(path);
             IDecompileResult result = RunDecompiler(path, msgSetter, token, referlib);
-            AfterDecompileCallback?.Invoke();
+            AfterDecompileCallback?.Invoke(path);
             return result;
         }
         public GlobalUtils.DecompilerInfo GetDecompilerInfo()

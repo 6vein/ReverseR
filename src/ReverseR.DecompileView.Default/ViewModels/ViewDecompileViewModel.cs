@@ -29,7 +29,7 @@ namespace ReverseR.DecompileView.Default.ViewModels
 {
     public class ViewDecompileViewModel : DecompileViewModelBase,IDefaultViewModel
     {
-        public CommonDecompiler Decompiler { get; set; }
+        public override CommonDecompiler Decompiler { get;protected set; }
         public void SetDecompiler(string id)
         {
             if (id == Decompiler?.Id)

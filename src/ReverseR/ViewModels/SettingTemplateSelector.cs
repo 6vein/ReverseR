@@ -35,6 +35,7 @@ namespace ReverseR.ViewModels
     }
     internal class DecompileComboBoxTemplateSelector: DataTemplateSelector
     {
+        public DataTemplate NumericItemTemplate { get; set; }
         public DataTemplate StringItemTemplate { get; set; }
         public DataTemplate ComboItemTemplate { get; set; }
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
@@ -44,6 +45,10 @@ namespace ReverseR.ViewModels
                 if (argument.ValueIndex == -1 && argument.AvailableValues.Count() == 1)
                 {
                     return StringItemTemplate;
+                }
+                else if (argument.AvailableValues.Count() == 0)
+                {
+                    return NumericItemTemplate;
                 }
                 else
                 {

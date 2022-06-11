@@ -19,7 +19,7 @@ namespace DecompilerFernflower
     {
         protected override string FriendlyName => "Fernflower";
         public override string Id => $"6168218c.{nameof(DecompilerFernflower)}";
-        protected override string DecompilerId => $"6168218c.{nameof(FernflowerDecompiler)}";
+        protected override string DecompilerId => $"org.jetbrains.fernflower";
 
         protected override (Type jvmDecompiler, Type embeddedDecompiler) Decompilers
             => (typeof(JVMFernflowerDecompiler), typeof(IKVMFernflowerDecompiler));

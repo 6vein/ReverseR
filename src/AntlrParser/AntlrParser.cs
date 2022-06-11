@@ -136,7 +136,7 @@ namespace AntlrParser
         {
             string tmp = content;
             PreParse(ref tmp);
-            Java8Lexer lexer = new Java8Lexer(CharStreams.fromstring(tmp));
+            Java8Lexer lexer = new Java8Lexer(CharStreams.fromString(tmp));
             Java8Parser parser = new Java8Parser(new CommonTokenStream(lexer));
 
             JavaClassVisitor visitor = new JavaClassVisitor() { baseClassPath=_basePath.ClassPath,filePath=_basePath.Path };
