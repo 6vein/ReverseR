@@ -17,7 +17,8 @@ namespace ReverseR.Common.ViewUtilities
         public Task<string> GetContentAsync();
         public Task SelectAsync(int start, int end);
         public IDecompileViewModel Parent { get; set; }
-        public Task LoadAsync(string path, IJPath classpath);
+        public void SetJPath(IJPath classPath);
+        public Task LoadAsync(string path);
         public void AttachDecompileTask(IBackgroundTask decompileTask);
         public IBackgroundTask GetAttachedDecompileTask();
         /// <summary>

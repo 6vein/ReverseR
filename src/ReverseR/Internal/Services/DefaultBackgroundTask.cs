@@ -24,6 +24,8 @@ namespace ReverseR.Internal.Services
         public string TaskName { get => _taskName; set => SetProperty(ref _taskName, value); }
         string _taskdescription;
         public string TaskDescription { get => _taskdescription; set => SetProperty(ref _taskdescription, value); }
+        bool _isStarted;
+        public bool IsStarted { get => _isStarted; protected set => SetProperty(ref _isStarted, value); }
         bool _isCompleted;
         public bool IsCompleted { get => _isCompleted;protected set => SetProperty(ref _isCompleted, value); }
         protected TaskCompletionSource<bool> _taskCompletionSource = new TaskCompletionSource<bool>();
@@ -133,6 +135,7 @@ namespace ReverseR.Internal.Services
             },OnCompletedCallbackScheduler);
             this.GetIContainer().Resolve<IEventAggregator>().GetEvent<TaskStartedEvent>().Publish(this);
             Task.Start();
+            IsStarted = true;
         }
 
         internal void SetTask(Task task)
@@ -254,6 +257,7 @@ namespace ReverseR.Internal.Services
             }, OnCompletedCallbackScheduler);
             this.GetIContainer().Resolve<IEventAggregator>().GetEvent<TaskStartedEvent>().Publish(this);
             Task.Start();
+            IsStarted = true;
         }
     }
 }

@@ -24,6 +24,9 @@ using System.ComponentModel;
 using System.Windows.Data;
 using System.Diagnostics;
 using ReverseR.Common.Controls;
+using System.Xml;
+using System.Text;
+using ReverseR.Common.Code;
 
 namespace ReverseR.DecompileView.Default.ViewModels
 {
@@ -58,14 +61,12 @@ namespace ReverseR.DecompileView.Default.ViewModels
                 FirePluginNotification(IPlugin.NotifyOptions.ArchiveOpened);
             }
         }
-
-        protected override IDocumentViewModel _InnerOpenDocument(IJPath path)
+        IDocumentViewModel CreateDocument(IJPath path)
         {
             DecompileDocumentViewModel viewModel;
             viewModel = Container.Resolve<DecompileDocumentViewModel>();
             viewModel.Parent = this;
             viewModel.Title = Path.GetFileName(path.Path);
-            Documents.Add(viewModel);
             /*viewModel.TokenSource = new CancellationTokenSource();
             viewModel.DecompileTask = new Task(() =>
               {
@@ -93,6 +94,7 @@ namespace ReverseR.DecompileView.Default.ViewModels
                   }
               });
             viewModel.DecompileTask.Start();*/
+            viewModel.SetJPath(path);
             viewModel.DecompTaskTokenSource = new CancellationTokenSource();
             IBackgroundTask backgroundTask = null;
             backgroundTask = Container.Resolve<IBackgroundTaskBuilder>()
@@ -121,8 +123,8 @@ namespace ReverseR.DecompileView.Default.ViewModels
                     IDecompileResult result = null;
                     try
                     {
-                        result = Decompiler.Decompile(tempPath, 
-                            r => { if (backgroundTask != null) backgroundTask.TaskDescription = r; }, 
+                        result = Decompiler.Decompile(tempPath,
+                            r => { if (backgroundTask != null) backgroundTask.TaskDescription = r; },
                             token, BaseDirectory + "\\raw.jar");
                         if (result.ResultCode == DecompileResultEnum.Success)
                         {
@@ -133,12 +135,12 @@ namespace ReverseR.DecompileView.Default.ViewModels
                             string newFileName = files[0];
                             if (EnableDecompiledFileCache)
                             {
-                                newFileName = Path.Combine(basedir+'\\', Path.GetFileNameWithoutExtension(files[0]) + ".java");
+                                newFileName = Path.Combine(basedir + '\\', Path.GetFileNameWithoutExtension(files[0]) + ".java");
                                 File.Copy(files[0], newFileName, true);
                                 MapSourceToMd5.Add(newFileName, APIHelper.GetMd5Of(newFileName));
                             }
                             StatusMessage = backgroundTask.TaskDescription = "Processing " + path.ClassPath;
-                            await viewModel.LoadAsync(newFileName, path);
+                            await viewModel.LoadAsync(newFileName);
 
                             Application.Current.Dispatcher.Invoke(() =>
                             {
@@ -190,7 +192,13 @@ namespace ReverseR.DecompileView.Default.ViewModels
                 .WithDescription($"Decompiler started")
                 .Build();
             viewModel.AttachDecompileTask(backgroundTask);
-            viewModel.BackgroundTask.Start();
+            return viewModel;
+        }
+        protected override IDocumentViewModel _InnerOpenDocument(IJPath path)
+        {
+            IDocumentViewModel viewModel = CreateDocument(path);
+            viewModel.GetAttachedDecompileTask().Start();
+            Documents.Add(viewModel);
             return viewModel;
         }
         public override IDocumentViewModel ActiveDocument { get; protected set; }
@@ -200,24 +208,64 @@ namespace ReverseR.DecompileView.Default.ViewModels
         }
         #endregion
         #region UserInterface
+        [Serializable]
+        class DockOptions
+        {
+            public AnchorableShowStrategy Side { get; set; }
+            public double Width { get; set; }
+            public double Height { get; set; }
+        }
         public DockingManager Manager { get; set; }
         public Dictionary<IDockablePlugin, LayoutAnchorable> MapPluginAnchor { get; protected set; } = new Dictionary<IDockablePlugin, LayoutAnchorable>();
 
         #endregion
         #region Extensibility
+        protected override void LoadLayout()
+        {
+            try
+            {
+                using (var reader = new XmlTextReader(Path.Combine(BaseDirectory, "layout.xml")))
+                {
+                    Manager.Layout.ReadXml(reader);
+                }
+            }
+            catch(Exception _)
+            {
+            }
+        }
+        protected override void SaveLayout()
+        {
+            try
+            {
+                using (var writer = new XmlTextWriter(Path.Combine(BaseDirectory, "layout.xml"),Encoding.UTF8))
+                {
+                    writer.WriteStartElement("DockLayouts");
+                    Manager.Layout.WriteXml(writer);
+                    writer.WriteEndElement();
+                }
+            }
+            catch(Exception _) { }
+        }
         protected override void InitalizePlugins()
         {
             foreach(IDockablePlugin plugin in Plugins)
             {
-                LayoutAnchorable layoutAnchorable = new LayoutAnchorable();
+                LayoutAnchorable layoutAnchorable = Manager.Layout.Descendents()
+                    .FirstOrDefault(elem => elem is LayoutAnchorable anchorable &&
+                        anchorable.ContentId == plugin.Id) as LayoutAnchorable;
+                if (layoutAnchorable == null)
+                {
+                    layoutAnchorable = new LayoutAnchorable();
+                    layoutAnchorable.AddToLayout(Manager, plugin.Side);
+                }
                 layoutAnchorable.Hiding += (s, e) =>
                 {
                     RaisePropertyChanged();
                 };
                 var container = CreatePluginRegion(plugin);
                 layoutAnchorable.Content = container;
+                layoutAnchorable.ContentId = plugin.Id;
                 MapPluginAnchor[plugin] = layoutAnchorable;
-                layoutAnchorable.AddToLayout(Manager, plugin.Side);
                 //(layoutAnchorable.Parent as LayoutAnchorablePane).DockMinWidth = plugin.InitialWidth;
                 //(layoutAnchorable.Parent as LayoutAnchorablePane).DockMinHeight = plugin.InitialHeight;
                 plugin.InitalizePlugin(this);
@@ -253,6 +301,8 @@ namespace ReverseR.DecompileView.Default.ViewModels
              if (Manager.ActiveContent is IDocumentViewModel vm)
              {
                  ActiveDocument = vm;
+                 if (vm.GetAttachedDecompileTask() != null && !vm.GetAttachedDecompileTask().IsStarted)
+                     vm.GetAttachedDecompileTask().Start();
              }
          };
         EventHandler<DocumentClosingEventArgs> DocumentClosing => (s, e) =>
@@ -265,6 +315,42 @@ namespace ReverseR.DecompileView.Default.ViewModels
          };
         protected override void InitializeSelf()
         {
+            List<IDocumentViewModel> documents = new List<IDocumentViewModel>();
+            List<LayoutDocument> invalidDocuments = new List<LayoutDocument>();
+            IJPath activeDocumentPath = null;
+            foreach (var document in Manager.Layout.Descendents().Where(it => it is LayoutDocument)
+                .Select(it=>it as LayoutDocument))
+            {
+                string classPath = document.ContentId;
+                LinkedList<string> periods = new LinkedList<string>(classPath.Split('/'));
+                ParseTreeNode root = ASTEntry;
+                //locate the node
+                while (periods.Count > 0 && root.Children.Count > 0)
+                {
+                    root = root.Children.First(item => item.Id == periods.First());
+                    periods.RemoveFirst();
+                }
+                if (document.IsSelected)
+                {
+                    activeDocumentPath = root;
+                }
+                if (periods.Count == 0)
+                {
+                    IDocumentViewModel viewModel = CreateDocument(root);
+                    documents.Add(viewModel);
+                    document.Content = viewModel;
+                }
+                invalidDocuments.Add(document);
+            }
+            foreach(var document in invalidDocuments)
+            {
+                document.Parent.RemoveChild(document);
+            }
+            Documents.AddRange(documents);
+            if (activeDocumentPath != null)
+            {
+                Documents.FirstOrDefault(it => it.JPath == activeDocumentPath)?.GetAttachedDecompileTask()?.Start();
+            }
             Manager.ActiveContentChanged += ActiveContentChanged;
             Manager.DocumentClosing += DocumentClosing;
             Manager.DocumentClosed += DocumentClosed;

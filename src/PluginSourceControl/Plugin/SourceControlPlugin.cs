@@ -11,12 +11,16 @@ using ReverseR.Common.ViewUtilities;
 using ReverseR.Common.Events;
 using Xceed.Wpf.AvalonDock.Layout;
 using System.Collections.ObjectModel;
+using System.Xml.Serialization;
+using System.IO;
+using System.Runtime.Remoting.Messaging;
 
 namespace PluginSourceControl.Plugin
 {
-    public class SourceControlPlugin:IDockablePlugin
+    public class SourceControlPlugin : IDockablePlugin
     {
-        protected IContainerProvider Container { get;private set; }
+        public string Id => "6168218c.SourceControlPlugin";
+        protected IContainerProvider Container { get; private set; }
         public AnchorableShowStrategy Side { get; set; }
         public object View { get; set; }
         public IPluginViewModel ViewModel { get; set; }
@@ -25,11 +29,11 @@ namespace PluginSourceControl.Plugin
         public string PluginName => "SourceControl";
         public string RegionName { get; set; }
         public double InitialWidth => 45;
-        public double InitialHeight { get; }
+        public double InitialHeight => 56;
         public void InitalizePlugin(IDecompileViewModel parent)
         {
             ParentViewModel = parent;
-            RegionName = $"{PluginName}{{{ParentViewModel.Guid.ToString()}}}";
+            RegionName = $"{PluginName}{{{ParentViewModel.Guid}}}";
             var view = Container.Resolve<Views.ViewSourceControl>();
             ViewModel = view.DataContext as IPluginViewModel;
             ViewModel.Parent = parent;
@@ -41,7 +45,7 @@ namespace PluginSourceControl.Plugin
             Container.Resolve<IRegionManager>().Regions[RegionName].RemoveAll();
         }
 
-        void OnArchiveOpened((string baseDir,Guid guid) payload)
+        void OnArchiveOpened((string baseDir, Guid guid) payload)
         {
             (ViewModel as ViewModels.ViewSourceControlViewModel).UpdateSourceTree(payload.baseDir);
         }

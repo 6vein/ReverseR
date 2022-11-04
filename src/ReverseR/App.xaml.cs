@@ -89,7 +89,7 @@ namespace ReverseR
                 IsProcessingUnhandledException = true;
                 try
                 {
-                    Container.Resolve<IDialogService>().ReportError($"Fatal:An unhandled exception:{e.Exception.ToString()}\nMessage:{e.Exception.Message}\nFrom:{e.Exception.Source}", null, e.Exception.StackTrace);
+                    Container.Resolve<IDialogService>().ReportError($"Fatal:An unhandled exception:{e.Exception.GetType()}\nMessage:{e.Exception.Message}\nFrom:{e.Exception.Source}", null, e.Exception.StackTrace);
                 }
                 finally
                 {

@@ -123,7 +123,7 @@ namespace PluginSourceControl.ViewModels
                         DrawingImage drawingImage = new DrawingImage();
                         drawingImage.Drawing = XamlReader.Parse(xmlNode.InnerXml) as DrawingGroup;
                         node.Icon = node.ExpandedIcon = drawingImage;
-                        node.Children = new ObservableCollection<SourceTreeNode>() { new SourceTreeNode() { ParseTreeNode=item.Children[0] } };
+                        node.Children = new ObservableCollection<SourceTreeNode>() { new SourceTreeNode() { ParseTreeNode = item.Children[0] } };
                     });
                     lstRet.Add(node);
                 }
@@ -136,7 +136,7 @@ namespace PluginSourceControl.ViewModels
                             var ico = Imaging.CreateBitmapSourceFromHIcon(icon.Handle, new Int32Rect(0, 0, icon.Width, icon.Height), BitmapSizeOptions.FromEmptyOptions());
                             node.Icon = node.ExpandedIcon = ico;
                         });
-                    }                        
+                    }
                     lstRet.Add(node);
                 }
                 else
@@ -174,26 +174,27 @@ namespace PluginSourceControl.ViewModels
                   if (item != null)
                   {
                       var node = (item.DataContext as SourceTreeNode);
+                      IDocumentViewModel associatedDocument = node.GetAssociatedDocument();
                       if (node.ParseTreeNode.ItemType == IClassParser.ItemType.CompilationUnit)
                       {
-                          if (node.AssociatedDocument == null||!Parent.Documents.Contains(node.AssociatedDocument))
-                              node.AssociatedDocument = Parent.OpenDocument(node.ParseTreeNode);
+                          if (associatedDocument == null)
+                              Parent.OpenDocument(node.ParseTreeNode);
                           else
-                              Parent.ActivateDocument(node.AssociatedDocument);
+                              Parent.ActivateDocument(associatedDocument);
                       }
-                      else if (node.ParseTreeNode.ItemType != IClassParser.ItemType.Directory 
+                      else if (node.ParseTreeNode.ItemType != IClassParser.ItemType.Directory
                       && node.ParseTreeNode.ItemType != IClassParser.ItemType.__InternalPlaceHolder
                       && node.ParseTreeNode.ItemType != IClassParser.ItemType.Others)
                       {
-                          if (node.CompilationUnitNode.AssociatedDocument == null || !Parent.Documents.Contains(node.CompilationUnitNode.AssociatedDocument))
+                          if (associatedDocument == null)
                           {
-                              node.CompilationUnitNode.AssociatedDocument = Parent.OpenDocument(node.CompilationUnitNode.ParseTreeNode);
+                              Parent.OpenDocument(node.CompilationUnitNode.ParseTreeNode);
                           }
                           else
-                              Parent.ActivateDocument(node.CompilationUnitNode.AssociatedDocument);
+                              Parent.ActivateDocument(associatedDocument);
                           Task.Run(async () =>
                           {
-                              await node.CompilationUnitNode.AssociatedDocument.SelectAsync(node.ParseTreeNode.Start, node.ParseTreeNode.End);
+                              await node.GetAssociatedDocument().SelectAsync(node.ParseTreeNode.Start, node.ParseTreeNode.End);
                           });
                       }
                       else if (node.ParseTreeNode.ItemType == IClassParser.ItemType.Others)

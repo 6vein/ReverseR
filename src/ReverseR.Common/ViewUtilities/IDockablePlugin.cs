@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xceed.Wpf.AvalonDock.Layout;
 using ReverseR.Common.Extensibility;
+using System.IO;
 
 namespace ReverseR.Common.ViewUtilities
 {
@@ -21,9 +22,9 @@ namespace ReverseR.Common.ViewUtilities
     {
         public string PluginName { get; }
         public AnchorableShowStrategy Side { get; set; }
-        public object View { get; set; }
-        public IPluginViewModel ViewModel { get; set; }
         public double InitialWidth { get; }
         public double InitialHeight { get; }
+        public object View { get; set; }
+        public IPluginViewModel ViewModel { get; set; }
     }
 }

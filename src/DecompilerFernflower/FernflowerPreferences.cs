@@ -38,11 +38,19 @@ namespace DecompilerFernflower.Decompile
             }
             return "-" + Name + '=' + AvailableValues[ValueIndex] + ' ';
         }
+        [JsonConstructor]
+        public FernflowerArguments()
+        {
+            Name = "";
+            Description = "";
+            AvailableValues = new string[0];
+            ValueIndex = 0;
+        }
         public FernflowerArguments(string name, string descr, string[] values,int index)
         {
             Name = name;
             Description = descr;
-            AvailableValues = values;
+            AvailableValues = values ?? new string[0];
             ValueIndex = index;
         }
     }
@@ -173,7 +181,11 @@ namespace DecompilerFernflower.Decompile
 
         public void DeserializePart(string value)
         {
-            Arguments = JsonConvert.DeserializeObject<FernflowerArguments[]>(value);
+            Arguments = JsonConvert.DeserializeObject<FernflowerArguments[]>(value) ?? GetDefaultArguments();
+            if (this.GetInvalidArguments(Arguments).Any())
+            {
+                this.MergeInvalidArguments(Arguments);
+            }
         }
     }
 }

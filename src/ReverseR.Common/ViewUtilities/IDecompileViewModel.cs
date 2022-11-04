@@ -7,19 +7,20 @@ using System.Threading.Tasks;
 using ReverseR.Common.Extensibility;
 using ReverseR.Common.DecompUtilities;
 using System.Threading;
+using ReverseR.Common.Collections;
 
 namespace ReverseR.Common.ViewUtilities
 {
     /// <summary>
     /// Classes implementing this interface should Publish the <see cref="Events.MenuUpdatedEvent"/> to change the menu
-    /// The views associated with this viewmodel should call <see cref="Initalize"/> after creation(for non-Mvvm capability)
+    /// The views associated with this viewmodel should call <see cref="Initialize"/> after creation(for non-Mvvm capability)
     /// </summary>
     public interface IDecompileViewModel:ITitleSupport
     {
         /// <summary>
         /// Initalize the view and its plugins
         /// </summary>
-        public void Initalize();
+        public void Initialize();
         /// <summary>
         /// Close the view
         /// </summary>
@@ -47,12 +48,13 @@ namespace ReverseR.Common.ViewUtilities
         public void PublishMenuUpdate();
         /// <summary>
         /// Gets the parse tree,empty or null <paramref name="classPath"/> for the entry root.
-        /// Every opened decompile view has a entry, such as <see cref="DecompileViewModelBase.ASTEntry"/>
+        /// Every opened decompile view has a entry, such as <see cref="ASTEntry"/>
         /// </summary>
         /// <param name="classPath"></param>
         /// <param name="parseCompilationUnit"></param>
         /// <returns></returns>
         public Task<Code.ParseTreeNode> GetParseTreeAsync(string classPath, bool parseCompilationUnit = false);
+        public Code.ParseTreeNode ASTEntry { get; }
         public Guid Guid { get; }
         /// <summary>
         /// A list that manages the plugins(<see cref="IPlugin"/> and <see cref="IDockablePlugin"/>).
@@ -60,7 +62,7 @@ namespace ReverseR.Common.ViewUtilities
         /// </summary>
         public List<IPlugin> Plugins { get; }
         public IDocumentViewModel ActiveDocument { get; }
-        public ObservableCollection<IDocumentViewModel> Documents { get; set; }
+        public PartiallyObservableCollection<IDocumentViewModel> Documents { get; set; }
         public CommonDecompiler Decompiler { get; }
         public string FilePath { get; }
         public string StatusMessage { get; }

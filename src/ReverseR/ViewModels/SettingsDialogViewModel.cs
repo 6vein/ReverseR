@@ -71,14 +71,14 @@ namespace ReverseR.ViewModels
     {
         public class ModuleEnableInfo:BindableBase
         {
-            public GlobalUtils.ModuleInfo ModuleInfo { get; set; }
+            public GlobalUtils.RRModuleInfo ModuleInfo { get; set; }
             public bool Enabled { get => ModuleInfo.Enabled; set { ModuleInfo.Enabled = value;RaisePropertyChanged(); }}
         }
         private string _ModulePath;
         public string ModuleDirectory { get => _ModulePath; set => SetProperty(ref _ModulePath, value); }
         private ObservableCollection<ModuleEnableInfo> _ModuleNames;
         public ObservableCollection<ModuleEnableInfo> ModuleInfos { get => _ModuleNames; set => SetProperty(ref _ModuleNames, value); }
-        public GlobalUtils.ModuleInfo CreateModuleInfo(string path)
+        public GlobalUtils.RRModuleInfo CreateModuleInfo(string path)
         {
             if (File.Exists(path))
             {
@@ -113,7 +113,7 @@ namespace ReverseR.ViewModels
                             string name = loader.GetModuleId(items[0]);
                             if(name!= null)
                             {
-                                return new GlobalUtils.ModuleInfo()
+                                return new GlobalUtils.RRModuleInfo()
                                 {
                                     Id = name,
                                     Path = path,
@@ -153,7 +153,7 @@ namespace ReverseR.ViewModels
             ModuleInfos = new ObservableCollection<ModuleEnableInfo>(
                 GlobalUtils.GlobalConfig.ModuleInfos.Select(info => new ModuleEnableInfo()
             {
-                ModuleInfo = new GlobalUtils.ModuleInfo(info)
+                ModuleInfo = new GlobalUtils.RRModuleInfo(info)
             }));
         }
     }
@@ -328,6 +328,16 @@ namespace ReverseR.ViewModels
         SettingsViewModelBase _content;
         public SettingsViewModelBase Content { get => _content; set => SetProperty(ref _content, value); }
     }
+    internal class LazyLoadTreeNode : SettingsTreeNode
+    {
+        public bool Loaded { get; set; } = false;
+        public Action<LazyLoadTreeNode> LoadAction { get; set; }
+        public void Load()
+        {
+            LoadAction?.Invoke(this);
+            Loaded = true;
+        }
+    }
     internal class SettingsDialogViewModel: DialogViewModelBase
     {
         ObservableCollection<SettingsTreeNode> _treeNodes;
@@ -352,7 +362,7 @@ namespace ReverseR.ViewModels
                     }
                 }
             });
-            TreeNodes.Add(new SettingsTreeNode()
+            TreeNodes.Add(new LazyLoadTreeNode()
             {
                 Text = "Decompile",
                 Children = new ObservableCollection<SettingsTreeNode>(
@@ -363,11 +373,16 @@ namespace ReverseR.ViewModels
                             Text="General",
                             Content=new DecompileGeneralViewModel()
                         }
-                    }.Concat(GlobalUtils.Decompilers.Select((it,i)=>new SettingsTreeNode()
-                    {
-                        Text=it.FriendlyName,
-                        Content=new DecompilerSettingsViewModel(i)
-                    })))
+                    }),
+                LoadAction = node =>
+                {
+                    node.Children = new ObservableCollection<SettingsTreeNode>(
+                        node.Children.Concat(GlobalUtils.Decompilers.Select((it, i) => new SettingsTreeNode()
+                        {
+                            Text = it.FriendlyName,
+                            Content = new DecompilerSettingsViewModel(i)
+                        })));
+                }
             });
             TreeNodes[0].IsSelected = true;
             SetActiveNode(TreeNodes[0]);
@@ -387,6 +402,10 @@ namespace ReverseR.ViewModels
         protected void SetActiveNode(SettingsTreeNode node)
         {
             ActiveNode = node;
+            if(node is LazyLoadTreeNode lazyNode)
+            {
+                lazyNode.Load();
+            }
             if (ActiveNode.Children != null && ActiveNode.Children.Count > 0)
             {
                 ActiveNode.IsExpanded = true;

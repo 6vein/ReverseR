@@ -26,7 +26,7 @@ namespace DecompilerFernflower
 
         public override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            RegisterDecompilerHelper<FernflowerPreferences>("fernflower.json");
+            RegisterDecompilerHelper<FernflowerPreferences>();
         }
     }
 }

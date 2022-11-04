@@ -82,11 +82,14 @@ namespace ReverseR.Common.ViewUtilities
         protected Task LoadTask { get; set; }
         public abstract Task SelectAsync(int start,int end);
         public abstract Task<string> GetContentAsync();
-        public virtual Task LoadAsync(string path, IJPath classPath)
+        public void SetJPath(IJPath classPath)
         {
             JPath = classPath;
+        }
+        public virtual Task LoadAsync(string path)
+        {
             InternalFilePath = path;
-            LoadTask = _InnerLoadAsync(path, classPath);
+            LoadTask = _InnerLoadAsync(path, JPath);
             return LoadTask;
         }
         public abstract Task _InnerLoadAsync(string path, IJPath classPath);

@@ -26,7 +26,7 @@ namespace DecompilerCFR
 
         public override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            RegisterDecompilerHelper<CFRPreferences>("cfr.json");
+            RegisterDecompilerHelper<CFRPreferences>();
         }
     }
 }

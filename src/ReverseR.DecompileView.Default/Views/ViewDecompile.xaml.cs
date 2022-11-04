@@ -25,11 +25,8 @@ namespace ReverseR.DecompileView.Default.Views
         {
             InitializeComponent();
             //I hate Avalondock with so little support of Mvvm
+            manager.LayoutUpdateStrategy = new ViewModels.DocumentLayoutUpdateStrategy();
             (DataContext as ViewModels.ViewDecompileViewModel).Manager = manager;
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                (DataContext as ViewModels.ViewDecompileViewModel).Initalize();
-            });
         }
 
         public void SetDecompiler(string id)

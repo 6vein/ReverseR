@@ -17,6 +17,7 @@ namespace ReverseR.Common.Services
         #region Bindings
         public string TaskName { get; set; }
         public string TaskDescription { get; set; }
+        public bool IsStarted { get; }
         public bool IsCompleted { get; }
         #endregion
         /// <summary>

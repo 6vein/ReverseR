@@ -44,6 +44,7 @@ namespace ReverseR.Common.DecompUtilities
         /// <returns></returns>
         string GetArgumentsString(string path, string outpath = null, params string[] referlib);
         IEnumerable<IArgument> GetArguments();
+        IArgument[] GetDefaultArguments();
         bool SetArguments(IEnumerable<IArgument> arguments);
         /// <summary>
         /// Get path of the executable jar file for decompiling,but can also return null or throw <see cref="NotImplementedException"/>
@@ -57,6 +58,10 @@ namespace ReverseR.Common.DecompUtilities
         {
             public bool Equals(ICommonPreferences.IArgument x, ICommonPreferences.IArgument y)
             {
+                if (x.AvailableValues == null || y.AvailableValues == null)
+                {
+                    return false;
+                }
                 if (x.AvailableValues.Count() == 1 && y.AvailableValues.Count() == 1)
                 {
                     return x.ValueIndex == -1 && y.ValueIndex == -1;
@@ -78,7 +83,19 @@ namespace ReverseR.Common.DecompUtilities
         }
         public static IEnumerable<ICommonPreferences.IArgument> GetInvalidArguments(this ICommonPreferences preferences,IEnumerable<ICommonPreferences.IArgument> arguments)
         {
-            return arguments.Except(preferences.GetArguments(), new ArgumentValidComparer());
+            return arguments.Except(preferences.GetDefaultArguments(), new ArgumentValidComparer());
+        }
+        public static void MergeInvalidArguments(this ICommonPreferences preferences, IList<ICommonPreferences.IArgument> arguments)
+        {
+            var defs = preferences.GetDefaultArguments();
+            var comparer = new ArgumentValidComparer();
+            for(int i = 0; i < defs.Length; i++)
+            {
+                if (!comparer.Equals(defs[i], arguments[i]))
+                {
+                    arguments[i] = defs[i];
+                }
+            }
         }
         public static bool IsStringArgument(this ICommonPreferences.IArgument argument)
         {

@@ -25,6 +25,7 @@ using ReverseR.Common.Code;
 using System.Diagnostics;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
+using ReverseR.Common.Collections;
 
 namespace ReverseR.Common.ViewUtilities
 {
@@ -126,8 +127,12 @@ namespace ReverseR.Common.ViewUtilities
             }
             catch (Exception e)
             {
-                Container.Resolve<IDialogService>().ReportError($"An error has occoured:\n{e.Message}", r => { }, e.StackTrace);
+                Container.Resolve<IDialogService>().ReportError(e, r => { }, e.StackTrace);
             }
+            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+            {
+                Initialize();
+            });
             PreOpenfileCallback?.Invoke();
             this.HandleOpenFile();
             AfterOpenfileCallback?.Invoke();
@@ -139,8 +144,8 @@ namespace ReverseR.Common.ViewUtilities
 
 #endregion
 #region UserInterface
-        private ObservableCollection<IDocumentViewModel> _documents = new ObservableCollection<IDocumentViewModel>();
-        public ObservableCollection<IDocumentViewModel> Documents { get => _documents; set => SetProperty(ref _documents, value); }
+        private PartiallyObservableCollection<IDocumentViewModel> _documents = new PartiallyObservableCollection<IDocumentViewModel>();
+        public PartiallyObservableCollection<IDocumentViewModel> Documents { get => _documents; set => SetProperty(ref _documents, value); }
         string _title;
         public string Title
         {
@@ -169,13 +174,17 @@ namespace ReverseR.Common.ViewUtilities
         }
         protected abstract void InitializeSelf();
         protected abstract void UnloadSelf();
-        public void Initalize()
+        protected abstract void LoadLayout();
+        protected abstract void SaveLayout();
+        public void Initialize()
         {
+            LoadLayout();
             InitalizePlugins();
             InitializeSelf();
         }
         public void Unload()
         {
+            SaveLayout();
             UnloadPlugins();
             UnloadSelf();
             //clean up

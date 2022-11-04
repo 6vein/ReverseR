@@ -29,7 +29,10 @@ namespace PluginSourceControl.ViewModels
     public class SourceTreeNode : BindableBase
     {
         public ViewSourceControlViewModel ParentViewModel { get; set; }
-        public IDocumentViewModel AssociatedDocument { get; set; }
+        public IDocumentViewModel GetAssociatedDocument()
+        {
+            return ParentViewModel.Parent.Documents.FirstOrDefault(doc => doc.JPath == CompilationUnitNode);
+        }
         public ParseTreeNode ParseTreeNode { get; set; }
         public SourceTreeNode CompilationUnitNode { get;private set; }
         internal static Dictionary<string, string> IconResource => new Dictionary<string, string>()

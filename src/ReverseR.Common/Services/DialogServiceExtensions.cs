@@ -22,6 +22,10 @@ namespace ReverseR.Common.Services
                 dialogService.ShowDialog("ErrorDialog", parameters, callback);
             });
         }
+        public static void ReportError(this IDialogService dialogService, Exception ex, Action<IDialogResult> callback, string stacktrace = null)
+        {
+            dialogService.ReportError($"An error has occoured:\n{ex.Message}", callback, ex.StackTrace);
+        }
         public static void PresentConfirmation(this IDialogService dialogService,string message, Action<IDialogResult> callback)
         {
             Application.Current.Dispatcher.Invoke(() =>

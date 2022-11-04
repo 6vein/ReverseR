@@ -18,6 +18,8 @@ namespace ReverseR.Common.Extensibility
             TextEdited = 1 << 2
         }
 
+        public string Id { get; }
+
         public NotifyOptions NotifyOption { get; }
 
         public IDecompileViewModel ParentViewModel { get; }

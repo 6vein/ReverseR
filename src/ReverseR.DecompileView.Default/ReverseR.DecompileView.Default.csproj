@@ -126,6 +126,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Settings.cs" />
+    <Compile Include="ViewModels\DocumentLayoutUpdateStrategy.cs" />
     <Compile Include="ViewModels\DocumentTemplateSelector.cs" />
     <Compile Include="ViewModels\DefaultDocumentViewModel.cs" />
     <Compile Include="ViewModels\ViewDecompileViewModel.cs" />

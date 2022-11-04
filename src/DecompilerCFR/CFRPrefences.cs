@@ -40,11 +40,19 @@ namespace DecompilerCFR.Decompile
             }
             return "--" + Name + ' ' + AvailableValues[ValueIndex] + ' ';
         }
+        [JsonConstructor]
+        public CFRArguments()
+        {
+            Name = "";
+            Description = "";
+            AvailableValues = new string[0];
+            ValueIndex = 0;
+        }
         public CFRArguments(string name, string descr, string[] values, int index)
         {
             Name = name;
             Description = descr;
-            AvailableValues = values;
+            AvailableValues = values ?? new string[0];
             ValueIndex = index;
         }
     }
@@ -219,6 +227,10 @@ namespace DecompilerCFR.Decompile
         public void DeserializePart(string value)
         {
             Arguments = JsonConvert.DeserializeObject<CFRArguments[]>(value);
+            if (this.GetInvalidArguments(Arguments).Any())
+            {
+                this.MergeInvalidArguments(Arguments);
+            }
         }
     }
 }
