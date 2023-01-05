@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using System.ComponentModel;
 using Prism.Ioc;
 using ICSharpCode.SharpZipLib.Zip;
+using ReverseR.Common.IO;
 
 namespace DecompilerCFR.Decompile
 {
@@ -22,15 +23,14 @@ namespace DecompilerCFR.Decompile
             Container = containerProvider;
             Options = GlobalUtils.Decompilers.First(info => info.Id == Id).Options;
         }
-        protected string tempJarPath;
-        protected void PreProcessFiles(string path)
+        protected string PreProcessFiles(string path)
         {
             FastZip zip = new FastZip();
-            var tempPath = Path.GetTempFileName();
-            File.Delete(tempPath);
+            var tempPath = GlobalUtils.GetTempDirectoryPath();
             Directory.CreateDirectory(tempPath);
-            tempJarPath = Path.Combine(tempPath, "temp.jar");
+            var tempJarPath = Path.Combine(tempPath, "temp.jar");
             zip.CreateZip(tempJarPath, path, true, "");
+            return tempJarPath;
         }
         protected void PostProcessFiles(string path,string target)
         {
@@ -39,8 +39,8 @@ namespace DecompilerCFR.Decompile
             {
                 File.Copy(file, Path.Combine(target, Path.GetFileName(file)));
             }
-            Directory.Delete(Path.GetDirectoryName(tempJarPath), true);
-            tempJarPath = "";
+            var jarDir = Path.GetDirectoryName(path);
+            FileUtilities.SafeDeleteDirectory(jarDir);
         }
     }
 }

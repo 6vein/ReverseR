@@ -23,7 +23,7 @@ namespace DecompilerCFR.Decompile.Internal
             string output = null;
             string output0 = null;
             IDecompileResult result = Container.Resolve<IDecompileResult>();
-            PreProcessFiles(folder);
+            var tempJarPath = PreProcessFiles(folder);
             //check if path is a directory
             if (Directory.Exists(folder))
             {

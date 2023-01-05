@@ -281,5 +281,12 @@ namespace ReverseR.Common
         {
             return Decompilers[index].ViewType;
         }
+        public static string GetTempDirectoryPath()
+        {
+            string file = Path.GetTempFileName();
+            string name = Path.GetFileName(file);
+            File.Delete(file);
+            return Path.Combine(GlobalConfig.CachePath, "Temp", name);
+        }
     }
 }

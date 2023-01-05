@@ -17,11 +17,13 @@ using System.Windows.Media;
 using System.Reflection;
 using System.Collections.Generic;
 using Prism.Services.Dialogs;
+using System.Windows;
 
 namespace ReverseR.ViewModels
 {
     public class MainWindowViewModel : BindableBase
     {
+        SubscriptionToken token = null;
         private IRegionManager regionManager;
         private IContainerProvider containerProvider;
         #region Bindings
@@ -185,6 +187,14 @@ namespace ReverseR.ViewModels
             Edit.Children.Add(this.CreateMenu("_Paste", ApplicationCommands.Copy, "Ctrl+V"));
             RootMenus.Add(Edit);
 
+            RootMenuItemWrapper Help = new RootMenuItemWrapper()
+            { Model = containerProvider.Resolve<IMenuViewModel>(), Alignment = System.Windows.TextAlignment.Center, Width = 56 };
+            Help.Text = "_Help";
+            Help.Children = new ObservableCollection<IMenuViewModel>();
+            Help.Children.Add(this.CreateMenu("_About", ApplicationCommands.NotACommand));
+            
+            RootMenus.Add(Help);
+
             return 2;
         }
 
@@ -212,6 +222,29 @@ namespace ReverseR.ViewModels
                     }
                 }
             }
+        }
+        internal void OnViewActivated(IDecompileViewModel viewModel)
+        {
+            if(ActiveContent is FrameworkElement element)
+            {
+                if(element.DataContext is IDecompileViewModel prevModel)
+                {
+                    if (prevModel != viewModel && token != null)
+                    {
+                        containerProvider.Resolve<IEventAggregator>().GetEvent<MenuUpdatedEvent>().Unsubscribe(token);
+                    }
+                }
+            }
+            token = containerProvider.Resolve<IEventAggregator>().GetEvent<MenuUpdatedEvent>().
+                Subscribe(OnMenuUpdated, ThreadOption.PublisherThread, true, r => r.guid == viewModel.Guid);
+        }
+        internal void OnAllViewDeactivated()
+        {
+            if(token != null)
+            {
+                containerProvider.Resolve<IEventAggregator>().GetEvent<MenuUpdatedEvent>().Unsubscribe(token);
+            }
+            RestoreMenu();
         }
 
         internal bool HandleMenuCanExecuteEvent(object sender, CanExecuteRoutedEventArgs e)

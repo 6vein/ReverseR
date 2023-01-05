@@ -27,6 +27,10 @@ using ReverseR.Common.Controls;
 using System.Xml;
 using System.Text;
 using ReverseR.Common.Code;
+using ReverseR.Common.Commands;
+using System.Web.UI.WebControls;
+using System.Security.Cryptography.X509Certificates;
+using ReverseR.Common.IO;
 
 namespace ReverseR.DecompileView.Default.ViewModels
 {
@@ -109,8 +113,7 @@ namespace ReverseR.DecompileView.Default.ViewModels
                         }
                     }
                     var basedir = Path.GetDirectoryName(path.Path);
-                    var tempPath = Path.GetTempFileName();
-                    File.Delete(tempPath);
+                    var tempPath = GlobalUtils.GetTempDirectoryPath();
                     Directory.CreateDirectory(tempPath);
                     File.Copy(path.Path, Path.Combine(tempPath, Path.GetFileName(path.Path)));
                     if (path.InnerClassPaths != null)
@@ -185,7 +188,7 @@ namespace ReverseR.DecompileView.Default.ViewModels
                     {
                         token.Value.ThrowIfCancellationRequested();
                     }
-                    Directory.Delete(tempPath, true);
+                    FileUtilities.SafeDeleteDirectory(tempPath);
                     StatusMessage = "Ready";
                 }, viewModel.DecompTaskTokenSource.Token)
                 .WithName($"{Decompiler.GetDecompilerInfo().FriendlyName}:{Path.GetFileName(path.Path)}")
@@ -199,6 +202,7 @@ namespace ReverseR.DecompileView.Default.ViewModels
             IDocumentViewModel viewModel = CreateDocument(path);
             viewModel.GetAttachedDecompileTask().Start();
             Documents.Add(viewModel);
+            PublishMenuUpdate();
             return viewModel;
         }
         public override IDocumentViewModel ActiveDocument { get; protected set; }
@@ -349,7 +353,12 @@ namespace ReverseR.DecompileView.Default.ViewModels
             Documents.AddRange(documents);
             if (activeDocumentPath != null)
             {
-                Documents.FirstOrDefault(it => it.JPath == activeDocumentPath)?.GetAttachedDecompileTask()?.Start();
+                var activeDocument = Documents.FirstOrDefault(it => it.JPath == activeDocumentPath);
+                if(activeDocument != null)
+                {
+                    ActivateDocument(activeDocument);
+                    activeDocument.GetAttachedDecompileTask().Start();
+                }
             }
             Manager.ActiveContentChanged += ActiveContentChanged;
             Manager.DocumentClosing += DocumentClosing;
@@ -429,7 +438,44 @@ namespace ReverseR.DecompileView.Default.ViewModels
         }
         protected override ObservableCollection<IMenuViewModel> _InternalMenuUpdate()
         {
-            return new ObservableCollection<IMenuViewModel>();
+            var menus = new ObservableCollection<IMenuViewModel>();
+
+            IMenuViewModel Views = this.CreateMenu("_Views", null);
+            Views.Children = new ObservableCollection<IMenuViewModel>();
+            foreach(IDockablePlugin plugin in this.Plugins)
+            {
+                Views.Children.Add(this.CreateMenu(plugin.ViewMenuText,
+                    new ParameterDelegateCommand<string>(plugin.Id, id =>
+                    {
+                        LayoutAnchorable layoutAnchorable = Manager.Layout.Descendents()
+                            .FirstOrDefault(elem => elem is LayoutAnchorable anchorable &&
+                                anchorable.ContentId == plugin.Id) as LayoutAnchorable;
+                        if (layoutAnchorable != null)
+                        {
+                            if (layoutAnchorable.IsHidden && layoutAnchorable.PreviousContainer == null)
+                            {
+                                layoutAnchorable.Parent = null;
+                                layoutAnchorable.AddToLayout(Manager, plugin.Side);
+                            }
+                            layoutAnchorable.Show();
+                        }
+                    }), plugin.ViewMenuGesture));
+            }
+            menus.Add(Views);
+
+            IMenuViewModel Windows = this.CreateMenu("_Windows", null);
+            Windows.Children = new ObservableCollection<IMenuViewModel>();
+            foreach(IDocumentViewModel document in Documents)
+            {
+                Windows.Children.Add(this.CreateMenu(document.Title,
+                    new ParameterDelegateCommand<IDocumentViewModel>(document, jpath =>
+                    {
+                        ActivateDocument(document);
+                    })));
+            }
+            menus.Add(Windows);
+
+            return menus;
         }
         #endregion
     }

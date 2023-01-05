@@ -15,12 +15,19 @@ namespace ReverseR.Common.ViewUtilities
     /// The <see cref="View"/> is usually injected with <see cref="Prism.Regions.IRegionManager.AddToRegion(string, object)"/>
     /// </para>
     /// <para>
-    /// the Region Name is <see cref="IDockablePlugin.PluginName"/> + <see cref="IDecompileViewModel.Guid"/>
+    /// the Region Name is <see cref="IPlugin.Id"/> + <see cref="IDecompileViewModel.Guid"/>
     /// </para>
     /// </summary>
     public interface IDockablePlugin:IPlugin,IDIAble
     {
-        public string PluginName { get; }
+        /// <summary>
+        /// The name shown in the Views menu, supports access text
+        /// </summary>
+        public string ViewMenuText { get; }
+        /// <summary>
+        /// The key gesture shown in the Views menu.
+        /// </summary>
+        public string ViewMenuGesture { get; }
         public AnchorableShowStrategy Side { get; set; }
         public double InitialWidth { get; }
         public double InitialHeight { get; }

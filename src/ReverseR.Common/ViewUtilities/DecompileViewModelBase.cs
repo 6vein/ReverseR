@@ -26,6 +26,7 @@ using System.Diagnostics;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
 using ReverseR.Common.Collections;
+using ReverseR.Common.IO;
 
 namespace ReverseR.Common.ViewUtilities
 {
@@ -37,6 +38,7 @@ namespace ReverseR.Common.ViewUtilities
     {
         #region PrismIoc
         protected IContainerProvider Container { get; private set; }
+        protected IEventAggregator EventAggregator { get; private set; }
         #endregion
         #region Bindings
         private bool _isWholeLoaderOpen;
@@ -144,15 +146,15 @@ namespace ReverseR.Common.ViewUtilities
 
 #endregion
 #region UserInterface
-        private PartiallyObservableCollection<IDocumentViewModel> _documents = new PartiallyObservableCollection<IDocumentViewModel>();
+        protected PartiallyObservableCollection<IDocumentViewModel> _documents = new PartiallyObservableCollection<IDocumentViewModel>();
         public PartiallyObservableCollection<IDocumentViewModel> Documents { get => _documents; set => SetProperty(ref _documents, value); }
-        string _title;
+        protected string _title;
         public string Title
         {
             get { return _title; }
             set { SetProperty(ref _title, value); }
         }
-        string _filePath;
+        protected string _filePath;
         //public string TitleTooltip { get => _titletooltip; set => SetProperty(ref _titletooltip, value); }
 #endregion
 #region Extensibility
@@ -168,7 +170,7 @@ namespace ReverseR.Common.ViewUtilities
         protected Controls.ViewRegionControl CreatePluginRegion(IDockablePlugin plugin)
         {
             Controls.ViewRegionControl contentControl = new Controls.ViewRegionControl();
-            RegionManager.SetRegionName(contentControl, $"{plugin.PluginName}{{{Guid.ToString()}}}");
+            RegionManager.SetRegionName(contentControl, $"{plugin.Id}{{{Guid.ToString()}}}");
             RegionManager.SetRegionManager(contentControl, Container.Resolve<IRegionManager>());
             return contentControl;
         }
@@ -192,7 +194,7 @@ namespace ReverseR.Common.ViewUtilities
             {
                 if (!EnableExtractionCache)
                 {
-                    Directory.Delete(BaseDirectory, true);
+                    FileUtilities.SafeDeleteDirectory(BaseDirectory);
                 }
                 else if (EnableDecompiledFileCache)
                 {
@@ -230,8 +232,8 @@ namespace ReverseR.Common.ViewUtilities
                 }
             }
 
-            Container.Resolve<IEventAggregator>().GetEvent<MenuUpdatedEvent>().
-                Publish((menus, Guid));
+            var evt = EventAggregator.GetEvent<MenuUpdatedEvent>();
+            evt.Publish((menus, Guid));
         }
 
 
@@ -279,8 +281,9 @@ namespace ReverseR.Common.ViewUtilities
             //LoaderWaitTime = new TimeSpan(0, 0, 1);
             StatusMessage = "Loading...";
             Container = this.GetIContainer();
+            EventAggregator = Container.Resolve<IEventAggregator>();
             Container.Resolve<IEventAggregator>().GetEvent<OpenFileEvent>().Subscribe(OnOpenFile, ThreadOption.BackgroundThread, false, filter => filter.Item3 == Guid);
-            Container.Resolve<IEventAggregator>().GetEvent<ViewActivatedEvent>().Subscribe(guid => OnActivated(), ThreadOption.UIThread, false, filter => filter == this.Guid);
+            Container.Resolve<IEventAggregator>().GetEvent<ViewActivatedEvent>().Subscribe(guid => OnActivated(), ThreadOption.PublisherThread, false, filter => filter == this.Guid);
             Container.Resolve<IEventAggregator>().GetEvent<MenuCanExecuteEvent>().Subscribe(payload => HandleMenuCanExecuteEvent(payload.Item2)
             , ThreadOption.PublisherThread, false, filter => filter.Item1 == Guid);
             Container.Resolve<IEventAggregator>().GetEvent<MenuExecuteEvent>().Subscribe(payload => HandleMenuExecuteEvent(payload.Item2)
@@ -302,8 +305,7 @@ namespace ReverseR.Common.ViewUtilities
                 {
                     IEnumerable<ParseTreeNode> ret = null;
                     var basedir = Path.GetDirectoryName(jPath.Path);
-                    var tempPath = Path.GetTempFileName();
-                    File.Delete(tempPath);
+                    var tempPath = GlobalUtils.GetTempDirectoryPath();
                     Directory.CreateDirectory(tempPath);
                     File.Copy(jPath.Path, Path.Combine(tempPath, Path.GetFileName(jPath.Path)));
                     if (jPath.InnerClassPaths != null)
@@ -346,7 +348,7 @@ namespace ReverseR.Common.ViewUtilities
                         else message = $"Unexpected exception:\n{e.Message}\n";
                         this.GetIContainer().Resolve<IDialogService>().ReportError(message, r => { }, e.StackTrace);
                     }
-                    Directory.Delete(tempPath, true);
+                    FileUtilities.SafeDeleteDirectory(tempPath);
                     return ret;
                 })
                 .WithName("Background:Parsing")

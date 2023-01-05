@@ -24,7 +24,6 @@ namespace ReverseR
     internal class DockingManagerRegionAdapter : RegionAdapterBase<DockingManager>
     {
         object ActiveContent;
-        SubscriptionToken token = null;
         IContainerProvider Container { get; set; }
         #region Constructor
 
@@ -60,18 +59,13 @@ namespace ReverseR
                     object vm = (ActiveContent as FrameworkElement).DataContext;
                     if (vm is IDecompileViewModel viewModel)
                     {
-                        token = Container.Resolve<IEventAggregator>().GetEvent<MenuUpdatedEvent>().
-                        Subscribe((regionTarget.DataContext as ViewModels.MainWindowViewModel).OnMenuUpdated, ThreadOption.UIThread, false, r => r.guid == viewModel.Guid);
+                        (regionTarget.DataContext as ViewModels.MainWindowViewModel).OnViewActivated(viewModel);
                         (regionTarget.DataContext as ViewModels.MainWindowViewModel).ActiveContent = ActiveContent;
                     }
                 }
                 else
                 {
-                    if(token!=null)
-                    {
-                        Container.Resolve< IEventAggregator>().GetEvent<MenuUpdatedEvent>().Unsubscribe(token);
-                        token = null;
-                    }
+                    (regionTarget.DataContext as ViewModels.MainWindowViewModel).OnAllViewDeactivated();
                 }
             };
 

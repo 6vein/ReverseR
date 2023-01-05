@@ -31,10 +31,11 @@ namespace PluginSourceControl.ViewModels
         public ViewSourceControlViewModel ParentViewModel { get; set; }
         public IDocumentViewModel GetAssociatedDocument()
         {
-            return ParentViewModel.Parent.Documents.FirstOrDefault(doc => doc.JPath == CompilationUnitNode);
+            if (CompilationUnitNode == null) return null;
+            return ParentViewModel.Parent.Documents.FirstOrDefault(doc => doc.JPath == CompilationUnitNode.ParseTreeNode);
         }
         public ParseTreeNode ParseTreeNode { get; set; }
-        public SourceTreeNode CompilationUnitNode { get;private set; }
+        public SourceTreeNode CompilationUnitNode { get; set; }
         internal static Dictionary<string, string> IconResource => new Dictionary<string, string>()
         {
             {".java","pack://application:,,,/PluginSourceControl;component/ImageResources/JavaFile_16x.xaml" },

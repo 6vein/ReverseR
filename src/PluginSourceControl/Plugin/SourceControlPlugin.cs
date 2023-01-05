@@ -26,14 +26,16 @@ namespace PluginSourceControl.Plugin
         public IPluginViewModel ViewModel { get; set; }
         public IDecompileViewModel ParentViewModel { get; set; }
         public IDockablePlugin.NotifyOptions NotifyOption => IDockablePlugin.NotifyOptions.ArchiveOpened;
-        public string PluginName => "SourceControl";
         public string RegionName { get; set; }
         public double InitialWidth => 45;
         public double InitialHeight => 56;
+        public string ViewMenuText => "_Source Control";
+        public string ViewMenuGesture => "Ctrl+Shift+S";
+
         public void InitalizePlugin(IDecompileViewModel parent)
         {
             ParentViewModel = parent;
-            RegionName = $"{PluginName}{{{ParentViewModel.Guid}}}";
+            RegionName = $"{Id}{{{ParentViewModel.Guid}}}";
             var view = Container.Resolve<Views.ViewSourceControl>();
             ViewModel = view.DataContext as IPluginViewModel;
             ViewModel.Parent = parent;

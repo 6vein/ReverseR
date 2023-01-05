@@ -125,6 +125,7 @@ namespace PluginSourceControl.ViewModels
                         node.Icon = node.ExpandedIcon = drawingImage;
                         node.Children = new ObservableCollection<SourceTreeNode>() { new SourceTreeNode() { ParseTreeNode = item.Children[0] } };
                     });
+                    node.CompilationUnitNode = node;
                     lstRet.Add(node);
                 }
                 else if (item.ItemType == IClassParser.ItemType.Others)

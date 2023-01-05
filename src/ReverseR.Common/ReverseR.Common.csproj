@@ -258,6 +258,7 @@
     <Compile Include="Code\IClassParser.cs" />
     <Compile Include="Code\ICodeCompletion.cs" />
     <Compile Include="Collections\PartiallyObservableCollection.cs" />
+    <Compile Include="Commands\ParameterDelegateCommand.cs" />
     <Compile Include="Controls\ViewRegionControl.cs" />
     <Compile Include="DecompUtilities\CommonDecompiler.cs" />
     <Compile Include="DecompUtilities\FileTypes.cs" />
@@ -272,6 +273,7 @@
     <Compile Include="Events\MenuUpdatedEvent.cs" />
     <Compile Include="Events\ViewActivatedEvent.cs" />
     <Compile Include="Extensibility\IPlugin.cs" />
+    <Compile Include="IO\FileUtilities.cs" />
     <Compile Include="Modularity\DecompilerModuleBase.cs" />
     <Compile Include="Modularity\ModuleBase.cs" />
     <Compile Include="Serialization\IPartialSerializable.cs" />

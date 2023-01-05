@@ -226,7 +226,7 @@ namespace DecompilerCFR.Decompile
 
         public void DeserializePart(string value)
         {
-            Arguments = JsonConvert.DeserializeObject<CFRArguments[]>(value);
+            Arguments = JsonConvert.DeserializeObject<CFRArguments[]>(value) ?? GetDefaultArguments();
             if (this.GetInvalidArguments(Arguments).Any())
             {
                 this.MergeInvalidArguments(Arguments);

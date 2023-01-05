@@ -25,7 +25,7 @@ namespace ReverseR.DecompileView.Default.ViewModels
 
         public bool BeforeInsertAnchorable(LayoutRoot layout, LayoutAnchorable anchorableToShow, ILayoutContainer destinationContainer)
         {
-            return true;
+            return false;
         }
 
         public bool BeforeInsertDocument(LayoutRoot layout, LayoutDocument documentToShow, ILayoutContainer destinationContainer)
